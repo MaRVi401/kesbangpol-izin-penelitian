@@ -1,0 +1,41 @@
+@import "tailwindcss";
+@plugin "flowbite/plugin";
+
+@theme {
+  --color-neutral-primary-soft: var(--neutral-primary-soft);
+  --color-neutral-primary-medium: var(--neutral-primary-medium);
+  --color-neutral-secondary-soft: var(--neutral-secondary-soft);
+  --color-neutral-secondary-medium: var(--neutral-secondary-medium);
+  --color-heading: var(--heading);
+  --color-body: var(--body);
+  --color-default: var(--default);
+  --color-default-medium: var(--default-medium);
+}
+
+@variant dark (&:where(.dark, .dark *));
+
+@layer base {
+  /* Mode Terang (Default / Light Mode) */
+  :root {
+    --neutral-primary-soft: #ffffff;      /* Warna background putih */
+    --neutral-primary-medium: #f3f4f6;    /* Abu-abu sangat muda */
+    --neutral-secondary-soft: #f9fafb;
+    --neutral-secondary-medium: #e5e7eb;
+    --heading: #111827;                   /* Teks hitam */
+    --body: #6b7280;                      /* Teks abu-abu */
+    --default: #e5e7eb;                   /* Border terang */
+    --default-medium: #d1d5db;
+  }
+
+  /* Mode Gelap (Dark Mode Override) */
+  .dark {
+    --neutral-primary-soft: #111827;      /* Background gelap */
+    --neutral-primary-medium: #1f2937;
+    --neutral-secondary-soft: #1f2937;
+    --neutral-secondary-medium: #374151;
+    --heading: #f9fafb;                   /* Teks putih */
+    --body: #9ca3af;                      /* Teks abu-abu terang */
+    --default: #374151;                   /* Border gelap */
+    --default-medium: #4b5563;
+  }
+}

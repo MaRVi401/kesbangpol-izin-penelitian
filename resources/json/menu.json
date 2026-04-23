@@ -1,0 +1,81 @@
+{
+    "menu": [
+        {
+            "role": "super_admin",
+            "items": [
+                {
+                    "name": "Dashboard",
+                    "route": "dashboard",
+                    "icon": "ti ti-layout-dashboard"
+                },
+                {
+                    "name": "User Management",
+                    "icon": "ti ti-users-group",
+                    "route": "user-management.index"
+                },
+                {
+                    "name": "Mini SIEM",
+                    "icon": "ti ti-radar",
+                    "route" : "siem.index"
+                }
+                
+            ]
+        },
+        {
+            "role": "pengguna_asn",
+            "items": [
+                {
+                    "name": "Dashboard",
+                    "icon": "ti ti-layout-dashboard",
+                    "route": "dashboard"
+                },
+                {
+                    "name": "Layanan Digital",
+                    "icon": "ti ti-file-download",
+                    "route": "services.index"
+                },
+                {
+                    "name": "Pengajuan tiket",
+                    "icon": "ti ti-ticket",
+                    "route": "submission.index"
+                },
+                {
+                    "name" : "Riwayat Status Tiket",
+                    "icon" : "ti ti-clock",
+                    "route": "history.index" 
+                },
+                {
+                    "name" : "Scan Image and crop",
+                    "icon" : "ti ti-scan",
+                    "route": "test.scanner"
+                }
+            ]
+        },
+        {
+            "role": "operator",
+            "items": [
+                {
+                    "name": "Dashboard",
+                    "icon": "ti ti-layout-dashboard",
+                    "route": "dashboard"
+                },
+                {
+                    "name": "Tiket Masuk",
+                    "icon": "ti ti-ticket",
+                    "route": "ticket.index"
+                },
+                {
+                    "name": "Tangani Tiket",
+                    "icon": "ti ti-briefcase",
+                    "route": "ticket.workdesk"
+                },
+                {
+                    "name" : "Riwayat Ticket",
+                    "icon" : "ti ti-clock",
+                    "route": "ticket.history"
+                }
+            ]
+        }
+        
+    ]
+}
