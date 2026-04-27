@@ -26,14 +26,14 @@ return new class extends Migration
         Schema::create('super_admin', function (Blueprint $table) {
             $table->uuid('uuid')->primary();
             $table->foreignUuid('users_id')->constrained('users', 'uuid')->cascadeOnDelete();
-            $table->string('nim')->nullable();
+            $table->string('nip')->nullable();
             $table->timestamps();
         });
 
         Schema::create('mahasiswa', function (Blueprint $table) {
             $table->uuid('uuid')->primary();
             $table->foreignUuid('users_id')->constrained('users', 'uuid')->cascadeOnDelete();
-            $table->string('nip');
+            $table->string('nim');
             $table->timestamps();
         });
 
@@ -69,7 +69,7 @@ return new class extends Migration
             $table->string('no_tiket')->unique();
             $table->string('lampiran')->nullable();
             $table->text('deskripsi')->nullable();
-            $table->enum('status', ['belum diajukan', 'diajukan', 'ditangani', 'selesai', 'ditolak']);
+            $table->enum('status', ['draft', 'diajukan', 'Verifikasi kelengkapan', 'verifikasi lengkap', 'verifikasi gagal', 'diterima', 'ditolak']);
             $table->timestamps();
         });
 
@@ -93,37 +93,46 @@ return new class extends Migration
         Schema::create('surat_permohonan_izin_penelitian', function (Blueprint $table) {
             $table->uuid('uuid')->primary();
             $table->foreignUuid('tiket_id')->constrained('tiket', 'uuid')->cascadeOnDelete();
-
-            // PD = Perangkat Daerah
-            $table->string('pd_no_surat');
-            $table->timestamp('pd_tgl');
-            $table->integer('pd_hal')->nullable();
-            $table->string('pd_instansi_nama')->nullable();
-            $table->string('pd_nama_kepala_instansi')->nullable();
-            $table->string('pd_bidang')->nullable();
-            $table->string('pd_alamat')->nullable();
-            $table->string('pd_telp')->nullable();
-            $table->string('pd_email')->nullable();
-            $table->string('pd_pj_nama')->nullable();
-            $table->string('pd_pj_nip')->nullable();
-            $table->string('pd_pj_jabatan')->nullable();
-            $table->string('pd_pj_email')->nullable();
-            $table->string('pd_pj_kontak')->nullable();
-            $table->enum('pd_jenis_layanan', ['permohonan baru', 'reset password', 'hapus akun', 'ganti nama akun'])->nullable();
-            $table->string('pd_alasan_hapus_akun')->nullable();
-            $table->string('pd_alasan_ganti_nama')->nullable();
-            $table->string('pd_usulan_email')->nullable();
-
-            // ASN Section
-            $table->string('asn_no_surat');
-            $table->timestamp('asn_tgl');
-            $table->integer('asn_hal')->nullable();
-            $table->string('asn_nama_lengkap')->nullable();
-            $table->string('asn_nip')->nullable();
-            $table->string('asn_jabatan')->nullable();
-            $table->string('asn_instansi')->nullable();
-            $table->string('asn_kontak')->nullable();
-            $table->enum('asn_jenis_layanan', ['permohonan baru', 'reset password', 'hapus akun', 'ganti nama akun'])->nullable();
+            
+            $table->string('nama');
+            $table->string('tempat_lahir');
+            $table->date('tanggal_lahir');
+            $table->string('pekerjaan_pendidikan');
+            $table->string('semester')->nullable();
+            $table->string('institusi_pendidikan');
+            $table->text('alamat_kantor')->nullable();
+            $table->text('alamat_institusi')->nullable();
+            $table->string('nomor_ktp')->nullable();
+            $table->string('nomor_mahasiswa')->nullable();
+            $table->string('nomor_pegawai')->nullable();
+            
+            $table->string('kegiatan');
+            $table->string('dalam_rangka');
+            $table->date('tanggal_mulai');
+            $table->date('tanggal_selesai');
+            $table->string('lokasi_kegiatan');
+            $table->string('judul_pembicara');
+            $table->string('penanggung_jawab_1');
+            $table->string('penanggung_jawab_2')->nullable();
+            $table->integer('banyak_peserta');
+            
+            $table->string('nama_alias')->nullable();
+            $table->string('nama_panggilan')->nullable();
+            $table->enum('jenis_kelamin', ['Laki-laki', 'Perempuan']);
+            $table->string('kebangsaan')->default('Indonesia');
+            $table->string('agama');
+            $table->string('pekerjaan')->nullable();
+            $table->enum('status_perkawinan', ['Kawin', 'Belum Kawin']);
+            $table->text('alamat_lengkap');
+            $table->integer('tinggi_badan')->nullable();
+            $table->string('bentuk_badan')->nullable();
+            $table->string('warna_kulit')->nullable();
+            $table->string('bentuk_rambut')->nullable();
+            $table->string('bentuk_hidung')->nullable();
+            $table->string('ciri_khusus')->nullable();
+            $table->string('hobi')->nullable();
+            $table->string('no_hp');
+            
             $table->timestamps();
         });
 
@@ -153,11 +162,7 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists('detail_tiket_layanan_pembuatan_apps');
-        Schema::dropIfExists('detail_tiket_layanan_subdomain');
-        Schema::dropIfExists('detail_tiket_layanan_email_gov');
-        Schema::dropIfExists('detail_tiket_layanan_pengaduan_sistem_elektronik');
-        Schema::dropIfExists('prioritas_tiket_kadis');
+        Schema::dropIfExists('surat_permohonan_izin_penelitian');
         Schema::dropIfExists('komentar_tiket');
         Schema::dropIfExists('riwayat_status_tiket');
         Schema::dropIfExists('tiket');
