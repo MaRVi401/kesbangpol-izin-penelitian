@@ -14,7 +14,7 @@ return new class extends Migration
             $table->string('nama');
             $table->string('username')->unique();
             $table->string('password');
-            $table->enum('role', ['super_admin', 'pengguna_asn', 'kabid', 'operator', 'kadis']);
+            $table->enum('role', ['super_admin', 'mahasiswa', 'kabid', 'operator',]);
             $table->string('alamat')->nullable();
             $table->string('email')->unique();
             $table->string('no_wa')->nullable();
@@ -26,11 +26,11 @@ return new class extends Migration
         Schema::create('super_admin', function (Blueprint $table) {
             $table->uuid('uuid')->primary();
             $table->foreignUuid('users_id')->constrained('users', 'uuid')->cascadeOnDelete();
-            $table->string('nip')->nullable();
+            $table->string('nim')->nullable();
             $table->timestamps();
         });
 
-        Schema::create('pengguna_asn', function (Blueprint $table) {
+        Schema::create('mahasiswa', function (Blueprint $table) {
             $table->uuid('uuid')->primary();
             $table->foreignUuid('users_id')->constrained('users', 'uuid')->cascadeOnDelete();
             $table->string('nip');
@@ -38,13 +38,6 @@ return new class extends Migration
         });
 
         Schema::create('kabid', function (Blueprint $table) {
-            $table->uuid('uuid')->primary();
-            $table->foreignUuid('users_id')->constrained('users', 'uuid')->cascadeOnDelete();
-            $table->string('nip');
-            $table->timestamps();
-        });
-
-        Schema::create('kadis', function (Blueprint $table) {
             $table->uuid('uuid')->primary();
             $table->foreignUuid('users_id')->constrained('users', 'uuid')->cascadeOnDelete();
             $table->string('nip');
@@ -97,30 +90,6 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        // 6. Prioritas Tiket Kadis
-        Schema::create('prioritas_tiket_kadis', function (Blueprint $table) {
-            $table->uuid('uuid')->primary();
-            $table->foreignUuid('tiket_id')->constrained('tiket', 'uuid')->cascadeOnDelete();
-            $table->foreignUuid('pengusul_id')->constrained('users', 'uuid')->cascadeOnDelete();
-            $table->foreignUuid('penerima_id')->constrained('users', 'uuid')->cascadeOnDelete();
-            $table->string('catatan_kabid')->nullable();
-            $table->string('catatan_kadis')->nullable();
-            $table->enum('status_persetujuan', ['pending', 'disetujui', 'ditolak'])->default('pending');
-            $table->enum('level_prioritas', ['rendah', 'sedang', 'tinggi'])->default('sedang');
-
-            $table->timestamps();
-        });
-
-        // 7. Detail Layanan 
-
-        Schema::create('detail_tiket_layanan_pengaduan_sistem_elektronik', function (Blueprint $table) {
-            $table->uuid('uuid')->primary();
-            $table->foreignUuid('tiket_id')->constrained('tiket', 'uuid')->cascadeOnDelete();
-            $table->text('detail_pengaduan');
-            $table->string('lampiran_screenshot')->nullable();
-            $table->timestamps();
-        });
-
         Schema::create('detail_tiket_layanan_email_gov', function (Blueprint $table) {
             $table->uuid('uuid')->primary();
             $table->foreignUuid('tiket_id')->constrained('tiket', 'uuid')->cascadeOnDelete();
@@ -155,77 +124,6 @@ return new class extends Migration
             $table->string('asn_instansi')->nullable();
             $table->string('asn_kontak')->nullable();
             $table->enum('asn_jenis_layanan', ['permohonan baru', 'reset password', 'hapus akun', 'ganti nama akun'])->nullable();
-            $table->timestamps();
-        });
-
-        Schema::create('detail_tiket_layanan_subdomain', function (Blueprint $table) {
-            $table->uuid('uuid')->primary();
-            $table->foreignUuid('tiket_id')->constrained('tiket', 'uuid')->cascadeOnDelete();
-            $table->string('no_surat');
-            $table->timestamp('tanggal');
-            $table->integer('halaman');
-            $table->string('instansi_opd');
-            $table->string('instansi_bidang');
-            $table->string('instansi_nama_kepala');
-            $table->string('instansi_alamat');
-            $table->string('instansi_telp');
-            $table->string('instansi_email');
-            $table->string('pj_admin_nama');
-            $table->string('pj_admin_nip');
-            $table->string('pj_admin_jabatan');
-            $table->string('pj_admin_email');
-            $table->string('pj_admin_telp');
-            $table->string('pj_teknis_nama');
-            $table->string('pj_teknis_instansi');
-            $table->string('pj_teknis_alamat');
-            $table->string('pj_teknis_email');
-            $table->string('pj_teknis_telp');
-            $table->string('subdomain_nama');
-            $table->string('subdomain_alamat');
-            $table->string('subdomain_ip');
-            $table->string('subdomain_redirect')->nullable();
-            $table->text('subdomain_deskripsi');
-            $table->enum('subdomain_jenis', ['permohonan baru', 'ganti nama sub domain', 'penghapusan sub domain']);
-            $table->timestamps();
-        });
-
-        Schema::create('detail_tiket_layanan_pembuatan_apps', function (Blueprint $table) {
-            $table->uuid('uuid')->primary();
-            $table->foreignUuid('tiket_id')->constrained('tiket', 'uuid')->cascadeOnDelete();
-
-            // Pengajuan (Awal)
-            $table->string('ajuan_no_surat')->nullable();
-            $table->timestamp('ajuan_tgl')->nullable();
-            $table->string('ajuan_nama_sistem')->nullable();
-            $table->text('ajuan_ket_sistem')->nullable();
-            $table->string('ajuan_ttd_nama')->nullable();
-            $table->string('ajuan_ttd_nip')->nullable();
-            $table->string('ajuan_perintah_pj1_nama')->nullable();
-            $table->string('ajuan_perintah_pj1_nip')->nullable();
-            $table->string('ajuan_perintah_pj1_jabatan')->nullable();
-            $table->string('ajuan_perintah_pj2_nama')->nullable();
-            $table->string('ajuan_perintah_pj2_nip')->nullable();
-            $table->string('ajuan_perintah_pj2_jabatan')->nullable();
-            $table->string('ajuan_nama_skpd')->nullable();
-            $table->text('ajuan_fitur')->nullable();
-            $table->text('ajuan_ket_fitur')->nullable();
-
-            // Pengembangan
-            $table->string('kembang_no_surat')->nullable();
-            $table->timestamp('kembang_tgl')->nullable();
-            $table->string('kembang_ttd_nama')->nullable();
-            $table->string('kembang_ttd_nip')->nullable();
-            $table->string('kembang_nama_sistem')->nullable();
-            $table->text('kembang_ket')->nullable();
-            $table->string('kembang_perintah_pj1_nama')->nullable();
-            $table->string('kembang_perintah_pj1_nip')->nullable();
-            $table->string('kembang_perintah_pj1_jabatan')->nullable();
-            $table->string('kembang_perintah_pj2_nama')->nullable();
-            $table->string('kembang_perintah_pj2_jabatan')->nullable();
-            $table->string('kembang_perintah_pj2_nip')->nullable();
-            $table->string('kembang_nama_skpd')->nullable();
-            $table->text('kembang_nama_fitur')->nullable();
-            $table->text('kembang_ket_fitur')->nullable();
             $table->timestamps();
         });
 
@@ -266,7 +164,7 @@ return new class extends Migration
         Schema::dropIfExists('layanan');
         Schema::dropIfExists('operator');
         Schema::dropIfExists('kabid');
-        Schema::dropIfExists('pengguna_asn');
+        Schema::dropIfExists('mahasiswa');
         Schema::dropIfExists('super_admin');
         Schema::dropIfExists('users');
         Schema::dropIfExists('jejak_audit');
