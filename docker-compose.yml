@@ -1,35 +1,64 @@
-version: '3.8'
-
 services:
-  # Database PostgreSQL untuk e-Gov
-  db_egov:
+  # Database PostgreSQL untuk SIREKIPEMA
+  db_sirekipema:
     image: postgres:latest
-    container_name: postgres-egov
+    container_name: postgres-sirekipema
     restart: always
     ports:
-      - "5432:5432"
+      - "5432:5432" 
     environment:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: password123
-      POSTGRES_DB: egovkominfo
+      POSTGRES_DB: sirekipema_db
     volumes:
-      - postgres_egov_data:/var/lib/postgresql
+      - postgres_sirekipema_data:/var/lib/postgresql
+    networks:
+      - sirekipema_net
 
-  # Storage MinIO untuk Aset Diskominfo
-  storage_egov:
+  # Storage MinIO untuk Aset SIREKIPEMA
+  storage_sirekipema:
     image: minio/minio
-    container_name: minio-egov
+    container_name: minio-sirekipema
     restart: always
     ports:
-      - "9000:9000"
-      - "9001:9001"
+      - "9000:9000" 
+      - "9001:9001" 
     environment:
       MINIO_ROOT_USER: admin
       MINIO_ROOT_PASSWORD: password123
     volumes:
-      - minio_egov_data:/data
+      - minio_sirekipema_data:/data
     command: server /data --console-address ":9001"
+    networks:
+      - sirekipema_net
+
+  # Init Container untuk Otomatisasi Bucket SIREKIPEMA
+  setup_sirekipema_bucket:
+    image: minio/mc
+    container_name: minio-setup
+    depends_on:
+      - storage_sirekipema
+    networks:
+      - sirekipema_net
+    entrypoint: >
+      /bin/sh -c "
+      echo 'Menunggu layanan MinIO siap menerima koneksi API...';
+      until mc alias set localminio http://minio-sirekipema:9000 admin password123; do
+        echo 'Koneksi ditolak, mencoba ulang dalam 3 detik...';
+        sleep 3;
+      done;
+      echo 'Koneksi berhasil. Membuat bucket sirekipema-bucket...';
+      mc mb localminio/sirekipema-bucket --ignore-existing;
+      echo 'Menetapkan hak akses publik (download)...';
+      mc anonymous set download localminio/sirekipema-bucket;
+      echo 'Konfigurasi selesai!';
+      exit 0;
+      "
 
 volumes:
-  postgres_egov_data:
-  minio_egov_data:
+  postgres_sirekipema_data:
+  minio_sirekipema_data:
+
+networks:
+  sirekipema_net:
+    driver: bridge
