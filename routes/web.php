@@ -4,20 +4,18 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Admin\UserManagementController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\PenggunaAsn\ServiceController;
-use App\Http\Controllers\PenggunaAsn\ServiceEmailGovController;
+use App\Http\Controllers\Mahasiswa\ServiceController;
+use App\Http\Controllers\Mahasiswa\ServiceEmailGovController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DevTemplateController;
-use App\Http\Controllers\PenggunaAsn\ServiceSubDomainController;
-use App\Http\Controllers\PenggunaAsn\ServiceAppsCreationController;
-use App\Http\Controllers\PenggunaAsn\ServiceComplaintSystemController;
-use App\Http\Controllers\PenggunaAsn\SubmissionController;
-use App\Http\Controllers\PenggunaAsn\ServiceHistoryTicketController;
+use App\Http\Controllers\Mahasiswa\ServiceSubDomainController;
+use App\Http\Controllers\Mahasiswa\ServiceAppsCreationController;
+use App\Http\Controllers\Mahasiswa\ServiceComplaintSystemController;
+use App\Http\Controllers\Mahasiswa\SubmissionController;
+use App\Http\Controllers\Mahasiswa\ServiceHistoryTicketController;
 use App\Http\Controllers\Operator\TicketController as OperatorTicketController;
 use App\Http\Controllers\Admin\SiemController;
 use App\Http\Controllers\Kabid\UsulanKabidController; 
-
-
 
 /*
 |--------------------------------------------------------------------------
@@ -29,7 +27,6 @@ Route::get('/error/{code}', function ($code) {
     abort($code);
 });
 
-
 /*
 |--------------------------------------------------------------------------
 | Public Routes
@@ -40,7 +37,6 @@ Route::get('/error/{code}', function ($code) {
 Route::get('/', function () {
     return view('welcome');
 })->name('landing');
-
 
 /*
 |--------------------------------------------------------------------------
@@ -58,7 +54,6 @@ Route::middleware('guest')->group(function () {
     Route::post('/login', [LoginController::class, 'login'])
         ->name('login.post');
 });
-
 
 /*
 |--------------------------------------------------------------------------
@@ -98,9 +93,6 @@ Route::middleware('auth')->group(function () {
         });
     });
 
-
-
-
     /*
     |----------------------------------------------------------------------
     | Khusus Operator
@@ -124,17 +116,16 @@ Route::middleware('auth')->group(function () {
             ->parameters(['ticket' => 'uuid'])
             ->only(['index', 'show', 'update', 'destroy']);
 
-
         Route::get('riwayat-tiket', [OperatorTicketController::class, 'history'])->name('ticket.history');
     });
 
     /*
     |----------------------------------------------------------------------
-    | Khusus pengguna asn
+    | Khusus mahasiswa
     |----------------------------------------------------------------------
     */
 
-    Route::middleware('can:pengguna_asn-only')->group(function () {
+    Route::middleware('can:mahasiswa-only')->group(function () {
 
         Route::resource('services', ServiceController::class);
 
@@ -156,10 +147,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/service-app-creation/download/{uuid}', [ServiceAppsCreationController::class, 'download'])->name('appscreation.download');
         Route::resource('service-app-creation', ServiceAppsCreationController::class);
 
-
         //Rute untuk pengaduan
         Route::resource('service-complaint-system', ServiceComplaintSystemController::class);
-
 
         //Rute Submission
         Route::post('/submission/{uuid}/upload', [SubmissionController::class, 'uploadDocument'])->name('submission.upload');
@@ -169,7 +158,7 @@ Route::middleware('auth')->group(function () {
         Route::resource('history', ServiceHistoryTicketController::class);
         
         //Rute Scanner Image
-        Route::view('/ai-scanner', 'pages.pengguna-asn.layanan.test-scanner')->name('test.scanner');
+        Route::view('/ai-scanner', 'pages.mahasiswa.layanan.test-scanner')->name('test.scanner');
     });
 
     /*
@@ -184,9 +173,5 @@ Route::middleware('auth')->group(function () {
              ->names('kabid.usulan')
              ->parameters(['usulan' => 'uuid'])
              ->only(['index', 'create', 'store', 'show', 'destroy']);
-
     });
-
-    
 });
-
