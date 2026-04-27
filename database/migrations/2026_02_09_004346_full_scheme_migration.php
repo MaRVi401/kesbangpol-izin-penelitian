@@ -90,7 +90,7 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        Schema::create('detail_tiket_layanan_email_gov', function (Blueprint $table) {
+        Schema::create('surat_permohonan_izin_penelitian', function (Blueprint $table) {
             $table->uuid('uuid')->primary();
             $table->foreignUuid('tiket_id')->constrained('tiket', 'uuid')->cascadeOnDelete();
 
