@@ -3,12 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Models\User;
-use App\Models\SuperAdmin;
-use App\Models\PenggunaAsn;
-use App\Models\Kabid;
-use App\Models\Operator;
-use App\Models\Kadis;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Schema;
@@ -18,79 +13,108 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         Schema::disableForeignKeyConstraints();
-        User::truncate();
-        SuperAdmin::truncate();
-        PenggunaAsn::truncate();
-        Kabid::truncate();
-        Operator::truncate();
-        Kadis::truncate();
+        
+        // Truncate tabel sesuai migrasi terbaru
+        DB::table('users')->truncate();
+        DB::table('super_admin')->truncate();
+        DB::table('mahasiswa')->truncate();
+        DB::table('kabid')->truncate();
+        DB::table('operator')->truncate();
+        
         Schema::enableForeignKeyConstraints();
 
+        // 1. Super Admin
         $adminUuid = (string) Str::uuid();
-        User::create([
+        DB::table('users')->insert([
             'uuid'     => $adminUuid,
-            'nama'     => "Jack",
+            'nama'     => 'Jack',
             'username' => 'superadmin',
             'password' => Hash::make('12345678'),
             'role'     => 'super_admin',
-            'email'    => 'ahmad.yassin@mail.com',
+            'email'    => 'jack@simdokum.local',
             'no_wa'    => '081234567890',
-            'alamat'   => 'Kantor Pusat Super Admin',
+            'alamat'   => 'Kosan Sukabumi',
+            'created_at' => now(),
+            'updated_at' => now(),
         ]);
 
-        SuperAdmin::create([
+        DB::table('super_admin')->insert([
             'uuid'     => (string) Str::uuid(),
             'users_id' => $adminUuid,
             'nip'      => '199001012024011001',
+            'created_at' => now(),
+            'updated_at' => now(),
         ]);
 
-        $kadisUuid = (string) Str::uuid();
-        User::create([
-            'uuid'     => $kadisUuid,
-            'nama'     => "Kepala Dinas",
-            'username' => 'kadis',
+        // 2. Mahasiswa
+        $mhsUuid = (string) Str::uuid();
+        DB::table('users')->insert([
+            'uuid'     => $mhsUuid,
+            'nama'     => 'Mahasiswa Polindra',
+            'username' => 'mahasiswa',
             'password' => Hash::make('password'),
-            'role'     => 'kadis',
-            'email'    => 'kadis@mail.com',
+            'role'     => 'mahasiswa',
+            'email'    => 'mahasiswa@mail.com',
             'no_wa'    => '081234567891',
-            'alamat'   => 'Kantor Kepala Dinas',
+            'alamat'   => 'Jl. Lohbener Lama',
+            'created_at' => now(),
+            'updated_at' => now(),
         ]);
 
-        Kadis::create([
+        DB::table('mahasiswa')->insert([
             'uuid'     => (string) Str::uuid(),
-            'users_id' => $kadisUuid,
-            'nip'      => '197001012000011001',
+            'users_id' => $mhsUuid,
+            'nim'      => '2203001',
+            'created_at' => now(),
+            'updated_at' => now(),
         ]);
 
-        $otherRoles = [
-            'pengguna_asn' => PenggunaAsn::class,
-            'kabid'        => Kabid::class,
-            'operator'     => Operator::class,
-        ];
+        // 3. Operator
+        $opUuid = (string) Str::uuid();
+        DB::table('users')->insert([
+            'uuid'     => $opUuid,
+            'nama'     => 'Operator Layanan',
+            'username' => 'operator',
+            'password' => Hash::make('password'),
+            'role'     => 'operator',
+            'email'    => 'operator@mail.com',
+            'no_wa'    => '081234567892',
+            'alamat'   => 'Ruang Operator',
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
 
-        for ($i = 1; $i <= 19; $i++) {
-            $roleKey = array_keys($otherRoles)[$i % count($otherRoles)];
-            $modelClass = $otherRoles[$roleKey];
+        DB::table('operator')->insert([
+            'uuid'     => (string) Str::uuid(),
+            'users_id' => $opUuid,
+            'nip'      => '198501012010011001',
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
 
-            $userUuid = (string) Str::uuid();
-            User::create([
-                'uuid'     => $userUuid,
-                'nama'     => "User " . Str::headline($roleKey) . " $i",
-                'username' => $roleKey . $i,
-                'password' => Hash::make('password'),
-                'role'     => $roleKey,
-                'email'    => $roleKey . $i . "@mail.com",
-                'no_wa'    => "081234567" . rand(100, 999) . $i,
-                'alamat'   => "Alamat " . Str::headline($roleKey) . " nomor $i",
-            ]);
+        // 4. Kabid
+        $kabidUuid = (string) Str::uuid();
+        DB::table('users')->insert([
+            'uuid'     => $kabidUuid,
+            'nama'     => 'Kepala Bidang',
+            'username' => 'kabid',
+            'password' => Hash::make('password'),
+            'role'     => 'kabid',
+            'email'    => 'kabid@mail.com',
+            'no_wa'    => '081234567893',
+            'alamat'   => 'Ruang Kabid',
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
 
-            $modelClass::create([
-                'uuid'     => (string) Str::uuid(),
-                'users_id' => $userUuid,
-                'nip'      => "199" . rand(10, 99) . "0101" . rand(1000, 9999) . $i,
-            ]);
-        }
+        DB::table('kabid')->insert([
+            'uuid'     => (string) Str::uuid(),
+            'users_id' => $kabidUuid,
+            'nip'      => '197501012000011001',
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
 
-        $this->command->info('Berhasil: UserSeeder telah dijalankan.');
+        $this->command->info('Berhasil: UserSeeder telah dijalankan dengan skema role baru.');
     }
 }

@@ -78,7 +78,7 @@ return new class extends Migration
             $table->uuid('uuid')->primary();
             $table->foreignUuid('tiket_id')->constrained('tiket', 'uuid')->cascadeOnDelete();
             $table->foreignUuid('users_id')->constrained('users', 'uuid')->cascadeOnDelete();
-            $table->enum('status', ['belum diajukan', 'diajukan', 'ditangani', 'selesai', 'ditolak']);
+            $table->enum('status', ['draft', 'diajukan', 'Verifikasi kelengkapan', 'verifikasi lengkap', 'verifikasi gagal', 'diterima', 'ditolak']);
             $table->timestamps();
         });
 

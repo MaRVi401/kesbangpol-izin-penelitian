@@ -16,24 +16,15 @@ class ServiceSeeder extends Seeder
         DB::table('layanan')->truncate();
         Schema::enableForeignKeyConstraints();
 
-        $services = [
-            'Email E-Gov',
-            'Subdomain',
-            'Pembuatan App',
-            'Pengaduan Sistem',
-            'Pembuatan & Pengembangan apps',
-            'Pengaduan Sistem Elektronik'
-        ];
+        DB::table('layanan')->insert([
+            'uuid'             => (string) Str::uuid(),
+            'nama'             => 'Surat Permohonan Izin Penelitian',
+            'status_arsip'     => false,
+            'status_prioritas' => 'sedang',
+            'created_at'       => Carbon::now(),
+            'updated_at'       => Carbon::now(),
+        ]);
 
-        foreach ($services as $nama) {
-            DB::table('layanan')->insert([
-                'uuid'             => (string) Str::uuid(),
-                'nama'             => $nama,
-                'status_arsip'     => false,
-                'status_prioritas' => 'sedang',
-                'created_at'       => Carbon::now(),
-                'updated_at'       => Carbon::now(),
-            ]);
-        }
+        $this->command->info('Berhasil: ServiceSeeder telah menambahkan layanan tunggal.');
     }
 }
