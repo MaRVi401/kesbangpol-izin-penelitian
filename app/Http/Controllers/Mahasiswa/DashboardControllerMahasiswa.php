@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\PenggunaAsn;
+namespace App\Http\Controllers\Mahasiswa;
 
 use App\Http\Controllers\Controller;
 use App\Models\Tiket;
@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
-class DashboardControllerPenggunaAsn extends Controller
+class DashboardControllerMahasiswa extends Controller
 {
     public function index(Request $request): View
     {

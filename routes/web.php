@@ -174,4 +174,4 @@ Route::middleware('auth')->group(function () {
              ->parameters(['usulan' => 'uuid'])
              ->only(['index', 'create', 'store', 'show', 'destroy']);
     });
-});
+}); 

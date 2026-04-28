@@ -25,9 +25,9 @@ class AppServiceProvider extends ServiceProvider
             return $user->role === 'super_admin';
         });
 
-        // Gate untuk Middleware 'can:pengguna_asn
-        Gate::define('pengguna_asn-only', function (User $user) {
-            return $user->role === 'pengguna_asn';
+        // Gate untuk Middleware 'can:mahasiswa-only
+        Gate::define('mahasiswa-only', function (User $user) {
+            return $user->role === 'mahasiswa';
         });
 
         // Gate untuk Middleware 'can:operator-only'
@@ -38,11 +38,6 @@ class AppServiceProvider extends ServiceProvider
         // Gate untuk Middleware 'can:kabid-only'
         Gate::define('kabid-only', function (User $user) {
             return $user->role === 'kabid';
-        });
-
-        // Gate untuk Middleware 'can:kadis-only'
-        Gate::define('kadis-only', function (User $user) {
-            return $user->role === 'kadis';
         });
 
         // View Composer hanya berjalan saat view 'partials.dashboard.sidebar' dipanggil
