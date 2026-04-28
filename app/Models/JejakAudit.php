@@ -12,6 +12,7 @@ class JejakAudit extends Model
     protected $table = 'jejak_audit';
     protected $primaryKey = 'uuid';
     public $incrementing = false;
+    protected $keyType = 'string'; // Tambahan
     
     protected $fillable = [
         'users_id', 
