@@ -53,13 +53,8 @@ const SubdomainFormHandler = () => {
                     
                     updateStepperUI(indicatorStep1, indicatorStep2);
                     window.scrollTo({ top: 0, behavior: 'smooth' });
-
-                    if (result.download_url) {
-                        setTimeout(() => {
-                            window.location.href = result.download_url;
-                        }, 500);
-                    }
-
+                    
+                    
                 }, 300);
             } else {
                 // Menggunakan SweetAlert untuk pesan error validasi/server

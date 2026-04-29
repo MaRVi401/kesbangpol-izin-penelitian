@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Storage;
+use Intervention\Image\Laravel\Facades\Image; // Pastikan library ini sudah terinstal
 
 // Pastikan Model di-import
 use App\Models\Tiket;
@@ -40,6 +42,9 @@ class ServiceController extends Controller
             'status_perkawinan'     => 'required|in:Kawin,Belum Kawin',
             'no_hp'                 => 'required|string|max:20',
             'alamat_lengkap'        => 'required|string',
+            
+            // Pas Foto Baru
+            'pas_foto'              => 'required|image|mimes:jpeg,png,jpg|max:2048',
             
             // Dokumen & Pekerjaan/Pendidikan
             'nomor_ktp'             => 'nullable|string|max:50',
@@ -75,14 +80,27 @@ class ServiceController extends Controller
 
         DB::beginTransaction();
         try {
-            // Ambil Layanan berdasarkan nama (Sesuaikan nama layanan dengan yang ada di DB kamu)
-            // Misalnya: 'Surat Izin Penelitian'
+            // 2. Proses Konversi & Penyimpanan Foto
+            $file = $request->file('pas_foto');
+            $fileName = 'pas_foto_' . Str::uuid() . '.webp';
+            
+            // Membaca gambar, mengubah format, dan menyimpan ke storage/app/private
+            $image = Image::read($file);
+            $encodedImage = $image->toWebp(80); // Kualitas 80%
+            
+            Storage::put('private/pas_foto/' . $fileName, (string) $encodedImage);
+
+            // Menambahkan path_pas_foto untuk dimasukkan ke database dan membuang key pas_foto agar tidak error di Mass Assignment
+            $validatedData['path_pas_foto'] = 'private/pas_foto/' . $fileName;
+            unset($validatedData['pas_foto']);
+
+            // 3. Ambil Layanan berdasarkan nama (Sesuaikan nama layanan dengan yang ada di DB kamu)
             $layanan = Layanan::where('nama', 'LIKE', '%Izin Penelitian%')->firstOrFail();
             
             // Buat Nomor Tiket (Misal format: PEN-12052026-ABCD)
             $noTiket = 'PEN-' . Carbon::now()->format('dmY') . '-' . Str::upper(Str::random(4));
             
-            // 2. Insert ke tabel `tiket`
+            // 4. Insert ke tabel `tiket`
             $tiket = Tiket::create([
                 'uuid'       => (string) Str::uuid(),
                 'users_id'   => Auth::user()->uuid,
@@ -92,14 +110,14 @@ class ServiceController extends Controller
                 'deskripsi'  => 'Permohonan Izin Penelitian: ' . $request->judul_pembicara,
             ]);
         
-            // 3. Insert ke tabel `surat_permohonan_izin_penelitian`
+            // 5. Insert ke tabel `surat_permohonan_izin_penelitian`
             $validatedData['uuid'] = (string) Str::uuid();
             $validatedData['tiket_id'] = $tiket->uuid;
             $validatedData['kebangsaan'] = $request->input('kebangsaan', 'Indonesia'); // Default Indonesia jika kosong
             
             SuratPermohonanIzinPenelitian::create($validatedData);
             
-            // 4. Insert Riwayat Status
+            // 6. Insert Riwayat Status
             RiwayatStatusTiket::create([
                 'uuid'      => (string) Str::uuid(), 
                 'tiket_id'  => $tiket->uuid,
@@ -108,9 +126,9 @@ class ServiceController extends Controller
                 'catatan'   => 'Permohonan Izin Penelitian berhasil diajukan oleh Mahasiswa'
             ]);
             
-            // 5. Insert Jejak Audit
+            // 7. Insert Jejak Audit
             JejakAudit::create([
-                'uuid'       => (string) Str::uuid(), // Jangan lupa UUID untuk jejak audit
+                'uuid'       => (string) Str::uuid(),
                 'users_id'   => Auth::id(),
                 'aksi'       => 'create',
                 'nama_tabel' => 'tiket',
