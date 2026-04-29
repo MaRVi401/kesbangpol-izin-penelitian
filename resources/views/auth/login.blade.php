@@ -96,7 +96,7 @@
                         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mt-6">
                             <p class="text-sm font-light text-gray-500 dark:text-gray-400">
                                 Belum punya akun?
-                                <a href="#"
+                                <a href="{{ route('register') }}"
                                     class="font-medium text-blue-600 hover:underline dark:text-blue-500">Daftar!</a>
                             </p>
 

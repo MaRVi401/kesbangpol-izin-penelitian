@@ -15,7 +15,8 @@ use App\Http\Controllers\Mahasiswa\SubmissionController;
 use App\Http\Controllers\Mahasiswa\ServiceHistoryTicketController;
 use App\Http\Controllers\Operator\TicketController as OperatorTicketController;
 use App\Http\Controllers\Admin\SiemController;
-use App\Http\Controllers\Kabid\UsulanKabidController; 
+use App\Http\Controllers\Kabid\UsulanKabidController;
+use App\Http\Controllers\Auth\RegisterController;
 
 /*
 |--------------------------------------------------------------------------
@@ -44,6 +45,14 @@ Route::get('/', function () {
 |--------------------------------------------------------------------------
 */
 Route::middleware('guest')->group(function () {
+
+    // Halaman Register
+    Route::get('/register', function () {
+        return view('auth.register');
+    })->name('register');
+
+    // Proses Register
+    Route::post('/register', [RegisterController::class, 'register']);
 
     // Halaman Login
     Route::get('/login', function () {
@@ -156,7 +165,7 @@ Route::middleware('auth')->group(function () {
 
         //Rute History Tiket
         Route::resource('history', ServiceHistoryTicketController::class);
-        
+
         //Rute Scanner Image
         Route::view('/ai-scanner', 'pages.mahasiswa.layanan.test-scanner')->name('test.scanner');
     });
@@ -167,11 +176,11 @@ Route::middleware('auth')->group(function () {
     |----------------------------------------------------------------------
     */
     Route::middleware('can:kabid-only')->group(function () {
-        
+
         // Rute untuk fitur Usulan Prioritas Tiket
         Route::resource('usulan', UsulanKabidController::class)
-             ->names('kabid.usulan')
-             ->parameters(['usulan' => 'uuid'])
-             ->only(['index', 'create', 'store', 'show', 'destroy']);
+            ->names('kabid.usulan')
+            ->parameters(['usulan' => 'uuid'])
+            ->only(['index', 'create', 'store', 'show', 'destroy']);
     });
-}); 
+});

@@ -34,6 +34,9 @@ return new class extends Migration
             $table->uuid('uuid')->primary();
             $table->foreignUuid('users_id')->constrained('users', 'uuid')->cascadeOnDelete();
             $table->string('nim');
+            $table->string('ktm_path')->nullable()->after('status_akun');
+            $table->string('surat_rekomendasi_path')->nullable()->after('ktm_path');
+            $table->enum('status_akun', ['pending', 'aktif', 'ditolak'])->default('pending')->after('nim');
             $table->timestamps();
         });
 
@@ -93,7 +96,7 @@ return new class extends Migration
         Schema::create('surat_permohonan_izin_penelitian', function (Blueprint $table) {
             $table->uuid('uuid')->primary();
             $table->foreignUuid('tiket_id')->constrained('tiket', 'uuid')->cascadeOnDelete();
-            
+
             $table->string('nama');
             $table->string('tempat_lahir');
             $table->date('tanggal_lahir');
@@ -105,7 +108,7 @@ return new class extends Migration
             $table->string('nomor_ktp')->nullable();
             $table->string('nomor_mahasiswa')->nullable();
             $table->string('nomor_pegawai')->nullable();
-            
+
             $table->string('kegiatan');
             $table->string('dalam_rangka');
             $table->date('tanggal_mulai');
@@ -115,7 +118,7 @@ return new class extends Migration
             $table->string('penanggung_jawab_1');
             $table->string('penanggung_jawab_2')->nullable();
             $table->integer('banyak_peserta');
-            
+
             $table->string('nama_alias')->nullable();
             $table->string('nama_panggilan')->nullable();
             $table->enum('jenis_kelamin', ['Laki-laki', 'Perempuan']);
@@ -132,7 +135,7 @@ return new class extends Migration
             $table->string('ciri_khusus')->nullable();
             $table->string('hobi')->nullable();
             $table->string('no_hp');
-            
+
             $table->timestamps();
         });
 
