@@ -9,13 +9,11 @@ use Illuminate\Support\Facades\Auth;
 
 class ServiceHistoryTicketController extends Controller
 {
-    
     public function index(Request $request)
     {
         
         $query = Tiket::with('layanan')
-            ->where('users_id', Auth::id())
-            ->where('status', 'selesai');
+            ->where('users_id', Auth::id());
 
         if ($request->filled('search')) {
             $search = $request->search;

@@ -1,9 +1,5 @@
-const SubdomainFormHandler = () => {
-    const form = document.getElementById('form-subdomain');
-    const step1 = document.getElementById('step-1');
-    const step2 = document.getElementById('step-2');
-    const indicatorStep1 = document.getElementById('indicator-step-1');
-    const indicatorStep2 = document.getElementById('indicator-step-2');
+const IzinPenelitianFormHandler = () => {
+    const form = document.getElementById('form-penelitian');
 
     if (!form) return;
 
@@ -38,40 +34,48 @@ const SubdomainFormHandler = () => {
             const result = await response.json();
 
             if (response.ok) {
-                step1.classList.add('opacity-0');
-                
-                // Menangkap nomor tiket dari controller dan menampilkannya di UI
-                const nomorTiketElement = document.getElementById('nomor-tiket');
-                if (nomorTiketElement && result.no_tiket) {
-                    nomorTiketElement.textContent = result.no_tiket;
-                }
-                
-                setTimeout(() => {
-                    step1.classList.add('hidden');
-                    step2.classList.remove('hidden');
-                    step2.classList.add('opacity-100');
-                    
-                    updateStepperUI(indicatorStep1, indicatorStep2);
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                    
-                    
-                }, 300);
-            } else {
-                // Menggunakan SweetAlert untuk pesan error validasi/server
+                // ... (Kode sukses biarkan seperti sebelumnya) ...
                 Swal.fire({
-                    icon: 'error',
-                    title: 'Validasi Gagal',
-                    text: result.message || 'Terjadi kesalahan, mohon periksa kembali form Anda.',
+                    icon: 'success',
+                    title: 'Berhasil!',
+                    text: `Permohonan Izin Penelitian dengan nomor tiket ${result.no_tiket || ''} berhasil diajukan.`,
+                    confirmButtonText: 'Ke Riwayat Tiket',
                     confirmButtonColor: '#3085d6',
+                    allowOutsideClick: false
+                }).then((sweetResult) => {
+                    if (sweetResult.isConfirmed) {
+                        window.location.href = '/history';
+                    }
+                });
+            } else {
+                // --- PERUBAHAN DI SINI: Menyusun Error Menjadi List HTML ---
+                let errorHtml = '';
+                
+                if (result.errors) {
+                    errorHtml = '<div style="text-align: left;"><ul class="pl-5 text-sm list-disc text-gray-700">';
+                    Object.values(result.errors).forEach(err => {
+                        // Ambil pesan error pertama dari setiap kolom yang bermasalah
+                        errorHtml += `<li class="mb-1">${err[0]}</li>`; 
+                    });
+                    errorHtml += '</ul></div>';
+                } else {
+                    errorHtml = `<p>${result.message || 'Terjadi kesalahan, mohon periksa kembali form Anda.'}</p>`;
+                }
+
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Periksa Kembali Form Anda',
+                    html: errorHtml, // Menggunakan property 'html', bukan 'text'
+                    confirmButtonColor: '#d33',
+                    confirmButtonText: 'Perbaiki Data'
                 });
             }
         } catch (error) {
             console.error('Error:', error);
-            // Menggunakan SweetAlert untuk pesan error jaringan/sistem
             Swal.fire({
                 icon: 'error',
                 title: 'Sistem Error',
-                text: 'Gagal mengirim data. Pastikan server berjalan dengan baik.',
+                text: 'Gagal mengirim data. Pastikan jaringan stabil atau hubungi administrator.',
                 confirmButtonColor: '#d33',
             });
         } finally {
@@ -81,16 +85,4 @@ const SubdomainFormHandler = () => {
     });
 };
 
-function updateStepperUI(step1, step2) {
-    step1.classList.remove('text-blue-600', 'dark:text-blue-500');
-    step1.classList.add('text-gray-500', 'dark:text-gray-400');
-    step1.querySelector('span').classList.replace('border-blue-600', 'border-gray-500');
-
-    step2.classList.remove('text-gray-500', 'dark:text-gray-400');
-    step2.classList.add('text-blue-600', 'dark:text-blue-500');
-    step2.querySelector('span').classList.replace('border-gray-500', 'border-blue-600');
-}
-
-
-
-document.addEventListener('DOMContentLoaded', SubdomainFormHandler);
+document.addEventListener('DOMContentLoaded', IzinPenelitianFormHandler);

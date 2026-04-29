@@ -34,7 +34,7 @@
                     "route": "dashboard"
                 },
                 {
-                    "name": "Layanan Digital",
+                    "name": "Form Pengajuan",
                     "icon": "ti ti-file-download",
                     "route": "services.index"
                 },

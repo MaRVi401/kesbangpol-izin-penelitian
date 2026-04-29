@@ -106,7 +106,7 @@
                         <h5 class="mb-3 text-xl font-bold tracking-tight text-gray-900 dark:text-white">Email Government
                         </h5>
                         <p class="mb-6 text-sm text-gray-500 dark:text-gray-400 grow">Layanan Email Gov.</p>
-                        <a href="{{ route('services-email-e-gov.index') }}"
+                        <a href="#"
                             class="inline-flex items-center justify-center text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 transition-all">
                             Buka Layanan
                             <svg class="w-4 h-4 ms-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -133,7 +133,7 @@
                         </div>
                         <h5 class="mb-3 text-xl font-bold tracking-tight text-gray-900 dark:text-white">Subdomain</h5>
                         <p class="mb-6 text-sm text-gray-500 dark:text-gray-400 grow">Layanan Subdomain.</p>
-                        <a href="{{ route('service-sub-domain.index') }}"
+                        <a href="#"
                             class="inline-flex items-center justify-center text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 transition-all">
                             Buka Layanan
                             <svg class="w-4 h-4 ms-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -161,7 +161,7 @@
                         <h5 class="mb-3 text-xl font-bold tracking-tight text-gray-900 dark:text-white">Pengembangan Apps
                         </h5>
                         <p class="mb-6 text-sm text-gray-500 dark:text-gray-400 grow">Layanan Pengembangan Aplikasi.</p>
-                        <a href="{{ route('service-app-creation.index') }}"
+                        <a href="#"
                             class="inline-flex items-center justify-center text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 transition-all">
                             Buka Layanan
                             <svg class="w-4 h-4 ms-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -189,7 +189,7 @@
                         <h5 class="mb-3 text-xl font-bold tracking-tight text-gray-900 dark:text-white">Pengaduan SE</h5>
                         <p class="mb-6 text-sm text-gray-500 dark:text-gray-400 grow">Layanan Pengaduan Sistem Elektronik.
                         </p>
-                        <a href="{{ route('service-complaint-system.index') }}"
+                        <a href="#"
                             class="inline-flex items-center justify-center text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 transition-all">
                             Buka Layanan
                             <svg class="w-4 h-4 ms-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">

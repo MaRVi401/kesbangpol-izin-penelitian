@@ -168,11 +168,11 @@ Route::middleware('auth')->group(function () {
         // Route::post('/submission/{uuid}/upload', [SubmissionController::class, 'uploadDocument'])->name('submission.upload');
         // Route::resource('submission', SubmissionController::class);
 
-        // //Rute History Tiket
-        // Route::resource('history', ServiceHistoryTicketController::class);
+        //Rute History Tiket
+        Route::resource('history', ServiceHistoryTicketController::class);
 
-        //Rute Scanner Image
-        Route::view('/ai-scanner', 'pages.mahasiswa.layanan.test-scanner')->name('test.scanner');
+        // //Rute Scanner Image
+        // Route::view('/ai-scanner', 'pages.mahasiswa.layanan.test-scanner')->name('test.scanner');
     });
 
     /*

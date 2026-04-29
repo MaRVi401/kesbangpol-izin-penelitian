@@ -22,13 +22,13 @@ class ServiceController extends Controller
 {
     public function index()
     {
-        // Akan menampilkan form Izin Penelitian
+        
         return view('pages.mahasiswa.surat-izin-penelitian.index');
     }
 
     public function store(Request $request)
     {
-        // 1. Validasi Input berdasarkan skema database
+  
         $validatedData = $request->validate([
             // Identitas Pribadi
             'nama'                  => 'required|string|max:255',
@@ -40,19 +40,19 @@ class ServiceController extends Controller
             'agama'                 => 'required|string|max:255',
             'kebangsaan'            => 'nullable|string|max:255',
             'status_perkawinan'     => 'required|in:Kawin,Belum Kawin',
-            'no_hp'                 => 'required|string|max:20',
+            'no_hp'                 => 'required|digits_between:10,15',
             'alamat_lengkap'        => 'required|string',
             
             // Pas Foto Baru
             'pas_foto'              => 'required|image|mimes:jpeg,png,jpg|max:2048',
             
             // Dokumen & Pekerjaan/Pendidikan
-            'nomor_mahasiswa'       => 'nullable|string|max:50',
-            'nomor_pegawai'         => 'nullable|string|max:50',
+            'nomor_mahasiswa'       => 'nullable|alpha_num|max:50',
+            'nomor_pegawai'         => 'nullable|digits:18',
             'pekerjaan'             => 'nullable|string|max:255',
             'pekerjaan_pendidikan'  => 'required|string|max:255',
             'institusi_pendidikan'  => 'required|string|max:255',
-            'semester'              => 'nullable|string|max:50',
+            'semester'              => 'nullable|integer|min:1|max:14',
             'alamat_institusi'      => 'nullable|string',
             'alamat_kantor'         => 'nullable|string',
             
@@ -68,15 +68,31 @@ class ServiceController extends Controller
             'banyak_peserta'        => 'required|integer|min:1',
             
             // Ciri Fisik (Opsional)
-            'tinggi_badan'          => 'nullable|integer',
+            'tinggi_badan'          => 'nullable|integer|min:50|max:250',
             'bentuk_badan'          => 'nullable|string|max:255',
             'warna_kulit'           => 'nullable|string|max:255',
             'bentuk_rambut'         => 'nullable|string|max:255',
             'bentuk_hidung'         => 'nullable|string|max:255',
             'ciri_khusus'           => 'nullable|string|max:255',
             'hobi'                  => 'nullable|string|max:255',
+        ], [
+            // --- KUSTOMISASI PESAN ERROR ---
+            'no_hp.digits_between'  => 'Kolom No. HP/WhatsApp harus antara 10 hingga 15 digit.',
+            'pas_foto.image'        => 'File pas foto harus berupa gambar.',
+            'pas_foto.max'          => 'Ukuran pas foto tidak boleh lebih dari 2MB.',
+            'nomor_mahasiswa.alpha_num' => 'Nomor Mahasiswa (NIM) hanya boleh berisi huruf dan angka.',
+            'nomor_pegawai.digits'  => 'Nomor Pegawai (NIP) harus tepat 18 digit.',
+            'semester.integer'      => 'Semester harus berupa angka bulat.',
+            'semester.min'          => 'Semester tidak boleh kurang dari 1.',
+            'semester.max'          => 'Semester tidak boleh lebih dari 14.',
+            'tanggal_selesai.after_or_equal' => 'Tanggal Selesai harus sama atau setelah Tanggal Mulai.',
+            'banyak_peserta.min'    => 'Banyak peserta minimal 1 orang.',
+            'tinggi_badan.min'      => 'Tinggi badan minimal 50 cm.',
+            'tinggi_badan.max'      => 'Tinggi badan maksimal 250 cm.',
+            'required'              => 'Kolom :attribute wajib diisi.'
         ]);
 
+        
         DB::beginTransaction();
         try {
             // 2. Proses Konversi & Penyimpanan Foto

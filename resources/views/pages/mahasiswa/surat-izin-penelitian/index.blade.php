@@ -4,20 +4,6 @@
 
 @section('content')
 <div class="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
-    <div class="mb-8 mt-4">
-        <ol class="items-center w-full max-w-2xl mx-auto flex space-x-8 justify-center">
-            <li id="indicator-step-1" class="flex items-center space-x-2.5 text-blue-600 dark:text-blue-500">
-                <span class="flex items-center justify-center w-8 h-8 border border-blue-600 rounded-full shrink-0 dark:border-blue-500">1</span>
-                <span><h3 class="font-medium leading-tight">Formulir Pengajuan</h3></span>
-            </li>
-            <li class="flex-1 h-px bg-gray-300 dark:bg-gray-600"></li>
-            <li id="indicator-step-2" class="flex items-center space-x-2.5 text-gray-500 dark:text-gray-400">
-                <span class="flex items-center justify-center w-8 h-8 border border-gray-500 rounded-full shrink-0 dark:border-gray-400">2</span>
-                <span><h3 class="font-medium leading-tight">Selesai</h3></span>
-            </li>
-        </ol>
-    </div>
-
     <div id="step-1" class="step-content transition-opacity duration-300">
         <form id="form-penelitian" action="{{ route('services.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
@@ -47,7 +33,7 @@
                         </div>
                         <div>
                             <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">No. HP / WhatsApp</label>
-                            <input type="text" name="no_hp" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white" required>
+                            <input type="text" inputmode="numeric" pattern="[0-9]*" minlength="10" maxlength="15" name="no_hp" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white" oninput="this.value = this.value.replace(/[^0-9]/g, '')" required>
                         </div>
                         
                         <div>
@@ -113,15 +99,15 @@
                         </div>
                         <div>
                             <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Semester (Opsional)</label>
-                            <input type="text" name="semester" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                            <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="2" name="semester" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
                         </div>
                         <div>
                             <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nomor Mahasiswa (NIM)</label>
-                            <input type="text" name="nomor_mahasiswa" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                            <input type="text" inputmode="numeric" pattern="[0-9]*" name="nomor_mahasiswa" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
                         </div>
                         <div>
                             <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nomor Pegawai (Opsional)</label>
-                            <input type="text" name="nomor_pegawai" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                            <input type="text" inputmode="numeric" pattern="[0-9]*" minlength="18" maxlength="18" name="nomor_pegawai" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
                         </div>
                         <div class="md:col-span-2">
                             <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Alamat Institusi Kampus</label>
@@ -172,7 +158,7 @@
                         </div>
                         <div>
                             <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Banyak Peserta/Anggota Tim</label>
-                            <input type="number" name="banyak_peserta" min="1" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white" required>
+                            <input type="text" inputmode="numeric" pattern="[0-9]*" name="banyak_peserta" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white" oninput="this.value = this.value.replace(/[^0-9]/g, '')" required>
                         </div>
                     </div>
                 </div>
@@ -187,7 +173,7 @@
                     <div class="grid gap-6 md:grid-cols-4">
                         <div>
                             <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tinggi Badan (cm)</label>
-                            <input type="number" name="tinggi_badan" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                            <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="3" name="tinggi_badan" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
                         </div>
                         <div>
                             <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Bentuk Badan</label>
@@ -222,24 +208,6 @@
                 </div>
             </div>
         </form>       
-    </div>
-
-    <div id="step-2" class="step-content hidden transition-opacity duration-300">
-        <div class="text-center py-10 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 max-w-2xl mx-auto mt-8 shadow-sm">
-            <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 inline-block mb-6 border border-gray-200 dark:border-gray-600">
-                <span class="text-sm text-gray-500 dark:text-gray-400 block mb-1">Nomor Tiket Anda</span>
-                <span class="text-xl font-mono font-bold text-blue-600 dark:text-blue-400" id="nomor-tiket">#Memproses...</span>
-            </div>
-            <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <svg class="w-8 h-8 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-            </div>
-            <h2 class="text-xl font-bold mb-2 text-gray-900 dark:text-white">Permohonan Berhasil Diajukan!</h2>
-            <p class="text-gray-600 dark:text-gray-400 mb-6">Data permohonan izin penelitian telah masuk ke sistem kami.</p>
-            <div class="flex justify-center space-x-4">
-                <a href="{{ route('history.index') }}" class="px-6 py-2.5 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition dark:bg-gray-800 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700">Cek Status Tiket</a>
-                <a href="{{ route('dashboard') }}" class="px-6 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">Kembali ke Dashboard</a>
-            </div>
-        </div>
     </div>
 </div>
 
