@@ -135,12 +135,8 @@ return new class extends Migration
             $table->string('ciri_khusus')->nullable();
             $table->string('hobi')->nullable();
             $table->string('no_hp');
-<<<<<<< HEAD
-
-=======
             $table->string('path_pas_foto')->nullable();
             
->>>>>>> 38d32e1 (membuat model mahasiswa)
             $table->timestamps();
         });
 
