@@ -72,7 +72,7 @@ return new class extends Migration
             $table->string('no_tiket')->unique();
             $table->string('lampiran')->nullable();
             $table->text('deskripsi')->nullable();
-            $table->enum('status', ['draft', 'diajukan', 'Verifikasi kelengkapan', 'verifikasi lengkap', 'verifikasi gagal', 'diterima', 'ditolak']);
+            $table->enum('status', ['draft', 'diajukan', 'verifikasi kelengkapan', 'verifikasi lengkap', 'verifikasi gagal', 'diterima', 'ditolak']);
             $table->timestamps();
         });
 

@@ -3,18 +3,19 @@
 namespace App\Services;
 
 use PhpOffice\PhpWord\TemplateProcessor;
-use App\Models\DetailTiketLayananSubdomain;
+use App\Models\SuratPermohonanIzinPenelitian;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
 
-class WordTemplateServiceSubdomain
+class WordTemplateServiceIzinPenelitian
 {
-    public function generateDokumen(DetailTiketLayananSubdomain $detail, $noTiket)
+    public function generateDokumen(SuratPermohonanIzinPenelitian $detail, $noTiket)
     {
         $disk = Storage::disk('s3'); 
         
-        $minioPath = 'Template-Sub-Domain.docx';
+        // Pastikan Anda mengunggah template ini ke MinIO/S3 Anda
+        $minioPath = 'Template-Izin-Penelitian.docx';
 
         if (!$disk->exists($minioPath)) {
             Log::error("Template MinIO tidak ditemukan: " . $minioPath);
@@ -30,46 +31,68 @@ class WordTemplateServiceSubdomain
 
             $templateProcessor = new TemplateProcessor($tempTemplatePath);
 
-            $noSurat = ($detail->no_surat == '-' || empty($detail->no_surat)) ? $noTiket : $detail->no_surat;
-            $templateProcessor->setValue('no_surat', $noSurat);
+            // 1. Informasi Umum Surat
+            $templateProcessor->setValue('no_tiket', $noTiket);
+            $tanggalSekarang = Carbon::now()->locale('id')->translatedFormat('d F Y');
+            $templateProcessor->setValue('tanggal_cetak', $tanggalSekarang);
+
+            // 2. Identitas Pribadi
+            $templateProcessor->setValue('Nama', $detail->nama);
+            $templateProcessor->setValue('Nama_Alias', $detail->nama_alias ?? '-');
+            $templateProcessor->setValue('Tempat_Lahir', $detail->tempat_lahir);
             
-            $tanggal = Carbon::parse($detail->tanggal)->locale('id')->translatedFormat('d F Y');
-            $templateProcessor->setValue('tanggal_surat', $tanggal);
-            $templateProcessor->setValue('halaman_surat', $detail->halaman ?? '1');
+            $tglLahir = Carbon::parse($detail->tanggal_lahir)->locale('id')->translatedFormat('d F Y');
+            $templateProcessor->setValue('Tanggal_Lahir', $tglLahir);
+            
+            $templateProcessor->setValue('Jenis_Kelamin', $detail->jenis_kelamin);
+            $templateProcessor->setValue('Kebangsaan', $detail->kebangsaan ?? 'Indonesia');
+            $templateProcessor->setValue('Agama', $detail->agama);
+            $templateProcessor->setValue('Status_Perkawinan', $detail->status_perkawinan);
+            $templateProcessor->setValue('Alamat_Lengkap', $detail->alamat_lengkap);
+            $templateProcessor->setValue('No_HP', $detail->no_hp);
 
-            $templateProcessor->setValue('DIP_OPD', $detail->instansi_opd);
-            $templateProcessor->setValue('DIP_bidang_bagian_UPTD', $detail->instansi_bidang);
-            $templateProcessor->setValue('DIP_Alamata', $detail->instansi_alamat); 
-            $templateProcessor->setValue('DIP_No_Telp', $detail->instansi_telp);
-            $templateProcessor->setValue('DIP_email', $detail->instansi_email);
-            $templateProcessor->setValue('DIP_nama_kepala_dinas_bagian', $detail->instansi_nama_kepala); 
+            // 3. Pekerjaan & Pendidikan
+            $templateProcessor->setValue('Pekerjaan_Pendidikan', $detail->pekerjaan_pendidikan);
+            $templateProcessor->setValue('Institusi', $detail->institusi_pendidikan);
+            $templateProcessor->setValue('Semester', $detail->semester ?? '-');
+            $templateProcessor->setValue('Alamat_Institusi', $detail->alamat_institusi ?? '-');
+            $templateProcessor->setValue('No_Mhs', $detail->nomor_mahasiswa ?? '-');
+            $templateProcessor->setValue('No_KTP', $detail->nomor_ktp ?? '-');
 
-            $templateProcessor->setValue('PJA_Nama', $detail->pj_admin_nama);
-            $templateProcessor->setValue('PJA_NIP', $detail->pj_admin_nip);
-            $templateProcessor->setValue('PJA_Jabatan', $detail->pj_admin_jabatan);
-            $templateProcessor->setValue('PJA_Email', $detail->pj_admin_email);
-            $templateProcessor->setValue('PJA_No_Telp', $detail->pj_admin_telp);
+            // 4. Detail Kegiatan
+            $templateProcessor->setValue('Judul_Penelitian', $detail->judul_pembicara);
+            $templateProcessor->setValue('Kegiatan', $detail->kegiatan);
+            $templateProcessor->setValue('Dalam_Rangka', $detail->dalam_rangka);
+            $templateProcessor->setValue('Lokasi', $detail->lokasi_kegiatan);
+            
+            $tglMulai = Carbon::parse($detail->tanggal_mulai)->locale('id')->translatedFormat('d F Y');
+            $tglSelesai = Carbon::parse($detail->tanggal_selesai)->locale('id')->translatedFormat('d F Y');
+            $templateProcessor->setValue('Tanggal_Mulai', $tglMulai);
+            $templateProcessor->setValue('Tanggal_Selesai', $tglSelesai);
+            
+            $templateProcessor->setValue('PJ_1', $detail->penanggung_jawab_1);
+            $templateProcessor->setValue('PJ_2', $detail->penanggung_jawab_2 ?? '-');
+            $templateProcessor->setValue('Jml_Peserta', $detail->banyak_peserta);
 
-            $templateProcessor->setValue('PJT_Nama', $detail->pj_teknis_nama);
-            $templateProcessor->setValue('PJT_Instansi', $detail->pj_teknis_instansi);
-            $templateProcessor->setValue('PJT_Alamat', $detail->pj_teknis_alamat);
-            $templateProcessor->setValue('PJT_Email', $detail->pj_teknis_email);
-            $templateProcessor->setValue('PJT_No_Telp', $detail->pj_teknis_telp);
+            // 5. Ciri Fisik (Opsional)
+            $templateProcessor->setValue('Tinggi', $detail->tinggi_badan ? $detail->tinggi_badan . ' cm' : '-');
+            $templateProcessor->setValue('Bentuk_Badan', $detail->bentuk_badan ?? '-');
+            $templateProcessor->setValue('Warna_Kulit', $detail->warna_kulit ?? '-');
+            $templateProcessor->setValue('Rambut', $detail->bentuk_rambut ?? '-');
+            $templateProcessor->setValue('Ciri_Khusus', $detail->ciri_khusus ?? '-');
 
-            $templateProcessor->setValue('DSB_nama_sub_domain', $detail->subdomain_nama);
-            $templateProcessor->setValue('DSB_alamat_sub_domain', $detail->subdomain_alamat);
-            $templateProcessor->setValue('DSB_Alamat_ip', $detail->subdomain_ip);
-            $templateProcessor->setValue('DSB_Redirect', $detail->subdomain_redirect ?? '-');
-            $templateProcessor->setValue('DSB_deskripsi_singkat', $detail->subdomain_deskripsi);
-            $templateProcessor->setValue('DSB_jenis_layanan', ucwords($detail->subdomain_jenis));
-
-            $tempOutputPath = tempnam(sys_get_temp_dir(), 'Output_Subdomain_');
+            // Simpan file sementara
+            $tempOutputPath = tempnam(sys_get_temp_dir(), 'Output_Izin_Penelitian_');
             $templateProcessor->saveAs($tempOutputPath);
 
-            $fileName = 'Permohonan_Subdomain_' . str_replace(['/', '\\', ' '], '-', $noTiket) . '.docx';
+            // Bersihkan nama file dari karakter terlarang
+            $cleanNoTiket = str_replace(['/', '\\', ' '], '-', $noTiket);
+            $fileName = 'Permohonan_Izin_Penelitian_' . $cleanNoTiket . '.docx';
 
+            // Hapus file template sementara
             unlink($tempTemplatePath);
 
+            // Kembalikan response download
             return response()->download($tempOutputPath, $fileName)->deleteFileAfterSend(true);
 
         } catch (\Exception $e) {
