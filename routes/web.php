@@ -89,7 +89,11 @@ Route::middleware('auth')->group(function () {
     |----------------------------------------------------------------------
     */
     Route::middleware('can:super-admin-only')->group(function () {
-
+        
+        Route::get('user-management/pending-mahasiswa', [UserManagementController::class, 'pendingMahasiswa'])
+            ->name('user-management.pending');
+        Route::post('user-management/activate/{uuid}', [UserManagementController::class, 'activate'])
+            ->name('user-management.activate');
         //User management
         Route::resource('user-management', UserManagementController::class)
             ->names('user-management')
@@ -100,6 +104,7 @@ Route::middleware('auth')->group(function () {
             Route::get('/security-logs', 'securityLogs')->name('security-logs');
             Route::get('/audit-trails', 'auditTrails')->name('audit-trails');
         });
+
     });
 
     /*
@@ -138,33 +143,33 @@ Route::middleware('auth')->group(function () {
 
         Route::resource('services', ServiceController::class);
 
-        // RUTE UNTUK DOWNLOAD Email Gov
-        Route::get('services/email-gov/download/{uuid}', [ServiceEmailGovController::class, 'download'])
-            ->name('email.download');
+        // // RUTE UNTUK DOWNLOAD Email Gov
+        // Route::get('services/email-gov/download/{uuid}', [ServiceEmailGovController::class, 'download'])
+        //     ->name('email.download');
 
-        // Rute baru untuk Email E-Gov
-        Route::resource('services-email-e-gov', ServiceEmailGovController::class);
+        // // Rute baru untuk Email E-Gov
+        // Route::resource('services-email-e-gov', ServiceEmailGovController::class);
 
-        //Rute baru untuk Sub Domain
-        Route::resource('service-sub-domain', ServiceSubDomainController::class);
+        // //Rute baru untuk Sub Domain
+        // Route::resource('service-sub-domain', ServiceSubDomainController::class);
 
-        //RUTE DOWNLOAD SUBDOMAIN
-        Route::get('services/subdomain/download/{uuid}', [ServiceSubDomainController::class, 'download'])
-            ->name('subdomain.download');
+        // //RUTE DOWNLOAD SUBDOMAIN
+        // Route::get('services/subdomain/download/{uuid}', [ServiceSubDomainController::class, 'download'])
+        //     ->name('subdomain.download');
 
-        //Rute baru untuk Pembuatan Apps
-        Route::get('/service-app-creation/download/{uuid}', [ServiceAppsCreationController::class, 'download'])->name('appscreation.download');
-        Route::resource('service-app-creation', ServiceAppsCreationController::class);
+        // //Rute baru untuk Pembuatan Apps
+        // Route::get('/service-app-creation/download/{uuid}', [ServiceAppsCreationController::class, 'download'])->name('appscreation.download');
+        // Route::resource('service-app-creation', ServiceAppsCreationController::class);
 
-        //Rute untuk pengaduan
-        Route::resource('service-complaint-system', ServiceComplaintSystemController::class);
+        // //Rute untuk pengaduan
+        // Route::resource('service-complaint-system', ServiceComplaintSystemController::class);
 
-        //Rute Submission
-        Route::post('/submission/{uuid}/upload', [SubmissionController::class, 'uploadDocument'])->name('submission.upload');
-        Route::resource('submission', SubmissionController::class);
+        // //Rute Submission
+        // Route::post('/submission/{uuid}/upload', [SubmissionController::class, 'uploadDocument'])->name('submission.upload');
+        // Route::resource('submission', SubmissionController::class);
 
-        //Rute History Tiket
-        Route::resource('history', ServiceHistoryTicketController::class);
+        // //Rute History Tiket
+        // Route::resource('history', ServiceHistoryTicketController::class);
 
         //Rute Scanner Image
         Route::view('/ai-scanner', 'pages.mahasiswa.layanan.test-scanner')->name('test.scanner');
