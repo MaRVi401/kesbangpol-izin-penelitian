@@ -19,7 +19,7 @@
     </div>
 
     <div id="step-1" class="step-content transition-opacity duration-300">
-        <form id="form-penelitian" action="{{ route('services.store') }}" method="POST">
+        <form id="form-penelitian" action="{{ route('services.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
             <div class="max-w-5xl mx-auto bg-white dark:bg-gray-800 p-8 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
                 <div class="border-b border-gray-200 dark:border-gray-700 pb-4 mb-8">
@@ -86,6 +86,12 @@
                             <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Alamat Lengkap</label>
                             <textarea name="alamat_lengkap" rows="2" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white" required></textarea>
                         </div>
+
+                        <div class="md:col-span-3">
+                            <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Pas Foto</label>
+                            <input type="file" name="pas_foto" accept="image/*" class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:text-white" required>
+                            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">File akan otomatis dikonversi ke format .webp (Maks. 2MB).</p>
+                        </div>
                     </div>
                 </div>
 
@@ -112,10 +118,6 @@
                         <div>
                             <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nomor Mahasiswa (NIM)</label>
                             <input type="text" name="nomor_mahasiswa" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-                        </div>
-                        <div>
-                            <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nomor KTP (NIK)</label>
-                            <input type="text" name="nomor_ktp" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
                         </div>
                         <div>
                             <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nomor Pegawai (Opsional)</label>
@@ -212,12 +214,14 @@
 
                 <div class="flex justify-end pt-6 border-t border-gray-200 dark:border-gray-700">
                     <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                        <svg class="w-5 h-5 mr-2 -ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
+                        <svg class="w-5 h-5 mr-2 -ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+                        </svg>
                         Kirim Permohonan
                     </button>
                 </div>
             </div>
-        </form>
+        </form>       
     </div>
 
     <div id="step-2" class="step-content hidden transition-opacity duration-300">

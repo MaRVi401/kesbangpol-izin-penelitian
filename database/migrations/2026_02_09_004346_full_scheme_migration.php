@@ -105,7 +105,6 @@ return new class extends Migration
             $table->string('institusi_pendidikan');
             $table->text('alamat_kantor')->nullable();
             $table->text('alamat_institusi')->nullable();
-            $table->string('nomor_ktp')->nullable();
             $table->string('nomor_mahasiswa')->nullable();
             $table->string('nomor_pegawai')->nullable();
 
