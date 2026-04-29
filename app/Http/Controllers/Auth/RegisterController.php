@@ -8,6 +8,8 @@ use App\Models\Mahasiswa;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+use Intervention\Image\Laravel\Facades\Image;
 
 class RegisterController extends Controller
 {
@@ -20,14 +22,15 @@ class RegisterController extends Controller
             'password' => 'required|string|min:8|confirmed',
             'no_wa' => 'required|string|max:15',
             'alamat' => 'required|string',
-            'nim' => 'required|string|max:20',
-            'ktm' => 'required|image|mimes:jpg,png,jpeg|max:2048',
+            'nim' => 'required|string|max:20|unique:mahasiswa,nim',
+            'ktm' => 'required|image|mimes:jpg,png,jpeg|max:5120',
             'surat_rekomendasi' => 'required|mimes:pdf|max:2048',
         ]);
 
+        $uploadedFiles = [];
         DB::beginTransaction();
+
         try {
-            // 1. Simpan ke tabel Users (sesuaikan kolom 'nama')
             $user = User::create([
                 'nama' => $request->name,
                 'username' => $request->username,
@@ -38,13 +41,25 @@ class RegisterController extends Controller
                 'alamat' => $request->alamat,
             ]);
 
-            // 2. Handle Upload File
-            $pathKtm = $request->file('ktm')->store('verifikasi/ktm', 'public');
-            $pathSurat = $request->file('surat_rekomendasi')->store('verifikasi/rekomendasi', 'public');
+            // --- PROSES KOMPRESI GAMBAR KTM KE WEBP ---
+            $fileKtm = $request->file('ktm');
+            $fileNameKtm = 'KTM_' . $request->nim . '_' . time() . '.webp';
+            $pathKtm = 'verifikasi/ktm/' . $fileNameKtm;
 
-            // 3. Simpan ke tabel Mahasiswa
+            // Baca gambar, ubah ke WebP, dan kompres kualitas ke 70-80% (biasanya cukup untuk < 200kb)
+            $img = Image::read($fileKtm)
+                ->scale(width: 1200) // Resize lebar ke 1200px agar ukuran file turun drastis
+                ->encodeByExtension('webp', quality: 75); 
+
+            Storage::disk('public')->put($pathKtm, (string) $img);
+            $uploadedFiles[] = $pathKtm;
+
+            // --- PROSES SURAT REKOMENDASI (PDF TETAP PDF) ---
+            $pathSurat = $request->file('surat_rekomendasi')->store('verifikasi/rekomendasi', 'public');
+            $uploadedFiles[] = $pathSurat;
+
             Mahasiswa::create([
-                'users_id' => $user->uuid, // Menggunakan uuid sesuai schema kamu
+                'users_id' => $user->uuid, 
                 'nim' => $request->nim,
                 'ktm_path' => $pathKtm,
                 'surat_rekomendasi_path' => $pathSurat,
@@ -52,11 +67,14 @@ class RegisterController extends Controller
             ]);
 
             DB::commit();
-            return redirect('/login')->with('success', 'Registrasi berhasil. Silakan tunggu verifikasi admin.');
+            return redirect('/login')->with('success', 'Registrasi berhasil.');
+
         } catch (\Exception $e) {
             DB::rollback();
-            // Log error jika perlu: Log::error($e->getMessage());
-            return back()->with('error', 'Gagal mendaftar: ' . $e->getMessage());
+            foreach ($uploadedFiles as $file) {
+                Storage::disk('public')->delete($file);
+            }
+            return back()->with('error', 'Gagal: ' . $e->getMessage());
         }
     }
 }
