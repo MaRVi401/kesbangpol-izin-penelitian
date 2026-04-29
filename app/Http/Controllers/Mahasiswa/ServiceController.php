@@ -47,7 +47,6 @@ class ServiceController extends Controller
             'pas_foto'              => 'required|image|mimes:jpeg,png,jpg|max:2048',
             
             // Dokumen & Pekerjaan/Pendidikan
-            'nomor_ktp'             => 'nullable|string|max:50',
             'nomor_mahasiswa'       => 'nullable|string|max:50',
             'nomor_pegawai'         => 'nullable|string|max:50',
             'pekerjaan'             => 'nullable|string|max:255',
