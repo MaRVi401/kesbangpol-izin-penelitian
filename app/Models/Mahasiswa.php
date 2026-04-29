@@ -15,14 +15,11 @@ class Mahasiswa extends Model
     protected $keyType = 'string';
 
     protected $fillable = [
-        'users_id',
-        'status_akun',
+        'users_id', 
+        'nim',
         'ktm_path',
-        'surat_rekomendasi_path'
-    ];
-
-    protected $casts = [
-        'is_suspicious' => 'boolean',
+        'surat_rekomendasi_path',
+        'status_akun'
     ];
 
     public function user()

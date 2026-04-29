@@ -35,19 +35,9 @@
                     "route": "services.index"
                 },
                 {
-                    "name": "Pengajuan tiket",
-                    "icon": "ti ti-ticket",
-                    "route": "submission.index"
-                },
-                {
                     "name" : "Riwayat Status Tiket",
                     "icon" : "ti ti-clock",
-                    "route": "history.index" 
-                },
-                {
-                    "name" : "Scan Image and crop",
-                    "icon" : "ti ti-scan",
-                    "route": "test.scanner"
+                    "route": "history.index"
                 }
             ]
         },
