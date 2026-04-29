@@ -70,7 +70,7 @@ class DashboardKabidSeeder extends Seeder
 
         // 4. Buat 50 Data Tiket Acak
         $statuses = [
-            'draft', 'diajukan', 'Verifikasi kelengkapan', 
+            'draft', 'diajukan', 'verifikasi kelengkapan', 
             'verifikasi lengkap', 'verifikasi gagal', 'diterima', 'ditolak'
         ];
 

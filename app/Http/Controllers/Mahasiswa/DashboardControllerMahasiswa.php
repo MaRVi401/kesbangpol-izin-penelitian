@@ -51,7 +51,7 @@ class DashboardControllerMahasiswa extends Controller
             ->take(5)
             ->get();
 
-        return view('pages.pengguna-asn.dashboard', compact(
+        return view('pages.mahasiswa.dashboard', compact(
             'totalDiajukan', 
             'totalDiproses', 
             'totalSelesai', 
