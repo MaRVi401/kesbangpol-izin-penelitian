@@ -135,7 +135,12 @@ return new class extends Migration
             $table->string('ciri_khusus')->nullable();
             $table->string('hobi')->nullable();
             $table->string('no_hp');
+<<<<<<< HEAD
 
+=======
+            $table->string('path_pas_foto')->nullable();
+            
+>>>>>>> 38d32e1 (membuat model mahasiswa)
             $table->timestamps();
         });
 
@@ -161,10 +166,18 @@ return new class extends Migration
             $table->string('ip_address', 45)->nullable();
             $table->timestamps();
         });
+        
+        Schema::create('penandatangan_surat', function (Blueprint $table) {
+            $table->uuid('uuid')->primary();
+            $table->string('nama');
+            $table->string('nip');
+            $table->timestamps();
+        });
     }
 
     public function down(): void
     {
+        Schema::dropIfExists('penandatangan_surat');
         Schema::dropIfExists('surat_permohonan_izin_penelitian');
         Schema::dropIfExists('komentar_tiket');
         Schema::dropIfExists('riwayat_status_tiket');
