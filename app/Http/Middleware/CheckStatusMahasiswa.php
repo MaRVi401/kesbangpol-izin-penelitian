@@ -17,9 +17,16 @@ class CheckStatusMahasiswa
     public function handle(Request $request, Closure $next)
     {
         if (Auth::check() && Auth::user()->role === 'mahasiswa') {
-            if (Auth::user()->mahasiswa->status_akun !== 'aktif') {
+            $status = Auth::user()->mahasiswa->status_akun;
+
+            if ($status !== 'aktif') {
                 Auth::logout();
-                return redirect('/login')->withErrors(['username' => 'Akun Anda belum aktif.']);
+
+                $message = ($status === 'ditolak')
+                    ? 'Pendaftaran Anda ditolak. Hubungi admin.'
+                    : 'Akun Anda belum aktif.';
+
+                return redirect('/login')->withErrors(['username' => $message]);
             }
         }
         return $next($request);
