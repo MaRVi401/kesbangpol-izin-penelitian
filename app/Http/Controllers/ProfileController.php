@@ -13,17 +13,23 @@ use App\Models\JejakAudit;
 class ProfileController extends Controller
 {
     /**
-     * Menampilkan halaman edit profil dengan data NIP.
+     * Menampilkan halaman edit profil dengan data identitas dinamis.
      */
     public function edit()
     {
         /** @var User $user */
         $user = Auth::user();
 
+        // Mengambil relasi berdasarkan role (contoh: operator, mahasiswa)
         $roleRelation = Str::camel($user->role);
-        $nip = $user->$roleRelation ? $user->$roleRelation->nip : '-';
 
-        return view('pages.edit-profile', compact('user', 'nip'));
+        // Tentukan Label secara dinamis
+        $labelIdentitas = ($user->role === 'mahasiswa') ? 'NIM' : 'NIP';
+
+        // Ambil nilai identitas dari relasi
+        $identitas = $user->$roleRelation ? ($user->$roleRelation->nip ?? $user->$roleRelation->nim ?? '-') : '-';
+
+        return view('pages.edit-profile', compact('user', 'labelIdentitas', 'identitas'));
     }
 
     /**
@@ -85,6 +91,7 @@ class ProfileController extends Controller
             }
 
             $user->save();
+
             if ($hasNewFile && $oldAvatar && Storage::disk('s3')->exists($oldAvatar)) {
                 Storage::disk('s3')->delete($oldAvatar);
             }

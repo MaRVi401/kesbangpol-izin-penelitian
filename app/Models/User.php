@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
+
 class User extends Authenticatable
 {
     use HasFactory, Notifiable, HasUuids;
@@ -48,18 +49,18 @@ class User extends Authenticatable
     {
         return $this->hasOne(SuperAdmin::class, 'users_id', 'uuid');
     }
-    
+
     // Perubahan dilakukan di sini: penggunaAsn diubah menjadi mahasiswa
     public function mahasiswa()
     {
         return $this->hasOne(Mahasiswa::class, 'users_id', 'uuid');
     }
-    
+
     public function kabid()
     {
         return $this->hasOne(Kabid::class, 'users_id', 'uuid');
     }
-    
+
     public function operator()
     {
         return $this->hasOne(Operator::class, 'users_id', 'uuid');
@@ -69,7 +70,7 @@ class User extends Authenticatable
     {
         return $this->hasMany(Tiket::class, 'users_id', 'uuid');
     }
-    
+
     public function tiketDitangani()
     {
         return $this->hasMany(Tiket::class, 'petugas_id', 'uuid');
