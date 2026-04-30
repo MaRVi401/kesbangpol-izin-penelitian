@@ -110,7 +110,7 @@
     <div>
         <h4 class="text-md font-bold text-gray-900 dark:text-white border-b border-gray-200 dark:border-gray-700 pb-2 mb-4">4. Pas Foto Pemohon</h4>
         <div class="flex justify-start">
-            <img src="{{ Storage::url($detail->path_pas_foto) }}" alt="Pas Foto" class="w-32 h-40 object-cover rounded-lg border border-gray-300 shadow-sm">
+            <img src="{{ url('/storage/private/private/pas_foto/' . $detail->path_pas_foto) }}" alt="Pas Foto" class="w-32 h-40 object-cover rounded-lg border border-gray-300 shadow-sm">
         </div>
     </div>
     @endif

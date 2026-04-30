@@ -167,6 +167,6 @@
     </div>
 
     @push('scripts')
-        @vite('resources/js/submission.js')
+        @vite('resources/js/detail-surat.js')
     @endpush
 @endsection
