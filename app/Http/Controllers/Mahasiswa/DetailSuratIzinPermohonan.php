@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\PenggunaAsn;
+namespace App\Http\Controllers\Mahasiswa;
 
 use App\Http\Controllers\Controller;
 use App\Models\Tiket;
@@ -12,7 +12,7 @@ use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver;
 use App\Models\JejakAudit;
 
-class SubmissionController extends Controller
+class DetailSuratIzinPermohonan extends Controller
 {
     public function index(Request $request)
     {
@@ -36,7 +36,7 @@ class SubmissionController extends Controller
 
         $tickets = $query->latest()->paginate(10);
 
-        return view('pages.pengguna-asn.submission.index', compact('tickets'));
+        return view('pages.mahasiswa.DetailSuratIzin.index', compact('tickets'));
     }
 
     public function show($uuid)
@@ -93,52 +93,7 @@ class SubmissionController extends Controller
 
         $ticket->delete();
 
-        return redirect()->route('submission.index')->with('success', 'Tiket dan lampiran dokumen berhasil dihapus.');
+        return redirect()->route('detail.index')->with('success', 'Tiket dan lampiran dokumen berhasil dihapus.');
     }
 
-    public function uploadDocument(Request $request, $uuid)
-    {
-        $request->validate([
-            'file_surat' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
-        ], [
-            'file_surat.required' => 'Dokumen wajib diunggah.',
-            'file_surat.mimes'   => 'Format dokumen harus berupa PDF.',
-            'file_surat.max'      => 'Ukuran file maksimal adalah 2 MB.',
-        ]);
-
-        $ticket = Tiket::where('uuid', $uuid)->firstOrFail();
-
-        if ($request->hasFile('file_surat')) {
-            $file = $request->file('file_surat');
-            $filename = Str::uuid() . '.webp';
-
-            $manager = new ImageManager(new Driver());
-
-            $image = $manager->read($file->getRealPath());
-
-            $encodedImage = $image->toWebp(80);
-
-            $path = 'lampiran_tiket/' . $filename;
-
-            Storage::disk('s3')->put($path, $encodedImage->toString());
-
-            $ticket->lampiran = $path;
-            $ticket->status = 'diajukan';
-            $ticket->petugas_id = null;
-            $ticket->save();
-
-            JejakAudit::create([
-                'users_id' => Auth::id(),
-                'aksi' => 'update',
-                'nama_tabel' => 'tiket',
-                'record_id' => $ticket->uuid,
-                'data_lama' => ['lampiran' => null, 'status' => 'belum diajukan'],
-                'data_baru' => ['lampiran' => $path, 'status' => 'diajukan'],
-                'ip_address' => request()->ip()
-            ]);
-            return back()->with('success', 'Dokumen Gambar berhasil diunggah ke MinIO!');
-        }
-
-        return back()->with('error', 'Terjadi kesalahan saat mengunggah dokumen.');
-    }
 }

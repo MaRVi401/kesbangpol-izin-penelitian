@@ -15,8 +15,8 @@ use App\Http\Controllers\FileController;
 // use App\Http\Controllers\Mahasiswa\ServiceSubDomainController;
 // use App\Http\Controllers\Mahasiswa\ServiceAppsCreationController;
 // use App\Http\Controllers\Mahasiswa\ServiceComplaintSystemController;
-// use App\Http\Controllers\Mahasiswa\SubmissionController;
-// use App\Http\Controllers\Mahasiswa\ServiceHistoryTicketController;
+use App\Http\Controllers\Mahasiswa\DetailSuratIzinPermohonan;
+use App\Http\Controllers\Mahasiswa\ServiceHistoryTicketController;
 // use App\Http\Controllers\Mahasiswa\ServiceEmailGovController;
 
 /*
@@ -187,11 +187,7 @@ Route::get('/user/avatar/{filename}', function ($filename) {
 
         // //Rute untuk pengaduan
         // Route::resource('service-complaint-system', ServiceComplaintSystemController::class);
-
-        // //Rute Submission
-        // Route::post('/submission/{uuid}/upload', [SubmissionController::class, 'uploadDocument'])->name('submission.upload');
-        // Route::resource('submission', SubmissionController::class);
-
+        Route::resource('detail', DetailSuratIzinPermohonan::class);
         //Rute History Tiket
         // Route::resource('history', ServiceHistoryTicketController::class);
 

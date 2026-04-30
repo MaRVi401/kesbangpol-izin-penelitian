@@ -1,6 +1,6 @@
 @extends('layouts.main')
 
-@section('title', 'Riwayat Status Tiket')
+@section('title', 'Daftar Tiket')
 
 @section('content')
     <div class="p-4 mt-14">
@@ -10,8 +10,7 @@
                     <a href="{{ route('dashboard') }}"
                         class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white transition-colors">
                         <svg class="w-3 h-3 me-2.5" fill="currentColor" viewBox="0 0 20 20">
-                            <path
-                                d="m19.707 9.293-2-2-7-7a1 1 0 0 0-1.414 0l-7 7-2 2a1 1 0 0 0 1.414 1.414L2 10.414V18a2 2 0 0 0 2 2h3a1 1 0 0 0 1-1v-4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v4a1 1 0 0 0 1 1h3a2 2 0 0 0 2-2v-7.586l.293.293a1 1 0 0 0 1.414-1.414Z" />
+                            <path d="m19.707 9.293-2-2-7-7a1 1 0 0 0-1.414 0l-7 7-2 2a1 1 0 0 0 1.414 1.414L2 10.414V18a2 2 0 0 0 2 2h3a1 1 0 0 0 1-1v-4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v4a1 1 0 0 0 1 1h3a2 2 0 0 0 2-2v-7.586l.293.293a1 1 0 0 0 1.414-1.414Z" />
                         </svg>
                         Home
                     </a>
@@ -22,40 +21,38 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                         </svg>
                         <span class="ms-1 text-sm font-medium text-gray-500 md:ms-2 dark:text-gray-500">
-                            Riwayat Tiket
+                            Daftar Tiket
                         </span>
                     </div>
                 </li>
             </ol>
         </nav>
+
         <div class="flex flex-col md:flex-row items-center justify-between mb-6">
-            <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Riwayat Status Tiket</h2>
+            <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Daftar Tiket</h2>
         </div>
         <hr class="mb-6 border-gray-200 dark:border-gray-700">
 
         <div class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 mb-6">
             <div class="w-full md:w-1/2">
-                <form action="{{ route('history.index') }}" method="GET" class="flex flex-col md:flex-row gap-3 w-full">
+                <form action="{{ route('detail.index') }}" method="GET" class="flex flex-col md:flex-row gap-3 w-full">
                     <div class="relative w-full">
                         <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                             <svg class="w-5 h-5 text-gray-500 dark:text-gray-400" fill="currentColor" viewbox="0 0 20 20">
-                                <path fill-rule="evenodd"
-                                    d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
-                                    clip-rule="evenodd" />
+                                <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
                             </svg>
                         </div>
 
                         <input type="text" name="search" id="simple-search" value="{{ request('search') }}"
                             class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 pr-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
-                            placeholder="Cari riwayat tiket...">
+                            placeholder="Cari tiket...">
 
                         @if (request('search'))
-                            <a href="{{ route('history.index') }}"
+                            <a href="{{ route('detail.index') }}"
                                 class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-red-500 transition-colors"
                                 title="Bersihkan Pencarian">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M6 18L18 6M6 6l12 12" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                                 </svg>
                             </a>
                         @endif
@@ -70,9 +67,9 @@
                     <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                         <tr>
                             <th scope="col" class="px-6 py-4 font-bold text-gray-900 dark:text-white w-16">No</th>
-                            <th scope="col" class="px-6 py-4 font-bold">Tiket</th>
+                            <th scope="col" class="px-6 py-4 font-bold">No. Tiket</th>
                             <th scope="col" class="px-6 py-4 font-bold">Layanan</th>
-                            <th scope="col" class="px-6 py-4 font-bold text-center">Tanggal Selesai</th>
+                            <th scope="col" class="px-6 py-4 font-bold text-center">Terakhir Diperbarui</th>
                             <th scope="col" class="px-6 py-4 font-bold text-center">Status</th>
                             <th scope="col" class="px-6 py-4 text-right font-bold">Aksi</th>
                         </tr>
@@ -88,7 +85,7 @@
                                         {{ $ticket->no_tiket ?? '-' }}
                                     </span>
                                 </td>
-                                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                <td class="px-6 py-4">
                                     <div class="flex items-center gap-3">
                                         <div class="p-2 bg-blue-50 dark:bg-blue-900/20 rounded-lg text-blue-600 dark:text-blue-400">
                                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -99,37 +96,31 @@
                                             {{ $ticket->layanan->nama ?? 'Layanan Tidak Ditemukan' }}
                                         </span>
                                     </div>
-                                </th>
+                                </td>
                                 <td class="px-6 py-4 text-center">
                                     <span class="text-sm text-gray-600 dark:text-gray-400">
                                         {{ $ticket->updated_at->format('d M Y, H:i') }}
                                     </span>
                                 </td>
-                               <td class="px-6 py-4 text-center">
+                                <td class="px-6 py-4 text-center">
                                     @php
-                                        // Menentukan warna badge berdasarkan status
                                         $statusColors = [
-                                            'draft'                  => 'bg-gray-100 text-gray-800 border-gray-300 dark:bg-gray-900/30 dark:text-gray-400 dark:border-gray-800',
+                                            'belum diajukan'         => 'bg-gray-100 text-gray-800 border-gray-300 dark:bg-gray-900/30 dark:text-gray-400 dark:border-gray-800',
                                             'diajukan'               => 'bg-blue-100 text-blue-800 border-blue-300 dark:bg-blue-900/30 dark:text-blue-400 dark:border-blue-800',
-                                            'verifikasi kelengkapan' => 'bg-yellow-100 text-yellow-800 border-yellow-300 dark:bg-yellow-900/30 dark:text-yellow-400 dark:border-yellow-800',
-                                            'verifikasi lengkap'     => 'bg-indigo-100 text-indigo-800 border-indigo-300 dark:bg-indigo-900/30 dark:text-indigo-400 dark:border-indigo-800',
-                                            'verifikasi gagal'       => 'bg-red-100 text-red-800 border-red-300 dark:bg-red-900/30 dark:text-red-400 dark:border-red-800',
-                                            'diterima'               => 'bg-green-100 text-green-800 border-green-300 dark:bg-green-900/30 dark:text-green-400 dark:border-green-800',
+                                            'ditangani'              => 'bg-indigo-100 text-indigo-800 border-indigo-300 dark:bg-indigo-900/30 dark:text-indigo-400 dark:border-indigo-800',
+                                            'selesai'                => 'bg-green-100 text-green-800 border-green-300 dark:bg-green-900/30 dark:text-green-400 dark:border-green-800',
                                             'ditolak'                => 'bg-red-100 text-red-800 border-red-300 dark:bg-red-900/30 dark:text-red-400 dark:border-red-800',
                                         ];
-                                        
-                                        // Ambil kelas warna sesuai status tiket, jika tidak ada gunakan default abu-abu
-                                        $colorClass = $statusColors[$ticket->status] ?? $statusColors['draft'];
+                                        $colorClass = $statusColors[$ticket->status] ?? 'bg-gray-100 text-gray-800 border-gray-300';
                                     @endphp
-                                    
                                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold border shadow-sm {{ $colorClass }}">
                                         {{ ucwords($ticket->status) }}
                                     </span>
                                 </td>
                                 <td class="px-6 py-4 text-right">
                                     <div class="flex items-center justify-end gap-2">
-                                        <a href="#"
-                                            class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-green-600 rounded-lg hover:bg-green-700 focus:ring-4 focus:outline-none focus:ring-green-300 dark:bg-green-500 dark:hover:bg-green-600 dark:focus:ring-green-800 transition-all shadow-sm"
+                                        <a href="{{ route('detail.show', $ticket->uuid) }}"
+                                            class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-500 dark:hover:bg-blue-600 dark:focus:ring-blue-800 transition-all shadow-sm"
                                             title="Lihat Detail Tiket">
                                             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
@@ -137,7 +128,7 @@
                                             </svg>
                                             Lihat
                                         </a>
-                                        <form action="#" method="POST" class="inline-block">
+                                        <form action="{{ route('detail.destroy', $ticket->uuid) }}" method="POST" class="inline-block">
                                             @csrf
                                             @method('DELETE')
                                             <button type="button" class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-red-600 rounded-lg hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 dark:bg-red-500 dark:hover:bg-red-600 dark:focus:ring-red-900 transition-all shadow-sm btn-delete" title="Hapus Tiket">
@@ -155,21 +146,10 @@
                                 <td colspan="6" class="px-6 py-12 text-center">
                                     <div class="flex flex-col items-center justify-center">
                                         <p class="text-gray-500 dark:text-gray-400 font-medium">
-                                            @if(request('search'))
-                                                Riwayat tiket dengan kata kunci tersebut tidak ditemukan.
-                                            @else
-                                                Belum ada riwayat tiket yang selesai.
-                                            @endif
+                                            {{ request('search') ? 'Tiket tidak ditemukan.' : 'Belum ada tiket yang terdaftar.' }}
                                         </p>
-
                                         @if(request('search'))
-                                            <a href="{{ route('history.index') }}"
-                                                class="mt-4 text-sm text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-2">
-                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                                                </svg>
-                                                Tampilkan semua riwayat
-                                            </a>
+                                            <a href="{{ route('detail.index') }}" class="mt-4 text-sm text-blue-600 dark:text-blue-400 hover:underline">Tampilkan semua tiket</a>
                                         @endif
                                     </div>
                                 </td>
@@ -178,7 +158,6 @@
                     </tbody>
                 </table>
             </div>
-            
             @if($tickets->hasPages())
                 <div class="p-4 border-t border-gray-200 dark:border-gray-700">
                     {{ $tickets->appends(['search' => request('search')])->links() }}

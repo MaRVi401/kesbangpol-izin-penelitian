@@ -72,50 +72,7 @@
             @endif
         @endif
 
-        @if(!$isPengaduan)
-            @if(($ticket->status == 'belum diajukan' && empty($ticket->lampiran)) || $ticket->status == 'ditolak')
-                
-                <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 mb-8 text-center">
-                    <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2">Unggah Dokumen Tindak Lanjut</h3>
-                    <p class="text-sm text-gray-500 dark:text-gray-400 mb-6">Unggah dokumen persuratan yang telah ditandatangani dan dicap basah di bawah ini.</p>
-
-                    @if($ticket->status == 'ditolak')
-                    <div class="mb-6 p-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert">
-                        <span class="font-medium">Perhatian!</span> Pengajuan ini sebelumnya ditolak. Silakan periksa kembali dan unggah ulang dokumen perbaikan.
-                    </div>
-                    @endif
-
-                    <div class="flex flex-col justify-center items-center gap-6">
-                        <div class="w-full max-w-md text-center">
-                            <form action="{{ route('submission.upload', $ticket->uuid) }}" method="POST" enctype="multipart/form-data" class="flex flex-col gap-4">
-                                @csrf
-                                
-                                <div class="text-left w-full">
-                                    <input class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 p-2" 
-                                           id="file_surat" name="file_surat" type="file" accept="image/jpeg,image/png,image/jpg" required onchange="previewUpload(this)">
-                                    <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Format Gambar PNG, JPEG, JPG (Maksimal 2MB)</p>
-                                </div>
-
-                                <button type="submit" class="inline-flex items-center justify-center w-full px-5 py-2.5 text-sm font-medium text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 transition-all shadow-sm">
-                                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
-                                    Upload Dokumen
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-                    
-                    <div id="file-preview-container" class="mt-6 flex justify-center"></div>
-                </div>
-
-            @else
-                <div class="bg-green-50 dark:bg-green-900/20 p-6 rounded-xl shadow-sm border border-green-200 dark:border-green-800/50 mb-8 text-center flex flex-col items-center justify-center">
-                    <svg class="w-12 h-12 text-green-500 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                    <h3 class="text-lg font-bold text-green-800 dark:text-green-400 mb-1">Dokumen Telah Diunggah</h3>
-                    <p class="text-sm text-green-700 dark:text-green-500 mb-4">Dokumen tindak lanjut untuk tiket ini sudah berhasil diterima oleh sistem.</p>
-                </div>
-            @endif
-        @endif
-
+       
         <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden mb-8">
             <div class="bg-gray-50 dark:bg-gray-700 border-b border-gray-200 dark:border-gray-600 p-4">
                 <h3 class="text-lg font-bold text-gray-900 dark:text-white">Detail Formulir Pengajuan</h3>
