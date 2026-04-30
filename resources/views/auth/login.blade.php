@@ -5,9 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Login - E-Gov Kominfo</title>
+    <title>Login - SIREKIPEMA</title>
     <link rel="icon" type="image" href="{{ asset('assets/images/landingPages/logo-kabSubang.webp') }}">
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/login.js'])
 </head>
 
 <body class="bg-gray-50 dark:bg-gray-900">
@@ -16,7 +16,7 @@
             <a href="/" class="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white">
                 <img class="w-10 h-auto mr-2" src="{{ asset('assets/images/landingPages/logo-kabSubang.webp') }}"
                     alt="logo-KabSubang">
-                E-Gov KOMINFO
+                SIREKIPEMA
             </a>
             <div
                 class="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
@@ -120,6 +120,5 @@
         </div>
     </section>
 </body>
-@vite('resources/js/login.js')
 
 </html>
