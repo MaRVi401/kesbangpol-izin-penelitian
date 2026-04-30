@@ -72,7 +72,7 @@ class RegisterController extends Controller
         } catch (\Exception $e) {
             DB::rollback();
             foreach ($uploadedFiles as $file) {
-                Storage::disk('public')->delete($file);
+                Storage::disk('local')->delete($file);
             }
             return back()->with('error', 'Gagal: ' . $e->getMessage());
         }
