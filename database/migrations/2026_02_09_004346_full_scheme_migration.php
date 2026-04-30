@@ -101,7 +101,7 @@ return new class extends Migration
             $table->string('tempat_lahir');
             $table->date('tanggal_lahir');
             $table->string('pekerjaan_pendidikan');
-            $table->integer('semester')->nullable(); 
+            $table->integer('semester')->nullable();
             $table->string('institusi_pendidikan');
             $table->text('alamat_kantor')->nullable();
             $table->text('alamat_institusi')->nullable();
@@ -135,7 +135,7 @@ return new class extends Migration
             $table->string('hobi')->nullable();
             $table->string('no_hp');
             $table->string('path_pas_foto')->nullable();
-            
+
             $table->timestamps();
         });
 
@@ -161,7 +161,7 @@ return new class extends Migration
             $table->string('ip_address', 45)->nullable();
             $table->timestamps();
         });
-        
+
         Schema::create('penandatangan_surat', function (Blueprint $table) {
             $table->uuid('uuid')->primary();
             $table->string('nama');
