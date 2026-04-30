@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Login - E-Gov Kominfo</title>
+    <link rel="icon" type="image" href="{{ asset('assets/images/landingPages/logo-kabSubang.webp') }}">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
@@ -96,7 +97,7 @@
                         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mt-6">
                             <p class="text-sm font-light text-gray-500 dark:text-gray-400">
                                 Belum punya akun?
-                                <a href="#"
+                                <a href="{{ route('register') }}"
                                     class="font-medium text-blue-600 hover:underline dark:text-blue-500">Daftar!</a>
                             </p>
 
