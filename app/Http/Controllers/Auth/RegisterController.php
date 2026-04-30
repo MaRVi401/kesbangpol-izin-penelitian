@@ -21,7 +21,7 @@ class RegisterController extends Controller
             'username' => 'required|string|max:255|unique:users',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
-            'no_wa' => 'required|string|max:15',
+            'no_wa' => 'required|regex:/^[0-9]+$/|min:10|max:15',
             'alamat' => 'required|string',
             'nim' => 'required|string|max:20|unique:mahasiswa,nim',
             'ktm' => 'required|image|mimes:jpg,png,jpeg|max:5120',
@@ -55,7 +55,7 @@ class RegisterController extends Controller
 
             $img = Image::read($fileKtm)
                 ->scale(width: 1200)
-                ->encodeByExtension('webp', quality: 75); 
+                ->encodeByExtension('webp', quality: 75);
 
             Storage::disk('local')->put($pathKtm, (string) $img);
             $uploadedFiles[] = $pathKtm;
@@ -65,7 +65,7 @@ class RegisterController extends Controller
             $uploadedFiles[] = $pathSurat;
 
             Mahasiswa::create([
-                'users_id' => $user->uuid, 
+                'users_id' => $user->uuid,
                 'nim' => $request->nim,
                 'ktm_path' => $pathKtm,
                 'surat_rekomendasi_path' => $pathSurat,
@@ -74,7 +74,6 @@ class RegisterController extends Controller
 
             DB::commit();
             return redirect('/login')->with('success', 'Registrasi berhasil.');
-
         } catch (\Exception $e) {
             DB::rollback();
             foreach ($uploadedFiles as $file) {
@@ -101,6 +100,8 @@ class RegisterController extends Controller
             'password.confirmed'         => 'Konfirmasi password tidak cocok.',
             'no_wa.required'             => 'Nomor WhatsApp wajib diisi.',
             'no_wa.max'                  => 'Nomor WhatsApp maksimal 15 digit.',
+            'no_wa.regex'                => 'Nomor WhatsApp hanya boleh berisi angka.',
+            'no_wa.min'                  => 'Nomor WhatsApp minimal 10 digit.',
             'alamat.required'            => 'Alamat lengkap wajib diisi.',
             'nim.required'               => 'NIM wajib diisi.',
             'nim.unique'                 => 'NIM ini sudah terdaftar.',

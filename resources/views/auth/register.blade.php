@@ -92,7 +92,7 @@
                                     <label for="no_wa" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nomor WhatsApp</label>
                                     <input type="text" name="no_wa" id="no_wa" value="{{ old('no_wa') }}"
                                         class="bg-gray-50 border @error('no_wa') border-red-500 @else border-gray-300 @enderror text-gray-900 rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                                        placeholder="0812xxxx">
+                                        placeholder="0812xxxx" oninput="this.value = this.value.replace(/[^0-9]/g, '')"  inputmode="numeric" minlength="10" maxlength="15">
                                     @error('no_wa')
                                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                     @enderror
