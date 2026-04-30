@@ -43,30 +43,17 @@ class DetailSuratIzinPermohonan extends Controller
     {
         $ticket = Tiket::with([
             'layanan',
-            'detailEmailGov',
-            'detailSubdomain',
-            'detailApps',
-            'detailPengaduan',
+            'suratIzinPenelitian',
             'komentar.user'
         ])
         ->where('uuid', $uuid)
         ->where('users_id', Auth::user()->uuid)
         ->firstOrFail();
 
-        $kategoriEmail = null;
-
-        if ($ticket->detailEmailGov) {
-            if (!empty($ticket->detailEmailGov->pd_jenis_layanan) || !empty($ticket->detailEmailGov->pd_instansi_nama)) {
-                $kategoriEmail = 'perangkat_daerah';
-            } elseif (!empty($ticket->detailEmailGov->asn_jenis_layanan) || !empty($ticket->detailEmailGov->asn_nip)) {
-                $kategoriEmail = 'asn';
-            }
-        }
-
         // Menghitung jumlah revisi berdasarkan riwayat komentar dari admin
         $jumlahRevisi = $ticket->komentar->count();
 
-        return view('pages.pengguna-asn.submission.show', compact('ticket', 'kategoriEmail', 'jumlahRevisi'));
+        return view('pages.mahasiswa.DetailSuratIzin.show', compact('ticket', 'jumlahRevisi'));
     }
 
     public function destroy($uuid)

@@ -189,7 +189,7 @@ Route::get('/user/avatar/{filename}', function ($filename) {
         // Route::resource('service-complaint-system', ServiceComplaintSystemController::class);
         Route::resource('detail', DetailSuratIzinPermohonan::class);
         //Rute History Tiket
-        // Route::resource('history', ServiceHistoryTicketController::class);
+        Route::resource('history', ServiceHistoryTicketController::class);
 
         // //Rute Scanner Image
         // Route::view('/ai-scanner', 'pages.mahasiswa.layanan.test-scanner')->name('test.scanner');

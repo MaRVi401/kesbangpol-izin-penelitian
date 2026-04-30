@@ -7,15 +7,10 @@
     <hr class="mb-6 border-gray-200 dark:border-gray-700">
 
     <div class="max-w-4xl mx-auto">
-        @php
-            $namaLayanan = strtolower($ticket->layanan->nama ?? '');
-            $isPengaduan = in_array($namaLayanan, ['pengaduan', 'pengaduan sistem', 'pengaduan sistem electronic']);
-        @endphp
-
         <div class="mb-6 flex justify-between items-center bg-white dark:bg-gray-800 p-4 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm">
             <div>
                 <h2 class="text-xl font-bold text-gray-900 dark:text-white">Tiket #{{ $ticket->no_tiket }}</h2>
-                <p class="text-sm text-gray-500 dark:text-gray-400">Layanan: <span class="font-semibold text-blue-600 dark:text-blue-400">{{ $ticket->layanan->nama ?? 'Tidak Diketahui' }}</span></p>
+                <p class="text-sm text-gray-500 dark:text-gray-400">Layanan: <span class="font-semibold text-blue-600 dark:text-blue-400">{{ $ticket->layanan->nama ?? 'Surat Permohonan Izin Penelitian' }}</span></p>
             </div>
             <div class="flex items-center gap-2">
                 <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold border 
@@ -25,7 +20,6 @@
                     Status: {{ Str::ucfirst($ticket->status) }}
                 </span>
 
-                {{-- Menampilkan Badge Revisi jika tiket pernah direvisi --}}
                 @if($jumlahRevisi > 0)
                     <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold border bg-purple-100 text-red-800 border-purple-200 dark:bg-red-900/30 dark:text-red-400 dark:border-red-800">
                         <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
@@ -34,7 +28,7 @@
                 @endif
             </div>
         </div>
-        {{-- Cek apakah status sudah Selesai atau Ditolak --}}
+
         @if(in_array($ticket->status, ['selesai', 'ditolak']))
             @if($ticket->komentar->isNotEmpty())
                 <div class="mb-6 p-5 rounded-xl border shadow-sm 
@@ -72,60 +66,37 @@
             @endif
         @endif
 
-       
         <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden mb-8">
             <div class="bg-gray-50 dark:bg-gray-700 border-b border-gray-200 dark:border-gray-600 p-4">
-                <h3 class="text-lg font-bold text-gray-900 dark:text-white">Detail Formulir Pengajuan</h3>
+                <h3 class="text-lg font-bold text-gray-900 dark:text-white">Detail Formulir Surat Izin Penelitian</h3>
             </div>
             
             <div class="p-6">
-                @if(in_array($namaLayanan, ['email gov', 'email e-gov']))
-                    @include('pages.pengguna-asn.submission.partials._detail_email_gov')
-                @elseif($namaLayanan == 'subdomain')
-                    @include('pages.pengguna-asn.submission.partials._detail_subdomain')
-                @elseif(in_array($namaLayanan, ['pembuatan aplikasi', 'pembuatan & pengembangan apps']))
-                    @include('pages.pengguna-asn.submission.partials._detail_pembuatan_apps')
-                @elseif($isPengaduan)
-                    @include('pages.pengguna-asn.submission.partials._detail_pengaduan')
-                @else
-                    <div class="text-center py-8 text-gray-500 dark:text-gray-400">
-                        Detail form untuk layanan ini tidak tersedia atau sedang dikembangkan.
-                    </div>
-                @endif
+                {{-- Karena sistem ini HANYA untuk Surat Izin Penelitian, kita panggil langsung partial-nya --}}
+                @include('pages.mahasiswa.DetailSuratIzin.partials._detail_surat_izin')
             </div>
         </div>
 
-        @if(!$isPengaduan)
-            @if(($ticket->status == 'belum diajukan' && empty($ticket->lampiran)) || $ticket->status == 'ditolak')
-            <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 mb-8 text-center">
-                <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2">Unduh Dokumen Sistem</h3>
-                <p class="text-sm text-gray-500 dark:text-gray-400 mb-6">Anda dapat mengunduh ulang dokumen persuratan (DOCX) yang telah di-generate oleh sistem melalui tombol di bawah ini.</p>
-                @php
-                    $downloadUrl = '#';
-                    if (in_array($namaLayanan, ['email gov', 'email e-gov'])) {
-                        $downloadUrl = url('services/email-gov/download/' . $ticket->uuid); 
-                    } elseif ($namaLayanan == 'subdomain') {
-                        $downloadUrl = url('services/subdomain/download/' . $ticket->uuid);
-                    } elseif (in_array($namaLayanan, ['pembuatan aplikasi', 'pembuatan & pengembangan apps'])) {
-                        $downloadUrl = url('service-app-creation/download/' . $ticket->uuid);
-                    } 
-                @endphp
-                <div class="flex justify-center items-center">
-                    <div class="w-full sm:w-auto">
-                        <a href="{{ $downloadUrl }}" class="inline-flex items-center justify-center w-full px-5 py-2.5 text-sm font-medium text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 transition-all shadow-sm">
-                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-                            Download Ulang DOCX
-                        </a>
-                    </div>
+        @if(($ticket->status == 'belum diajukan' && empty($ticket->lampiran)) || $ticket->status == 'ditolak')
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 mb-8 text-center">
+            <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2">Unduh Dokumen Sistem</h3>
+            <p class="text-sm text-gray-500 dark:text-gray-400 mb-6">Anda dapat mengunduh ulang dokumen persuratan yang telah di-generate oleh sistem melalui tombol di bawah ini.</p>
+            <div class="flex justify-center items-center">
+                <div class="w-full sm:w-auto">
+                    {{-- Sesuaikan route download ini dengan route khusus surat izin penelitian Anda nanti --}}
+                    <a href="{{ url('detail/download/' . $ticket->uuid) }}" class="inline-flex items-center justify-center w-full px-5 py-2.5 text-sm font-medium text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 transition-all shadow-sm">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                        Download Ulang Surat
+                    </a>
                 </div>
             </div>
-            @endif
+        </div>
         @endif
 
     </div>
 </div>
 
 @push('scripts')
-    @vite('resources/js/submission.js')
+    @vite('resources/js/detail-surat.js')
 @endpush
 @endsection
