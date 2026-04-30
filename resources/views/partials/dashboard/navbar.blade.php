@@ -37,7 +37,7 @@
                         data-dropdown-toggle="dropdown-user">
                         <img class="w-8 h-8 rounded-full object-cover"
                             src="{{ auth()->check() && auth()->user()->avatar
-                                ? \Illuminate\Support\Facades\Storage::disk('s3')->url(auth()->user()->avatar)
+                                ? route('avatar.display', ['filename' => basename(auth()->user()->avatar)])
                                 : 'https://ui-avatars.com/api/?name=' . urlencode(auth()->user()->nama ?? 'Guest') }}"
                             alt="user photo"
                             onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name={{ urlencode(auth()->user()->nama ?? 'Guest') }}';">

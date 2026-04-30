@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\PenggunaAsn;
+namespace App\Http\Controllers\Mahasiswa;
 
 use App\Http\Controllers\Controller;
 use App\Models\Tiket;
@@ -9,13 +9,11 @@ use Illuminate\Support\Facades\Auth;
 
 class ServiceHistoryTicketController extends Controller
 {
-    
     public function index(Request $request)
     {
         
         $query = Tiket::with('layanan')
-            ->where('users_id', Auth::id())
-            ->where('status', 'selesai');
+            ->where('users_id', Auth::id());
 
         if ($request->filled('search')) {
             $search = $request->search;
@@ -30,6 +28,6 @@ class ServiceHistoryTicketController extends Controller
 
         $tickets = $query->latest('updated_at')->paginate(10);
 
-        return view('pages.pengguna-asn.history_ticket.index', compact('tickets'));
+        return view('pages.mahasiswa.history_ticket.index', compact('tickets'));
     }
 }

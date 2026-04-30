@@ -115,7 +115,11 @@
                 </div>
             </div>
         </div>
+        <div id="session-data" data-success="{{ session('success') }}" data-error="{{ session('error') }}"
+            style="display: none;">
+        </div>
     </section>
 </body>
 @vite('resources/js/login.js')
+
 </html>

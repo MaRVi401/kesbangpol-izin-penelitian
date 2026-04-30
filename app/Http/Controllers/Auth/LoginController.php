@@ -31,12 +31,18 @@ class LoginController extends Controller
 
             // --- PENGECEKAN STATUS KHUSUS MAHASISWA ---
             if ($user->role === 'mahasiswa') {
-                // Memastikan relasi mahasiswa ada dan statusnya 'aktif'
-                if (!$user->mahasiswa || $user->mahasiswa->status_akun !== 'aktif') {
-                    Auth::logout(); // Keluarkan kembali jika belum aktif
+                $status = $user->mahasiswa->status_akun ?? null;
+
+                if ($status !== 'aktif') {
+                    Auth::logout();
+                    $errorMessage = 'Akun Anda belum aktif. Silakan tunggu verifikasi admin.';
+
+                    if ($status === 'ditolak') {
+                        $errorMessage = 'Mohon maaf, pendaftaran akun Anda ditolak. Silakan hubungi admin untuk informasi lebih lanjut.';
+                    }
 
                     return back()->withErrors([
-                        'username' => 'Akun mahasiswa Anda belum aktif atau ditolak. Silakan hubungi admin.'
+                        'username' => $errorMessage
                     ])->onlyInput('username');
                 }
             }

@@ -105,14 +105,30 @@
                                         {{ $ticket->updated_at->format('d M Y, H:i') }}
                                     </span>
                                 </td>
-                                <td class="px-6 py-4 text-center">
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold border bg-green-100 text-green-800 border-green-300 dark:bg-green-900/30 dark:text-green-400 dark:border-green-800 shadow-sm">
-                                        Selesai
+                               <td class="px-6 py-4 text-center">
+                                    @php
+                                        // Menentukan warna badge berdasarkan status
+                                        $statusColors = [
+                                            'draft'                  => 'bg-gray-100 text-gray-800 border-gray-300 dark:bg-gray-900/30 dark:text-gray-400 dark:border-gray-800',
+                                            'diajukan'               => 'bg-blue-100 text-blue-800 border-blue-300 dark:bg-blue-900/30 dark:text-blue-400 dark:border-blue-800',
+                                            'verifikasi kelengkapan' => 'bg-yellow-100 text-yellow-800 border-yellow-300 dark:bg-yellow-900/30 dark:text-yellow-400 dark:border-yellow-800',
+                                            'verifikasi lengkap'     => 'bg-indigo-100 text-indigo-800 border-indigo-300 dark:bg-indigo-900/30 dark:text-indigo-400 dark:border-indigo-800',
+                                            'verifikasi gagal'       => 'bg-red-100 text-red-800 border-red-300 dark:bg-red-900/30 dark:text-red-400 dark:border-red-800',
+                                            'diterima'               => 'bg-green-100 text-green-800 border-green-300 dark:bg-green-900/30 dark:text-green-400 dark:border-green-800',
+                                            'ditolak'                => 'bg-red-100 text-red-800 border-red-300 dark:bg-red-900/30 dark:text-red-400 dark:border-red-800',
+                                        ];
+                                        
+                                        // Ambil kelas warna sesuai status tiket, jika tidak ada gunakan default abu-abu
+                                        $colorClass = $statusColors[$ticket->status] ?? $statusColors['draft'];
+                                    @endphp
+                                    
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold border shadow-sm {{ $colorClass }}">
+                                        {{ ucwords($ticket->status) }}
                                     </span>
                                 </td>
                                 <td class="px-6 py-4 text-right">
                                     <div class="flex items-center justify-end gap-2">
-                                        <a href="{{ route('submission.show', $ticket->uuid) }}"
+                                        <a href="#"
                                             class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-green-600 rounded-lg hover:bg-green-700 focus:ring-4 focus:outline-none focus:ring-green-300 dark:bg-green-500 dark:hover:bg-green-600 dark:focus:ring-green-800 transition-all shadow-sm"
                                             title="Lihat Detail Tiket">
                                             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -121,7 +137,7 @@
                                             </svg>
                                             Lihat
                                         </a>
-                                        <form action="{{ route('submission.destroy', $ticket->uuid) }}" method="POST" class="inline-block">
+                                        <form action="#" method="POST" class="inline-block">
                                             @csrf
                                             @method('DELETE')
                                             <button type="button" class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-red-600 rounded-lg hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 dark:bg-red-500 dark:hover:bg-red-600 dark:focus:ring-red-900 transition-all shadow-sm btn-delete" title="Hapus Tiket">

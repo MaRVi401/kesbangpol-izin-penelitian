@@ -62,13 +62,13 @@ class UserSeeder extends Seeder
         ]);
 
         DB::table('mahasiswa')->insert([
-            'uuid'     => (string) Str::uuid(),
-            'users_id' => $mhsUuid,
-            'nim'      => '2203001',
-            'created_at' => now(),
-            'updated_at' => now(),
+            'uuid'        => (string) Str::uuid(),
+            'users_id'    => $mhsUuid,
+            'nim'         => '2203001',
+            'status_akun' => 'aktif',
+            'created_at'  => now(),
+            'updated_at'  => now(),
         ]);
-
         // 3. Operator
         $opUuid = (string) Str::uuid();
         DB::table('users')->insert([

@@ -55,7 +55,7 @@
                 </div>
                 <h5 class="text-3xl font-bold text-gray-900 dark:text-white">{{ $totalDiajukan }}</h5>
                 <div class="mt-4">
-                    <a href="{{ route('submission.index') }}" class="text-xs font-bold text-blue-600 hover:underline dark:text-blue-400 inline-flex items-center">
+                    <a href="#" class="text-xs font-bold text-blue-600 hover:underline dark:text-blue-400 inline-flex items-center">
                         Cek Status Pengajuan
                         <svg class="w-3 h-3 ms-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7" /></svg>
                     </a>
@@ -124,7 +124,7 @@
                             @forelse($recentTickets as $rt)
                                 <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/40 transition-all duration-200">
                                     <td class="px-6 py-4">
-                                        <a href="{{ route('submission.show', $rt->uuid) }}" class="font-mono font-bold text-blue-600 hover:underline dark:text-blue-400">
+                                        <a href="#" class="font-mono font-bold text-blue-600 hover:underline dark:text-blue-400">
                                             {{ $rt->no_tiket }}
                                         </a>
                                     </td>
@@ -170,7 +170,7 @@
                     <a href="/services" class="text-xs font-bold text-blue-600 hover:underline dark:text-blue-400">
                         + Buat Pengajuan Baru
                     </a>
-                    <a href="{{ route('submission.index') }}" class="flex items-center justify-center text-xs font-bold text-gray-500 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400 transition-colors">
+                    <a href="#" class="flex items-center justify-center text-xs font-bold text-gray-500 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400 transition-colors">
                         LIHAT SEMUA
                         <svg class="w-4 h-4 ms-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />

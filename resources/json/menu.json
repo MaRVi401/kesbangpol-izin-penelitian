@@ -14,11 +14,15 @@
                     "route": "user-management.index"
                 },
                 {
+                    "name": "Aktivasi Akun",
+                    "icon": "ti ti-user-check",
+                    "route": "user-management.pending"
+                },
+                {
                     "name": "Mini SIEM",
                     "icon": "ti ti-radar",
-                    "route" : "siem.index"
+                    "route": "siem.index"
                 }
-                
             ]
         },
         {
@@ -30,13 +34,13 @@
                     "route": "dashboard"
                 },
                 {
-                    "name": "Layanan Digital",
+                    "name": "Form Pengajuan",
                     "icon": "ti ti-file-download",
                     "route": "services.index"
                 },
                 {
-                    "name" : "Riwayat Status Tiket",
-                    "icon" : "ti ti-clock",
+                    "name": "Riwayat Status Tiket",
+                    "icon": "ti ti-clock",
                     "route": "history.index"
                 }
             ]
@@ -60,12 +64,11 @@
                     "route": "ticket.workdesk"
                 },
                 {
-                    "name" : "Riwayat Ticket",
-                    "icon" : "ti ti-clock",
+                    "name": "Riwayat Ticket",
+                    "icon": "ti ti-clock",
                     "route": "ticket.history"
                 }
             ]
         }
-        
     ]
 }
