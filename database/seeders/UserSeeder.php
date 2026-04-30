@@ -65,7 +65,7 @@ class UserSeeder extends Seeder
             'uuid'        => (string) Str::uuid(),
             'users_id'    => $mhsUuid,
             'nim'         => '2203001',
-            'status_akun' => 'aktif', // ✅ HANYA LETAKKAN DI SINI
+            'status_akun' => 'aktif',
             'created_at'  => now(),
             'updated_at'  => now(),
         ]);

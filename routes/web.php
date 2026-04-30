@@ -11,6 +11,7 @@ use App\Http\Controllers\Operator\TicketController as OperatorTicketController;
 use App\Http\Controllers\Admin\SiemController;
 use App\Http\Controllers\Kabid\UsulanKabidController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\FileController;
 // use App\Http\Controllers\Mahasiswa\ServiceSubDomainController;
 // use App\Http\Controllers\Mahasiswa\ServiceAppsCreationController;
 // use App\Http\Controllers\Mahasiswa\ServiceComplaintSystemController;
@@ -75,7 +76,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])
         ->name('dashboard');
 
-    // Edit profile
+    // Rute untuk akses file di storage private
+    Route::get('/storage/private/{path}', [FileController::class, 'show'])
+    ->where('path', '.*')
+    ->middleware('auth');
+
+        // Edit profile
     Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
 
@@ -169,7 +175,7 @@ Route::middleware('auth')->group(function () {
         // Route::resource('submission', SubmissionController::class);
 
         //Rute History Tiket
-        Route::resource('history', ServiceHistoryTicketController::class);
+        // Route::resource('history', ServiceHistoryTicketController::class);
 
         // //Rute Scanner Image
         // Route::view('/ai-scanner', 'pages.mahasiswa.layanan.test-scanner')->name('test.scanner');

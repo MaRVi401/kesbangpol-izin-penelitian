@@ -69,7 +69,7 @@ class UserManagementController extends Controller
     }
 
     /**
-     * Store a newly created user in Minio (S3).
+     * Store a newly created user in Minio (Private Storage).
      */
     public function store(Request $request)
     {
@@ -94,7 +94,7 @@ class UserManagementController extends Controller
                 $file = $request->file('avatar');
                 $filename = 'avatars/' . Str::random(40) . '.webp';
                 $image = Image::read($file)->scale(width: 500)->encodeByExtension('webp', quality: 75);
-                Storage::disk('s3')->put($filename, (string) $image);
+                Storage::disk('local')->put($filename, (string) $image);
                 $avatarPath = $filename;
             }
 
@@ -147,7 +147,7 @@ class UserManagementController extends Controller
     }
 
     /**
-     * Update user data and sync Minio (S3) storage.
+     * Update user data and sync Minio (Private Storage) storage.
      */
     public function update(Request $request, User $user)
     {
@@ -182,11 +182,11 @@ class UserManagementController extends Controller
 
             if ($request->hasFile('avatar')) {
                 if ($user->avatar) {
-                    Storage::disk('s3')->delete($user->avatar);
+                    Storage::disk('local')->delete($user->avatar);
                 }
                 $filename = 'avatars/' . Str::random(40) . '.webp';
                 $image = Image::read($request->file('avatar'))->scale(width: 500)->encodeByExtension('webp', quality: 75);
-                Storage::disk('s3')->put($filename, (string) $image);
+                Storage::disk('local')->put($filename, (string) $image);
                 $user->avatar = $filename;
             }
 
@@ -227,7 +227,7 @@ class UserManagementController extends Controller
     }
 
     /**
-     * Remove user and clean up Minio (S3) storage.
+     * Remove user and clean up Minio (Private Storage) storage.
      */
     public function destroy(User $user)
     {
@@ -245,7 +245,7 @@ class UserManagementController extends Controller
         DB::beginTransaction();
         try {
             if ($user->avatar) {
-                Storage::disk('s3')->delete($user->avatar);
+                Storage::disk('local')->delete($user->avatar);
             }
 
             JejakAudit::create([

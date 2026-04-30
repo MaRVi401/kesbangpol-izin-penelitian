@@ -128,7 +128,7 @@
                             {{-- Image Preview --}}
                             <img id="avatar-preview"
                                 class="w-20 h-20 rounded-full object-cover ring-4 ring-white dark:ring-gray-800 shadow-lg"
-                                src="{{ $user->avatar ? \Illuminate\Support\Facades\Storage::disk('s3')->url($user->avatar) : 'https://ui-avatars.com/api/?name=' . urlencode($user->nama) }}"
+                                src="{{ $user->avatar ? url('/storage/private/' . $user->avatar) : 'https://ui-avatars.com/api/?name=' . urlencode($user->nama) }}"
                                 alt="current-avatar"
                                 onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name={{ urlencode($user->nama) }}';">
                         </div>

@@ -90,13 +90,13 @@
                                                     
                                                     <div class="space-y-3">
                                                         <p class="text-sm font-bold text-gray-900 dark:text-white">Preview KTM:</p>
-                                                        <img src="{{ asset('storage/' . $user->mahasiswa->ktm_path) }}" 
+                                                        <img src="{{ url('storage/private/' . $user->mahasiswa->ktm_path) }}" 
                                                              class="w-full h-48 object-cover rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm"
                                                              alt="KTM Preview">
                                                         
                                                         <div class="pt-2">
                                                             <p class="text-sm font-bold text-gray-900 dark:text-white mb-2">Dokumen Pendukung:</p>
-                                                            <a href="{{ asset('storage/' . $user->mahasiswa->surat_rekomendasi_path) }}" target="_blank"
+                                                            <a href="{{ url('storage/private/' . $user->mahasiswa->surat_rekomendasi_path) }}" target="_blank"
                                                                 class="inline-flex items-center px-4 py-2 text-sm font-medium text-blue-600 bg-blue-50 border border-blue-200 rounded-lg hover:bg-blue-100 dark:bg-blue-900/20 dark:border-blue-800 dark:text-blue-400 transition-all">
                                                                 <svg class="w-4 h-4 me-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
                                                                 Lihat Surat Rekomendasi

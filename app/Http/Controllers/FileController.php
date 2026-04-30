@@ -1,24 +1,23 @@
 <?php
 
 namespace App\Http\Controllers;
-
 use Illuminate\Support\Facades\Storage;
 
 class FileController extends Controller
 {
-
-    public function showFile($type, $filename)
+    public function show($path)
     {
-
-        $path = "verifikasi/{$type}/{$filename}";
-
+        // 1. Cek eksistensi file di disk local
         if (!Storage::disk('local')->exists($path)) {
             abort(404);
         }
 
-        $file = Storage::disk('local')->get($path);
-        $mime = Storage::disk('local')->mimeType($path);
+        // 2. Logika Keamanan Tambahan (Opsional)
+        if (auth()->user()->role !== 'super-admin' && !str_contains($path, auth()->id())) {
+            abort(403);
+        }
 
-        return response($file, 200)->header('Content-Type', $mime);
+        // 3. Mengembalikan file untuk ditampilkan di browser
+        return Storage::disk('local')->response($path);
     }
 }

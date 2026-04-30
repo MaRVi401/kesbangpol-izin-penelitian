@@ -51,11 +51,11 @@ class RegisterController extends Controller
                 ->scale(width: 1200) // Resize lebar ke 1200px agar ukuran file turun drastis
                 ->encodeByExtension('webp', quality: 75); 
 
-            Storage::disk('public')->put($pathKtm, (string) $img);
+            Storage::disk('local')->put($pathKtm, (string) $img);
             $uploadedFiles[] = $pathKtm;
 
-            // --- PROSES SURAT REKOMENDASI (PDF TETAP PDF) ---
-            $pathSurat = $request->file('surat_rekomendasi')->store('verifikasi/rekomendasi', 'public');
+            // --- PROSES SURAT REKOMENDASI ---
+            $pathSurat = $request->file('surat_rekomendasi')->store('verifikasi/rekomendasi', 'local');
             $uploadedFiles[] = $pathSurat;
 
             Mahasiswa::create([
