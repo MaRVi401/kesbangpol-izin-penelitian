@@ -1,324 +1,306 @@
-@extends('layouts.app')
+<!DOCTYPE html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="scroll-smooth">
 
-@section('title', 'E-Gov Kominfo - Portal Layanan Digital')
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Sistem Izin Penelitian - KESBANGPOL</title>
 
-@section('content')
+    <!-- Fonts & Tailwind -->
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- AlpineJS untuk interaksi mobile menu -->
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+</head>
 
-    @include ('partials.landingPage.navbar')
-    <section id="beranda"
-        class="relative min-h-[90vh] flex items-center justify-center py-16 lg:py-24 overflow-hidden bg-white dark:bg-gray-900">
+<body
+    class="antialiased bg-gray-50 dark:bg-gray-900 font-sans text-gray-900 dark:text-gray-100 transition-colors duration-300">
 
-        <div class="absolute inset-0 z-0 overflow-hidden pointer-events-none">
-            <div class="absolute -top-[10%] -left-[10%] w-96 h-96 bg-blue-400/20 rounded-full blur-[100px]"></div>
-            <div class="absolute -bottom-[10%] -right-[10%] w-96 h-96 bg-indigo-400/20 rounded-full blur-[100px]"></div>
-        </div>
-
-        <div class="container relative z-10 max-w-7xl px-6 mx-auto">
-            <div class="grid gap-12 lg:grid-cols-12 items-center">
-
-                <div class="lg:col-span-7 flex flex-col items-center lg:items-start text-center lg:text-left">
-
-                    <h1
-                        class="mb-6 text-4xl font-extrabold tracking-tight leading-[1.1] text-gray-900 md:text-6xl xl:text-7xl dark:text-white">
-                        Portal Layanan <br class="hidden lg:block">
-                        <span class="bg-clip-text text-transparent bg-linear-to-r from-blue-600 to-indigo-500">
-                            Digital DISKOMINFO
-                        </span>
-                    </h1>
-
-                    <p
-                        class="mb-8 max-w-xl text-lg font-normal text-gray-600 lg:text-xl leading-relaxed dark:text-gray-400">
-                        Akses satu pintu untuk seluruh ekosistem digital pemerintah daerah. Cepat, aman, dan dirancang untuk
-                        memudahkan kebutuhan publik.
-                    </p>
-
-                    <div class="flex flex-col w-full sm:flex-row sm:w-auto gap-4">
-                        <a href="#layanan"
-                            class="inline-flex items-center justify-center px-8 py-4 text-base font-bold text-white transition-all duration-300 bg-blue-600 rounded-xl hover:bg-blue-700 hover:shadow-xl hover:shadow-blue-500/30 active:scale-95">
-                            Lihat Layanan
-                            <svg class="w-5 h-5 ml-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
-                            </svg>
-                        </a>
-
-                        <a href="#footer"
-                            class="inline-flex items-center justify-center px-8 py-4 text-base font-bold text-gray-700 transition-all duration-300 bg-white border-2 border-gray-100 rounded-xl hover:bg-gray-50 hover:border-gray-200 dark:bg-gray-800 dark:text-white dark:border-gray-700 dark:hover:bg-gray-700 active:scale-95">
-                            Tentang Kami
-                        </a>
-                    </div>
-
-                    <div
-                        class="mt-10 pt-10 border-t border-gray-100 dark:border-gray-800 w-full flex justify-center lg:justify-start gap-8">
-                        <div>
-                            <p class="text-2xl font-bold text-gray-900 dark:text-white">24/7</p>
-                            <p class="text-sm text-gray-500 dark:text-gray-400">Akses Online</p>
-                        </div>
-                        <div class="w-px h-10 bg-gray-200 dark:bg-gray-700"></div>
-                        <div>
-                            <p class="text-2xl font-bold text-gray-900 dark:text-white">100%</p>
-                            <p class="text-sm text-gray-500 dark:text-gray-400">Terintegrasi</p>
-                        </div>
+    <!-- Header / Navbar -->
+    <nav x-data="{ open: false }"
+        class="fixed w-full z-50 top-0 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border-b border-gray-100 dark:border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 md:h-20 items-center">
+                <!-- Logo Section -->
+                <div class="flex items-center gap-3">
+                    <img src="{{ asset('assets/images/landingPages/logo-kabSubang.webp') }}" class="h-10 sm:h-12 w-auto"
+                        alt="Logo Instansi">
+                    <div class="flex flex-col border-l-2 border-red-600 pl-3 font-sans">
+                        <span
+                            class="font-bold text-gray-900 dark:text-white leading-none text-sm sm:text-lg">KESBANGPOL</span>
+                        <span
+                            class="text-[9px] sm:text-xs text-gray-500 dark:text-gray-400 tracking-widest uppercase font-semibold">Kabupaten
+                            Subang</span>
                     </div>
                 </div>
 
-                <div class="hidden lg:flex lg:col-span-5 relative group px-5">
-                    <div
-                        class="absolute inset-0 bg-blue-500/10 blur-[50px] rounded-full group-hover:bg-blue-500/20 transition-all duration-700">
-                    </div>
+                <!-- Desktop Navigation -->
+                <div class="hidden md:flex items-center gap-6 lg:gap-8 font-medium text-gray-600 dark:text-gray-300">
+                    <a href="#beranda" class="hover:text-red-600 dark:hover:text-red-500 transition">Beranda</a>
+                    <a href="#alur" class="hover:text-red-600 dark:hover:text-red-500 transition">Alur Pengajuan</a>
+                    <a href="#berita" class="hover:text-red-600 dark:hover:text-red-500 transition">Berita</a>
 
-                    <img src="{{ asset('assets/images/landingPages/logo-jumbotron2.svg') }}" alt="Diskominfo Digital Portal"
-                        class="relative w-full h-auto drop-shadow-2xl transition-transform duration-700 group-hover:scale-[1.02]">
+                    <div class="h-6 w-px bg-gray-200 dark:bg-gray-700"></div>
+
+                    @if (Route::has('login'))
+                        @auth
+                            <a href="{{ url('/dashboard') }}"
+                                class="bg-red-600 text-white px-5 py-2 rounded-full hover:bg-red-700 transition shadow-lg shadow-red-200 dark:shadow-none">Dashboard</a>
+                        @else
+                            <a href="{{ route('login') }}"
+                                class="hover:text-red-600 dark:hover:text-red-400 transition font-bold border border-red-600 px-5 py-2 rounded-full text-red-600">Masuk</a>
+                            @if (Route::has('register'))
+                                <a href="{{ route('register') }}"
+                                    class="bg-red-600 text-white px-5 py-2 rounded-full hover:bg-red-700 transition shadow-lg shadow-red-200 dark:shadow-none">Daftar</a>
+                            @endif
+                        @endauth
+                    @endif
                 </div>
 
+                <!-- Hamburger Button (Mobile) -->
+                <div class="flex md:hidden items-center">
+                    <button @click="open = !open"
+                        class="text-gray-600 dark:text-gray-300 hover:text-red-600 focus:outline-none transition">
+                        <svg class="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path x-show="!open" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 6h16M4 12h16M4 18h16"></path>
+                            <path x-show="open" x-cloak stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
             </div>
         </div>
-    </section>
 
-    <hr class="border-gray-200 dark:border-gray-800">
+        <!-- Mobile Menu (Dropdown) -->
+        <div x-show="open" x-cloak x-transition:enter="transition ease-out duration-200"
+            x-transition:enter-start="opacity-0 -translate-y-4" x-transition:enter-end="opacity-100 translate-y-0"
+            class="md:hidden bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700 shadow-xl">
+            <div class="px-4 pt-2 pb-6 space-y-1">
+                <a href="#beranda" @click="open = false"
+                    class="block px-3 py-3 text-base font-medium hover:bg-gray-50 dark:hover:bg-gray-700 rounded-xl">Beranda</a>
+                <a href="#alur" @click="open = false"
+                    class="block px-3 py-3 text-base font-medium hover:bg-gray-50 dark:hover:bg-gray-700 rounded-xl">Alur
+                    Pengajuan</a>
+                <a href="#layanan" @click="open = false"
+                    class="block px-3 py-3 text-base font-medium hover:bg-gray-50 dark:hover:bg-gray-700 rounded-xl">Layanan</a>
 
-    <section id="layanan" class="py-20 bg-gray-50 dark:bg-gray-800/50 scroll-mt-20">
-        <div class="max-w-7xl px-4 mx-auto text-center">
-            <h2 class="mb-4 text-3xl font-bold text-gray-900 dark:text-white">Layanan Kami</h2>
-            <p class="mb-12 text-gray-500 dark:text-gray-400">Daftar layanan publik dan internal yang tersedia.</p>
-
-            <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-
-                <div
-                    class="bg-white dark:bg-gray-900 flex flex-col border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm overflow-hidden transition-all hover:shadow-md">
-                    <div
-                        class="p-6 bg-gray-50 dark:bg-gray-800/50 flex justify-center items-center aspect-square overflow-hidden">
-                        <img class="w-full h-full object-contain transform transition-transform hover:scale-110"
-                            src="{{ asset('assets/images/landingPages/logo-kabSubang.webp') }}" alt="E-Filling" />
-                    </div>
-                    <div class="p-6 text-center flex flex-col grow">
-                        <div>
-                            <span
-                                class="inline-flex items-center bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 text-xs font-semibold px-2.5 py-1 rounded-full mb-4">
-                                <svg class="w-3 h-3 me-1" fill="currentColor" viewBox="0 0 20 20">
-                                    <path
-                                        d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z">
-                                    </path>
-                                </svg>
-                                Populer
-                            </span>
-                        </div>
-                        <h5 class="mb-3 text-xl font-bold tracking-tight text-gray-900 dark:text-white">Email Government
-                        </h5>
-                        <p class="mb-6 text-sm text-gray-500 dark:text-gray-400 grow">Layanan Email Gov.</p>
-                        <a href="#"
-                            class="inline-flex items-center justify-center text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 transition-all">
-                            Buka Layanan
-                            <svg class="w-4 h-4 ms-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M19 12H5m14 0-4 4m4-4-4-4" />
-                            </svg>
-                        </a>
-                    </div>
+                <div class="pt-4 border-t border-gray-100 dark:border-gray-700 flex flex-col gap-3">
+                    @auth
+                        <a href="{{ url('/dashboard') }}"
+                            class="w-full text-center bg-red-600 text-white py-3 rounded-xl font-bold">Dashboard</a>
+                    @else
+                        <a href="{{ route('login') }}"
+                            class="w-full text-center text-red-600 font-bold border border-red-600 py-3 rounded-xl font-bold">Masuk</a>
+                        <a href="{{ route('register') }}"
+                            class="w-full text-center bg-red-600 text-white py-3 rounded-xl font-bold">Daftar</a>
+                    @endauth
                 </div>
+            </div>
+        </div>
+    </nav>
 
-                <div
-                    class="bg-white dark:bg-gray-900 flex flex-col border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm overflow-hidden transition-all hover:shadow-md">
-                    <div
-                        class="p-6 bg-gray-50 dark:bg-gray-800/50 flex justify-center items-center aspect-square overflow-hidden">
-                        <img class="w-full h-full object-contain transform transition-transform hover:scale-110"
-                            src="{{ asset('assets/images/landingPages/logo-kabSubang.webp') }}" alt="E-Licensing" />
-                    </div>
-                    <div class="p-6 text-center flex flex-col grow">
-                        <div>
-                            <span
-                                class="inline-flex items-center bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 text-xs font-semibold px-2.5 py-1 rounded-full mb-4">
-                                Layanan Publik
-                            </span>
-                        </div>
-                        <h5 class="mb-3 text-xl font-bold tracking-tight text-gray-900 dark:text-white">Subdomain</h5>
-                        <p class="mb-6 text-sm text-gray-500 dark:text-gray-400 grow">Layanan Subdomain.</p>
-                        <a href="#"
-                            class="inline-flex items-center justify-center text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 transition-all">
-                            Buka Layanan
-                            <svg class="w-4 h-4 ms-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M19 12H5m14 0-4 4m4-4-4-4" />
-                            </svg>
-                        </a>
-                    </div>
+    <!-- Hero Section -->
+    <header id="beranda"
+        class="relative pt-24 pb-16 md:pt-48 md:pb-32 overflow-hidden bg-gradient-to-br from-white to-blue-50 dark:from-gray-900 dark:to-gray-800 transition-colors duration-300">
+        <div
+            class="max-w-7xl mx-auto px-6 lg:px-8 relative z-10 flex flex-col lg:flex-row items-center gap-10 md:gap-12">
+            <div class="w-full lg:w-1/2 text-center lg:text-left order-2 lg:order-1">
+                <h1
+                    class="text-3xl md:text-5xl lg:text-6xl font-extrabold text-gray-900 dark:text-white leading-tight mb-4 md:mb-6">
+                    Ajukan Izin Penelitian <br class="hidden sm:block">
+                    <span class="text-red-600 dark:text-red-500 italic font-serif">Lebih Mudah & Cepat</span>
+                </h1>
+                <p
+                    class="text-base md:text-lg text-gray-600 dark:text-gray-300 mb-8 md:mb-10 max-w-xl mx-auto lg:mx-0 leading-relaxed">
+                    Sistem informasi pelayanan permohonan Surat Rekomendasi Penelitian Online pada Badan Kesatuan Bangsa
+                    dan Politik untuk Mahasiswa, Peneliti, dan Instansi.
+                </p>
+                <div class="flex flex-col sm:flex-row justify-center lg:justify-start gap-4">
+                    <a href="{{ route('login') }}"
+                        class="px-8 py-3 md:py-4 bg-red-600 text-white rounded-2xl font-bold text-lg hover:bg-red-700 transition-all transform hover:scale-105 shadow-xl shadow-red-200 dark:shadow-none">
+                        Mulai Pengajuan
+                    </a>
+                    <a href="#alur"
+                        class="px-8 py-3 md:py-4 bg-white dark:bg-gray-700 text-gray-700 dark:text-white border border-gray-200 dark:border-gray-600 rounded-2xl font-bold text-lg hover:bg-gray-50 dark:hover:bg-gray-600 transition-all shadow-sm">
+                        Lihat Alur Kerja
+                    </a>
                 </div>
+            </div>
+            <div class="w-full lg:w-1/2 order-1 lg:order-2">
+                <img src="{{ asset('assets/images/landingPages/logo-jumbotron.svg') }}"
+                    class="w-4/5 sm:w-full max-w-sm md:max-w-lg mx-auto drop-shadow-2xl animate-pulse"
+                    style="animation-duration: 5s;" alt="Hero Illustration">
+            </div>
+        </div>
 
-                <div
-                    class="bg-white dark:bg-gray-900 flex flex-col border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm overflow-hidden transition-all hover:shadow-md">
-                    <div
-                        class="p-6 bg-gray-50 dark:bg-gray-800/50 flex justify-center items-center aspect-square overflow-hidden">
-                        <img class="w-full h-full object-contain transform transition-transform hover:scale-110"
-                            src="{{ asset('assets/images/landingPages/logo-kabSubang.webp') }}" alt="E-Planning" />
-                    </div>
-                    <div class="p-6 text-center flex flex-col grow">
-                        <div>
-                            <span
-                                class="inline-flex items-center bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 text-xs font-semibold px-2.5 py-1 rounded-full mb-4">
-                                Internal
-                            </span>
-                        </div>
-                        <h5 class="mb-3 text-xl font-bold tracking-tight text-gray-900 dark:text-white">Pengembangan Apps
-                        </h5>
-                        <p class="mb-6 text-sm text-gray-500 dark:text-gray-400 grow">Layanan Pengembangan Aplikasi.</p>
-                        <a href="#"
-                            class="inline-flex items-center justify-center text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 transition-all">
-                            Buka Layanan
-                            <svg class="w-4 h-4 ms-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M19 12H5m14 0-4 4m4-4-4-4" />
-                            </svg>
-                        </a>
-                    </div>
-                </div>
+        <!-- Decorative Circles -->
+        <div
+            class="absolute top-0 right-0 -mr-20 -mt-20 w-64 h-64 md:w-96 md:h-96 bg-red-100 dark:bg-red-900/20 rounded-full blur-3xl opacity-50 transition-colors">
+        </div>
+        <div
+            class="absolute bottom-0 left-0 -ml-20 -mb-20 w-64 h-64 md:w-96 md:h-96 bg-blue-100 dark:bg-blue-900/20 rounded-full blur-3xl opacity-50 transition-colors">
+        </div>
+    </header>
 
-                <div
-                    class="bg-white dark:bg-gray-900 flex flex-col border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm overflow-hidden transition-all hover:shadow-md">
+    <!-- Alur Kerja Section -->
+    <section id="alur"
+        class="py-16 md:py-24 bg-white dark:bg-gray-900 transition-colors duration-300 border-t dark:border-gray-800">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="text-center mb-12 md:mb-16">
+                <h2 class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-4 uppercase tracking-tight">
+                    Langkah Mudah Pengajuan</h2>
+                <div class="h-1.5 w-20 bg-red-600 mx-auto rounded-full"></div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 lg:gap-8">
+                <!-- Step Cards -->
+                @php
+                    $steps = [
+                        [
+                            'no' => 1,
+                            'title' => 'Registrasi Akun',
+                            'desc' => 'Buat akun menggunakan email aktif untuk memantau status pengajuan.',
+                        ],
+                        [
+                            'no' => 2,
+                            'title' => 'Isi Data',
+                            'desc' =>
+                                'Lengkapi formulir permohonan dan unggah berkas persyaratan (KTP, Proposal, Pengantar).',
+                        ],
+                        [
+                            'no' => 3,
+                            'title' => 'Verifikasi Data',
+                            'desc' => 'Petugas KESBANGPOL akan memverifikasi dokumen Anda secara sistem.',
+                        ],
+                        [
+                            'no' => 4,
+                            'title' => 'Cetak Rekomendasi',
+                            'desc' => 'Jika disetujui, unduh dan cetak Surat Rekomendasi secara mandiri.',
+                        ],
+                    ];
+                @endphp
+
+                @foreach ($steps as $step)
                     <div
-                        class="p-6 bg-gray-50 dark:bg-gray-800/50 flex justify-center items-center aspect-square overflow-hidden">
-                        <img class="w-full h-full object-contain transform transition-transform hover:scale-110"
-                            src="{{ asset('assets/images/landingPages/logo-kabSubang.webp') }}" alt="Open Data" />
-                    </div>
-                    <div class="p-6 text-center flex flex-col grow">
-                        <div>
-                            <span
-                                class="inline-flex items-center bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300 text-xs font-semibold px-2.5 py-1 rounded-full mb-4">
-                                Informasi
-                            </span>
+                        class="group p-6 md:p-8 rounded-3xl bg-gray-50 dark:bg-gray-800 hover:bg-red-600 dark:hover:bg-red-600 transition-all duration-300 border border-gray-100 dark:border-gray-700 shadow-sm">
+                        <div
+                            class="w-12 h-12 bg-white dark:bg-gray-700 rounded-xl flex items-center justify-center text-xl font-extrabold text-red-600 dark:text-red-400 mb-6 shadow-sm group-hover:rotate-12 transition-transform">
+                            {{ $step['no'] }}
                         </div>
-                        <h5 class="mb-3 text-xl font-bold tracking-tight text-gray-900 dark:text-white">Pengaduan SE</h5>
-                        <p class="mb-6 text-sm text-gray-500 dark:text-gray-400 grow">Layanan Pengaduan Sistem Elektronik.
+                        <h3
+                            class="text-lg md:text-xl font-bold text-gray-900 dark:text-white mb-3 group-hover:text-white transition">
+                            {{ $step['title'] }}
+                        </h3>
+                        <p
+                            class="text-sm text-gray-600 dark:text-gray-400 group-hover:text-red-50 transition leading-relaxed">
+                            {{ $step['desc'] }}
                         </p>
-                        <a href="#"
-                            class="inline-flex items-center justify-center text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 transition-all">
-                            Buka Layanan
-                            <svg class="w-4 h-4 ms-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M19 12H5m14 0-4 4m4-4-4-4" />
-                            </svg>
-                        </a>
                     </div>
+                @endforeach
+            </div>
+        </div>
+    </section>
+
+    <!-- Berita & Informasi Section -->
+    <section id="berita" class="py-16 md:py-24 bg-gray-50 dark:bg-gray-800/50 transition-colors duration-300">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
+                <div class="text-left">
+                    <h2
+                        class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-2 uppercase tracking-tight">
+                        Berita & Informasi</h2>
+                    <p class="text-gray-600 dark:text-gray-400">Update terbaru seputar kegiatan dan kebijakan
+                        KESBANGPOL.</p>
                 </div>
+                <a href="#"
+                    class="text-red-600 dark:text-red-400 font-bold hover:underline flex items-center gap-2 transition">
+                    Lihat Semua Berita
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7">
+                        </path>
+                    </svg>
+                </a>
+            </div>
 
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Loop Berita (Simulasi dengan Blade) -->
+                @php
+                    $news = [
+                        [
+                            'title' => 'Sosialisasi Kebijakan Izin Penelitian Terbaru 2026',
+                            'date' => '02 Mei 2026',
+                            'category' => 'Pengumuman',
+                            'img' => asset('assets/images/landingPages/logo-kabSubang.webp'),
+                        ],
+                        [
+                            'title' => 'Kunjungan Kerja Lapangan Tim Verifikasi Kesbangpol',
+                            'date' => '28 April 2026',
+                            'category' => 'Kegiatan',
+                            'img' => asset('assets/images/landingPages/logo-kabSubang.webp'),
+                        ],
+                        [
+                            'title' => 'Peningkatan Layanan Digital Melalui Sistem Online',
+                            'date' => '15 April 2026',
+                            'category' => 'Inovasi',
+                            'img' => asset('assets/images/landingPages/logo-kabSubang.webp'),
+                        ],
+                    ];
+                @endphp
+
+                @foreach ($news as $item)
+                    <div
+                        class="bg-white dark:bg-gray-900 rounded-2xl overflow-hidden shadow-sm border border-gray-100 dark:border-gray-700 hover:shadow-md transition duration-300 flex flex-col uppercase-none">
+                        <img src="{{ $item['img'] }}" alt="Berita" class="w-full h-48 object-cover">
+                        <div class="p-6 flex flex-col flex-1">
+                            <div class="flex items-center gap-3 mb-3 text-xs font-semibold uppercase tracking-wider">
+                                <span class="text-red-600 dark:text-red-400">{{ $item['category'] }}</span>
+                                <span class="text-gray-400">|</span>
+                                <span class="text-gray-500 dark:text-gray-500">{{ $item['date'] }}</span>
+                            </div>
+                            <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4 line-clamp-2 leading-snug">
+                                {{ $item['title'] }}
+                            </h3>
+                            <div class="mt-auto">
+                                <a href="#"
+                                    class="text-sm font-bold text-gray-700 dark:text-gray-300 hover:text-red-600 dark:hover:text-red-400 transition inline-flex items-center gap-1">
+                                    Baca Selengkapnya
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M14 5l7 7-7 7"></path>
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
             </div>
         </div>
     </section>
 
-    <section id="informasi" class="py-20 scroll-mt-20">
-        <div class="max-w-7xl px-4 mx-auto">
-            <div class="text-center mb-12">
-                <h2 class="mb-4 text-3xl font-bold text-gray-900 dark:text-white">Pusat Informasi</h2>
-                <p class="text-gray-500 dark:text-gray-400 max-w-2xl mx-auto">Dapatkan berita, artikel, dan pengumuman
-                    terbaru seputar transformasi digital di lingkungan pemerintah daerah.</p>
-            </div>
-
-            <div class="grid gap-8 lg:grid-cols-3">
-
-                <article
-                    class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-shadow duration-300">
-                    <div class="relative">
-                        <img src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/article/blog-1.png"
-                            class="w-full h-52 object-cover" alt="Berita 1">
-                        <span
-                            class="absolute top-4 left-4 bg-blue-600 text-white text-xs font-bold px-3 py-1 rounded-full uppercase">Berita</span>
-                    </div>
-                    <div class="p-6">
-                        <div class="flex items-center mb-3 text-sm text-gray-500 dark:text-gray-400">
-                            <svg class="w-4 h-4 me-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
-                                </path>
-                            </svg>
-                            <span>05 Feb 2026</span>
-                        </div>
-                        <h3 class="mb-2 text-xl font-bold leading-tight text-gray-900 dark:text-white hover:text-blue-600">
-                            <a href="#">Implementasi Tanda Tangan Elektronik di Seluruh OPD</a>
-                        </h3>
-                        <p class="mb-4 text-gray-500 dark:text-gray-400 line-clamp-2">Upaya percepatan digitalisasi
-                            birokrasi kini memasuki tahap integrasi sistem tanda tangan elektronik terpadu.</p>
-                        <a href="#" class="inline-flex items-center font-medium text-blue-600 hover:underline">
-                            Selengkapnya
-                            <svg class="w-4 h-4 ms-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
-                            </svg>
-                        </a>
-                    </div>
-                </article>
-
-                <article
-                    class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-shadow duration-300">
-                    <div class="relative">
-                        <img src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/article/blog-2.png"
-                            class="w-full h-52 object-cover" alt="Berita 2">
-                        <span
-                            class="absolute top-4 left-4 bg-orange-500 text-white text-xs font-bold px-3 py-1 rounded-full uppercase">Pengumuman</span>
-                    </div>
-                    <div class="p-6">
-                        <div class="flex items-center mb-3 text-sm text-gray-500 dark:text-gray-400">
-                            <svg class="w-4 h-4 me-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
-                                </path>
-                            </svg>
-                            <span>03 Feb 2026</span>
-                        </div>
-                        <h3 class="mb-2 text-xl font-bold leading-tight text-gray-900 dark:text-white hover:text-blue-600">
-                            <a href="#">Pemeliharaan Rutin Server Pusat Data Nasional</a>
-                        </h3>
-                        <p class="mb-4 text-gray-500 dark:text-gray-400 line-clamp-2">Informasi mengenai jadwal maintenance
-                            server yang akan berdampak pada beberapa layanan publik digital sementara waktu.</p>
-                        <a href="#" class="inline-flex items-center font-medium text-blue-600 hover:underline">
-                            Selengkapnya
-                            <svg class="w-4 h-4 ms-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
-                            </svg>
-                        </a>
-                    </div>
-                </article>
-
-                <article
-                    class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-shadow duration-300">
-                    <div class="relative">
-                        <img src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/article/blog-3.png"
-                            class="w-full h-52 object-cover" alt="Berita 3">
-                        <span
-                            class="absolute top-4 left-4 bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full uppercase">E-Gov</span>
-                    </div>
-                    <div class="p-6">
-                        <div class="flex items-center mb-3 text-sm text-gray-500 dark:text-gray-400">
-                            <svg class="w-4 h-4 me-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
-                                </path>
-                            </svg>
-                            <span>01 Feb 2026</span>
-                        </div>
-                        <h3 class="mb-2 text-xl font-bold leading-tight text-gray-900 dark:text-white hover:text-blue-600">
-                            <a href="#">Pencapaian Indeks SPBE Kabupaten Tahun 2025</a>
-                        </h3>
-                        <p class="mb-4 text-gray-500 dark:text-gray-400 line-clamp-2">Skor Indeks Sistem Pemerintahan
-                            Berbasis Elektronik (SPBE) mengalami kenaikan signifikan tahun ini.</p>
-                        <a href="#" class="inline-flex items-center font-medium text-blue-600 hover:underline">
-                            Selengkapnya
-                            <svg class="w-4 h-4 ms-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
-                            </svg>
-                        </a>
-                    </div>
-                </article>
+    <!-- Footer -->
+    <footer class="bg-gray-900 dark:bg-black py-10 md:py-16 text-center border-t border-gray-800">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="flex flex-col items-center gap-6">
+                <div class="flex items-center gap-3 grayscale opacity-80">
+                    <img src="{{ asset('assets/images/landingPages/logo-kabSubang.webp') }}" class="h-10 w-auto"
+                        alt="">
+                    <span class="text-white font-bold tracking-widest uppercase">Kesbangpol Subang</span>
+                </div>
+                <p
+                    class="text-gray-500 dark:text-gray-400 text-[10px] md:text-xs tracking-[0.2em] uppercase leading-relaxed">
+                    &copy; {{ date('Y') }} BADAN KESATUAN BANGSA DAN POLITIK.<br class="sm:hidden">
+                    POWERED BY DISKOMINFO KAB. SUBANG.
+                </p>
             </div>
         </div>
+    </footer>
 
-    </section>
-    <button id="back-to-top" type="button"
-        class="fixed bottom-8 right-8 z-50 inline-flex items-center p-3 text-gray-900 bg-white border border-gray-300 rounded-lg shadow-lg opacity-0 invisible transition-all duration-300 hover:bg-gray-50 focus:ring-4 focus:outline-none focus:ring-gray-100 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 active:scale-90">
-        <svg class="w-6 h-6" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 8">
-            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M13 7 7.674 1.3a.91.91 0 0 0-1.348 0L1 7" />
-        </svg>
-    </button>
-    @include ('partials.landingPage.footer')
-@endsection
+    <style>
+        [x-cloak] {
+            display: none !important;
+        }
+    </style>
+</body>
+
+</html>
