@@ -20,6 +20,7 @@
     </main>
 
     <script nonce="{{ $csp_nonce }}" src="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.js"></script>
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" nonce="{{ $csp_nonce }}"></script>
     @stack('scripts')
 </body>
 

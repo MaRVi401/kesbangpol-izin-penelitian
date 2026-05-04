@@ -66,7 +66,7 @@
                             </div>
 
                             {{-- Kontainer pesan error dari JavaScript dan Server --}}
-                            <div id="avatar-error-container" class="mt-2 min-h-[20px]">
+                            <div id="avatar-error-container" class="mt-2 min-h-5">
                                 @error('avatar')
                                     <p class="text-[11px] font-bold text-red-600 dark:text-red-500 text-center leading-tight">
                                         {{ $message }}

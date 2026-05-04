@@ -1,51 +1,62 @@
-<nav
-    class="bg-white/80 dark:bg-gray-900/80 backdrop-blur-md sticky top-0 z-50 border-b border-gray-200 dark:border-gray-800">
-    <div class="max-w-7xl flex flex-wrap items-center justify-between mx-auto p-4">
-        {{-- Logo Section --}}
-        <a href="/" class="flex items-center space-x-3 rtl:space-x-reverse">
-            {{-- <img src="{{ asset('assets/images/landingPages/logo-diskominfo.png') }}" class="h-8 hidden md:block" alt="Logo" /> --}}
-            <span class="self-center text-2xl font-bold whitespace-nowrap">E-Gov SUBANG</span>
-        </a>
+<nav x-data="{ open: false }"
+    class="fixed w-full z-50 top-0 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border-b border-gray-100 dark:border-gray-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between h-16 md:h-20 items-center">
+            <div class="flex items-center gap-3">
+                <img src="{{ asset('assets/images/landingPages/logo-kabSubang.webp') }}" class="h-10 sm:h-12 w-auto"
+                    alt="Logo Instansi">
+                <div class="flex flex-col border-l-2 border-red-600 pl-3 font-sans">
+                    <span class="font-bold text-gray-900 dark:text-white leading-none text-sm sm:text-lg">KESBANGPOL</span>
+                    <span class="text-[9px] sm:text-xs text-gray-500 dark:text-gray-400 tracking-widest uppercase font-semibold">Kabupaten Subang</span>
+                </div>
+            </div>
 
-        {{-- Action Buttons (Login/Dashboard & Mobile Toggle) --}}
-        <div class="flex md:order-2 space-x-3 md:space-x-2 rtl:space-x-reverse items-center">
-            @auth
-                {{-- Tombol Dashboard untuk semua user yang login --}}
-                <a href="{{ route('dashboard') }}"
-                    class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center transition shadow-md">
-                    Dashboard
-                </a>
-            @else
-                {{-- Tombol Login dengan icon masuk --}}
-                <a href="{{ route('login') }}"
-                    class="inline-flex items-center text-gray-900 dark:text-white bg-white border border-gray-300 hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 transition duration-300 dark:bg-gray-800 dark:border-gray-600 dark:hover:bg-gray-700">
-                    <svg class="w-4 h-4 me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
-                        viewBox="0 0 18 16">
-                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M1 8h11m0 0L8 4m4 4-4 4m4-11h3a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-3" />
+            <div class="hidden md:flex items-center gap-6 lg:gap-8 font-medium text-gray-600 dark:text-gray-300">
+                <a href="#beranda" class="hover:text-red-600 dark:hover:text-red-500 transition">Beranda</a>
+                <a href="#alur" class="hover:text-red-600 dark:hover:text-red-500 transition">Alur Pengajuan</a>
+                <a href="#berita" class="hover:text-red-600 dark:hover:text-red-500 transition">Berita</a>
+
+                <div class="h-6 w-px bg-gray-200 dark:bg-gray-700"></div>
+
+                @if (Route::has('login'))
+                    @auth
+                        <a href="{{ url('/dashboard') }}" class="bg-red-600 text-white px-5 py-2 rounded-full hover:bg-red-700 transition shadow-lg shadow-red-200 dark:shadow-none">Dashboard</a>
+                    @else
+                        <a href="{{ route('login') }}" class="hover:text-red-600 dark:hover:text-red-400 transition font-bold border border-red-600 px-5 py-2 rounded-full text-red-600">Masuk</a>
+                        @if (Route::has('register'))
+                            <a href="{{ route('register') }}" class="bg-red-600 text-white px-5 py-2 rounded-full hover:bg-red-700 transition shadow-lg shadow-red-200 dark:shadow-none">Daftar</a>
+                        @endif
+                    @endauth
+                @endif
+            </div>
+
+            <div class="flex md:hidden items-center">
+                <button @click="open = !open" class="text-gray-600 dark:text-gray-300 hover:text-red-600 focus:outline-none transition">
+                    <svg class="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path x-show="!open" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        <path x-show="open" x-cloak stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                     </svg>
-                    Login
-                </a>
-            @endauth
-
-            {{-- Hamburger Menu for Mobile --}}
-            <button data-collapse-toggle="navbar-cta" type="button"
-                class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none">
-                <svg class="w-5 h-5" fill="none" viewBox="0 0 17 14">
-                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M1 1h15M1 7h15M1 13h15" />
-                </svg>
-            </button>
+                </button>
+            </div>
         </div>
+    </div>
 
-        {{-- Navigation Links --}}
-        <div class="items-center justify-between hidden w-full md:flex md:w-auto md:order-1" id="navbar-cta">
-            <ul
-                class="flex flex-col font-medium p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:space-x-8 md:flex-row md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900">
-                <li><a href="#beranda" class="nav-link block py-2 px-3 md:p-0" id="link-beranda">Beranda</a></li>
-                <li><a href="#layanan" class="nav-link block py-2 px-3 md:p-0" id="link-layanan">Layanan</a></li>
-                <li><a href="#informasi" class="nav-link block py-2 px-3 md:p-0" id="link-informasi">Informasi</a></li>
-            </ul>
+    <div x-show="open" x-cloak x-transition:enter="transition ease-out duration-200"
+        x-transition:enter-start="opacity-0 -translate-y-4" x-transition:enter-end="opacity-100 translate-y-0"
+        class="md:hidden bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700 shadow-xl">
+        <div class="px-4 pt-2 pb-6 space-y-1">
+            <a href="#beranda" @click="open = false" class="block px-3 py-3 text-base font-medium hover:bg-gray-50 dark:hover:bg-gray-700 rounded-xl">Beranda</a>
+            <a href="#alur" @click="open = false" class="block px-3 py-3 text-base font-medium hover:bg-gray-50 dark:hover:bg-gray-700 rounded-xl">Alur Pengajuan</a>
+            <a href="#berita" @click="open = false" class="block px-3 py-3 text-base font-medium hover:bg-gray-50 dark:hover:bg-gray-700 rounded-xl">Berita</a>
+
+            <div class="pt-4 border-t border-gray-100 dark:border-gray-700 flex flex-col gap-3">
+                @auth
+                    <a href="{{ url('/dashboard') }}" class="w-full text-center bg-red-600 text-white py-3 rounded-xl font-bold">Dashboard</a>
+                @else
+                    <a href="{{ route('login') }}" class="w-full text-center text-red-600 font-bold border border-red-600 py-3 rounded-xl">Masuk</a>
+                    <a href="{{ route('register') }}" class="w-full text-center bg-red-600 text-white py-3 rounded-xl font-bold">Daftar</a>
+                @endauth
+            </div>
         </div>
     </div>
 </nav>
