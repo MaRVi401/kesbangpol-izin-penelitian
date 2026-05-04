@@ -21,12 +21,36 @@ class ServiceController extends Controller
 {
     public function index()
     {
-        return view('pages.mahasiswa.surat-izin-penelitian.index');
+        $userId = Auth::user()->uuid;
+        
+        $draft = Tiket::where('users_id', $userId)
+                      ->where('status', 'draft')
+                      ->whereHas('layanan', function($q) {
+                          $q->where('nama', 'LIKE', '%Izin Penelitian%');
+                      })
+                      ->latest()
+                      ->first();
+
+        $payloadDraft = [];
+        if ($draft && $draft->payload_draft) {
+            // Jika payload_draft masih berupa string JSON (misal karena query raw atau error cast)
+            if (is_string($draft->payload_draft)) {
+                 $payloadDraft = json_decode($draft->payload_draft, true) ?? [];
+            } else {
+                 // Jika sudah array (berkat model casting)
+                 $payloadDraft = (array) $draft->payload_draft;
+            }
+        }
+        
+        $tiketUuid = $draft ? $draft->uuid : null;
+
+        return view('pages.mahasiswa.surat-izin-penelitian.index', compact('payloadDraft', 'tiketUuid'));
     }
 
     public function store(Request $request)
     {
         $validatedData = $request->validate([
+            'tiket_uuid'            => 'nullable|uuid',
             'nama'                  => 'required|string|max:255',
             'nama_alias'            => 'nullable|string|max:255',
             'nama_panggilan'        => 'nullable|string|max:255',
@@ -81,8 +105,8 @@ class ServiceController extends Controller
 
         DB::beginTransaction();
         try {
-            $file = $request->file('pas_foto');
             $userId = Auth::user()->uuid;
+            $file = $request->file('pas_foto');
             
             $fileHash = hash_file('sha256', $file->path());
             $fileName = $userId . '_' . $fileHash . '.webp';
@@ -93,20 +117,41 @@ class ServiceController extends Controller
             Storage::put('private/pas_foto/' . $fileName, (string) $encodedImage);
 
             $validatedData['path_pas_foto'] = $fileName;
-            unset($validatedData['pas_foto']);
-
+            
+            $tiketUuid = $request->input('tiket_uuid');
+            unset($validatedData['pas_foto'], $validatedData['tiket_uuid']);
+            
+            $tiket = null;
             $layanan = Layanan::where('nama', 'LIKE', '%Izin Penelitian%')->firstOrFail();
-            
             $noTiket = 'PEN-' . Carbon::now()->format('dmY') . '-' . Str::upper(Str::random(4));
-            
-            $tiket = Tiket::create([
-                'uuid'       => (string) Str::uuid(),
-                'users_id'   => $userId,
-                'layanan_id' => $layanan->uuid,
-                'no_tiket'   => $noTiket,
-                'status'     => 'diajukan',
-                'deskripsi'  => 'Permohonan Izin Penelitian: ' . $request->judul_pembicara,
-            ]);
+            $aksiAudit = 'create';
+
+            if ($tiketUuid) {
+                $tiket = Tiket::where('uuid', $tiketUuid)
+                              ->where('users_id', $userId)
+                              ->where('status', 'draft')
+                              ->first();
+            }
+
+            if ($tiket) {
+                $tiket->update([
+                    'no_tiket' => $noTiket,
+                    'status' => 'diajukan',
+                    'deskripsi' => 'Permohonan Izin Penelitian: ' . $request->judul_pembicara,
+                    'payload_draft' => null
+                ]);
+                $aksiAudit = 'update';
+            } else {
+                $tiket = Tiket::create([
+                    'uuid'       => (string) Str::uuid(),
+                    'users_id'   => $userId,
+                    'layanan_id' => $layanan->uuid,
+                    'no_tiket'   => $noTiket,
+                    'status'     => 'diajukan',
+                    'deskripsi'  => 'Permohonan Izin Penelitian: ' . $request->judul_pembicara,
+                    'payload_draft' => null
+                ]);
+            }
         
             $validatedData['uuid'] = (string) Str::uuid();
             $validatedData['tiket_id'] = $tiket->uuid;
@@ -125,7 +170,7 @@ class ServiceController extends Controller
             JejakAudit::create([
                 'uuid'       => (string) Str::uuid(),
                 'users_id'   => $userId,
-                'aksi'       => 'create',
+                'aksi'       => $aksiAudit,
                 'nama_tabel' => 'tiket',
                 'record_id'  => $tiket->uuid,
                 'data_baru'  => $tiket->toArray(),
@@ -147,6 +192,75 @@ class ServiceController extends Controller
                 'status' => 'error',
                 'message' => 'Gagal menyimpan data: ' . $e->getMessage()
             ], 500);
+        }
+    }
+
+
+
+    public function autosave(Request $request)
+    {
+        // Hanya validasi field yang diperlukan untuk identifier
+        $request->validate([
+            'tiket_uuid' => 'nullable|uuid',
+        ]);
+
+        DB::beginTransaction();
+        try {
+            $userId = Auth::user()->uuid;
+            $layanan = Layanan::where('nama', 'LIKE', '%Izin Penelitian%')->firstOrFail();
+            
+            // Ambil semua input form, KECUALI file foto dan token untuk disimpan sbg JSON
+            $payload = $request->except(['_token', 'pas_foto', 'tiket_uuid']);
+            
+            $tiket = null;
+
+            // Cek apakah sudah ada tiket draft milik user ini (Mencegah IDOR)
+            if ($request->filled('tiket_uuid')) {
+                $tiket = Tiket::where('uuid', $request->tiket_uuid)
+                            ->where('users_id', $userId)
+                            ->where('status', 'draft')
+                            ->first();
+            }
+
+            if (!$tiket) {
+                // CREATE Tiket Draft Baru
+                $noTiket = 'DRAFT-' . Carbon::now()->format('dmY') . '-' . Str::upper(Str::random(4));
+                
+                $tiket = Tiket::create([
+                    'uuid'          => (string) Str::uuid(),
+                    'users_id'      => $userId,
+                    'layanan_id'    => $layanan->uuid,
+                    'no_tiket'      => $noTiket,
+                    'status'        => 'draft',
+                    'deskripsi'     => 'Draft Izin Penelitian',
+                    'payload_draft' => $payload // Simpan semua isian ke sini
+                ]);
+
+                RiwayatStatusTiket::create([
+                    'uuid'      => (string) Str::uuid(), 
+                    'tiket_id'  => $tiket->uuid,
+                    'users_id'  => $userId, 
+                    'status'    => 'draft',
+                    'catatan'   => 'Sistem menyimpan draft otomatis'
+                ]);
+            } else {
+                // UPDATE Tiket Draft yang sudah ada
+                $tiket->update([
+                    'payload_draft' => $payload // Timpa JSON lama dengan yang baru
+                ]);
+            }
+
+            DB::commit();
+
+            return response()->json([
+                'status'     => 'success',
+                'tiket_uuid' => $tiket->uuid,
+                'message'    => 'Draft tersimpan jam ' . now()->format('H:i:s')
+            ]);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['status' => 'error', 'message' => 'Gagal autosave'], 500);
         }
     }
 }

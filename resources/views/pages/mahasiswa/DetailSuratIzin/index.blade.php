@@ -35,7 +35,7 @@
 
         <div class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 mb-6">
             <div class="w-full md:w-3/4 flex flex-col md:flex-row gap-3">
-                <form action="{{ route('submission.index') }}" method="GET"
+                <form action="{{ route('detail.index') }}" method="GET"
                     class="flex flex-col md:flex-row gap-3 w-full">
                     
                     <div class="relative w-full md:w-2/3">

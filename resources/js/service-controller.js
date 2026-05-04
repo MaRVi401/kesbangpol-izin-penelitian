@@ -1,7 +1,10 @@
 const IzinPenelitianFormHandler = () => {
     const form = document.getElementById('form-penelitian');
-
     if (!form) return;
+
+    const saveStatusElement = document.getElementById('save-status');
+    let tiketUuidInput = document.getElementById('tiket_uuid');
+    let timeoutId;
 
     form.addEventListener('submit', async function (e) {
         e.preventDefault();
@@ -34,7 +37,6 @@ const IzinPenelitianFormHandler = () => {
             const result = await response.json();
 
             if (response.ok) {
-                // ... (Kode sukses biarkan seperti sebelumnya) ...
                 Swal.fire({
                     icon: 'success',
                     title: 'Berhasil!',
@@ -48,13 +50,11 @@ const IzinPenelitianFormHandler = () => {
                     }
                 });
             } else {
-                // --- PERUBAHAN DI SINI: Menyusun Error Menjadi List HTML ---
                 let errorHtml = '';
                 
                 if (result.errors) {
                     errorHtml = '<div style="text-align: left;"><ul class="pl-5 text-sm list-disc text-gray-700">';
                     Object.values(result.errors).forEach(err => {
-                        // Ambil pesan error pertama dari setiap kolom yang bermasalah
                         errorHtml += `<li class="mb-1">${err[0]}</li>`; 
                     });
                     errorHtml += '</ul></div>';
@@ -65,7 +65,7 @@ const IzinPenelitianFormHandler = () => {
                 Swal.fire({
                     icon: 'warning',
                     title: 'Periksa Kembali Form Anda',
-                    html: errorHtml, // Menggunakan property 'html', bukan 'text'
+                    html: errorHtml,
                     confirmButtonColor: '#d33',
                     confirmButtonText: 'Perbaiki Data'
                 });
@@ -82,6 +82,55 @@ const IzinPenelitianFormHandler = () => {
             submitBtn.disabled = false;
             submitBtn.innerHTML = originalBtnText;
         }
+    });
+
+    const performAutosave = () => {
+        saveStatusElement.innerText = "Menyimpan draft...";
+        
+        const formData = new FormData(form);
+        const data = {};
+        
+        formData.forEach((value, key) => {
+            const inputElement = form.querySelector(`[name="${key}"]`);
+            if (key !== '_token' && inputElement && inputElement.type !== 'file') {
+                data[key] = value;
+            }
+        });
+
+        if (tiketUuidInput && tiketUuidInput.value) {
+            data['tiket_uuid'] = tiketUuidInput.value;
+        }
+
+        const autosaveUrl = form.getAttribute('data-autosave-url');
+        fetch(autosaveUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+        .then(response => response.json())
+        .then(res => {
+            if (res.status === 'success') {
+                tiketUuidInput.value = res.tiket_uuid; 
+                saveStatusElement.innerText = res.message; 
+            }
+        })
+        .catch(error => {
+            console.error('Error autosave:', error);
+            saveStatusElement.innerText = "Gagal menyimpan draft.";
+        });
+    };
+
+    form.addEventListener('input', function(e) {
+        if (e.target.type === 'file') return; 
+
+        clearTimeout(timeoutId);
+        saveStatusElement.innerText = "Mengetik...";
+        
+        timeoutId = setTimeout(performAutosave, 2000); 
     });
 };
 

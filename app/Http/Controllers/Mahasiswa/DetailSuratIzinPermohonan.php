@@ -80,7 +80,7 @@ class DetailSuratIzinPermohonan extends Controller
 
         $ticket->delete();
 
-        return redirect()->route('detail.index')->with('success', 'Tiket dan lampiran dokumen berhasil dihapus.');
+        return back()->with('success', 'Tiket dan lampiran dokumen berhasil dihapus.');
     }
 
 }

@@ -190,6 +190,9 @@ Route::get('/user/avatar/{filename}', function ($filename) {
         Route::resource('detail', DetailSuratIzinPermohonan::class);
         //Rute History Tiket
         Route::resource('history', ServiceHistoryTicketController::class);
+        Route::post('services/autosave', [ServiceController::class, 'autosave'])
+             ->middleware('throttle:30,1') // Maksimal 30 request per menit
+             ->name('izin-penelitian.autosave');
 
         // //Rute Scanner Image
         // Route::view('/ai-scanner', 'pages.mahasiswa.layanan.test-scanner')->name('test.scanner');

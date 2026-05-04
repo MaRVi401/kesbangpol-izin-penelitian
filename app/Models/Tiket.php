@@ -25,10 +25,19 @@ class Tiket extends Model
         'layanan_id', 
         'petugas_id', 
         'no_tiket', 
-        'lampiran', // Ditambahkan
+        'lampiran',
+        'payload_draft', // Ditambahkan
         'deskripsi', 
         'status'
     ];
+
+
+    protected function casts(): array
+    {
+        return [
+            'payload_draft' => 'array', // Otomatis konversi JSON ke Array
+        ];
+    }
 
     public function user(): BelongsTo
     {
