@@ -71,6 +71,9 @@ class UserManagementController extends Controller
     /**
      * Store a newly created user in Minio (Private Storage).
      */
+    /**
+     * Store a newly created user.
+     */
     public function store(Request $request)
     {
         $rules = [
@@ -78,15 +81,15 @@ class UserManagementController extends Controller
             'email'    => 'required|email|unique:users,email',
             'username' => 'required|string|unique:users,username',
             'role'     => 'required|in:super_admin,mahasiswa,kabid,operator',
-            'nip'      => 'required_if:role,kabid,operator|nullable|numeric|digits:18',
+            'nip'      => 'required_if:role,kabid,operator,super_admin|nullable|numeric|digits:18',
             'nim'      => 'required_if:role,mahasiswa|nullable|numeric|digits:10',
             'no_wa'    => 'nullable|numeric|digits_between:10,13',
             'password' => 'required|min:8|confirmed',
             'avatar'   => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'alamat'   => 'nullable|string',
         ];
-        $messages = $this->customMessages();
 
-        $request->validate($rules, $messages);
+        $request->validate($rules, $this->customMessages());
 
         DB::beginTransaction();
         try {
@@ -99,7 +102,7 @@ class UserManagementController extends Controller
                 $avatarPath = $filename;
             }
 
-            // Simpan User Utama
+            // 1. Simpan ke Tabel Users
             $user = User::create([
                 'nama'     => $request->nama,
                 'email'    => $request->email,
@@ -111,30 +114,47 @@ class UserManagementController extends Controller
                 'avatar'   => $avatarPath,
             ]);
 
-            // Simpan Detail Role (NIP)
-            $this->getRoleModel($request->role)::create([
+            // 2. Simpan ke Tabel Detail Role (Dynamic Model)
+            $roleModel = $this->getRoleModel($request->role);
+
+            $detailData = [
                 'uuid'     => (string) Str::uuid(),
                 'users_id' => $user->uuid,
-                'nip'      => $request->nip,
-            ]);
+            ];
 
-            // Catat Audit setelah data berhasil dibuat
+            // Logika pemisahan kolom NIP atau NIM
+            if ($request->role === 'mahasiswa') {
+                $detailData['nim'] = $request->nim;
+                $detailData['status_akun'] = 'aktif';
+            } else {
+                $detailData['nip'] = $request->nip;
+            }
+
+            $roleModel::create($detailData);
+
+            // 3. Catat Jejak Audit
             JejakAudit::create([
-                'users_id' => Auth::id(),
-                'aksi' => 'create',
+                'users_id'   => Auth::id(),
+                'aksi'       => 'create',
                 'nama_tabel' => 'users',
-                'record_id' => $user->uuid,
-                'data_baru' => $user->toArray(),
-                'ip_address' => request()->ip()
+                'record_id'  => $user->uuid,
+                'data_baru'  => $user->toArray(),
+                'ip_address' => $request->ip()
             ]);
 
             DB::commit();
             return redirect()->route('user-management.index')->with('success', 'User baru berhasil ditambahkan.');
+
         } catch (\Exception $e) {
             DB::rollBack();
+            // Hapus avatar jika upload berhasil tapi DB gagal
+            if ($avatarPath) {
+                Storage::disk('local')->delete($avatarPath);
+            }
             return back()->withErrors(['error' => 'Gagal sistem: ' . $e->getMessage()])->withInput();
         }
     }
+
 
     /**
      * Show the form for editing the specified user.
@@ -373,6 +393,10 @@ class UserManagementController extends Controller
             'avatar.image'      => 'File yang diunggah harus berupa gambar.',
             'avatar.mimes'      => 'Format gambar harus JPG, JPEG, PNG, atau WebP.',
             'avatar.max'        => 'Ukuran foto terlalu besar, maksimal adalah 2MB.',
+            'nip.required_if'   => 'NIP wajib diisi jika Anda memilih role ASN/Pejabat.',
+            'nim.required_if'   => 'NIM wajib diisi jika Anda memilih role Mahasiswa.',
+            'nim.digits'        => 'NIM harus berjumlah 10 digit.',
+            'nim.numeric'       => 'NIM harus berupa angka.',
         ];
     }
 }

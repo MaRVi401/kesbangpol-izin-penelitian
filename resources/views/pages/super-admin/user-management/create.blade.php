@@ -40,11 +40,10 @@
 
         <hr class="mb-6 border-gray-200 dark:border-gray-700">
 
-        {{-- Sub-Title --}}
+        {{-- Title Section --}}
         <div class="mb-6">
-            <h3 class="text-xl font-bold text-gray-800 dark:text-gray-200">Tambah Pengguna Baru</h3>
-            <p class="text-sm text-gray-500 dark:text-gray-400">Silahkan lengkapi formulir di bawah untuk mendaftarkan
-                pengguna baru ke sistem.</p>
+            <h3 class="text-xl font-bold text-gray-900 dark:text-white">Tambah Pengguna Baru</h3>
+            <p class="text-sm text-gray-500 dark:text-gray-400">Silahkan lengkapi formulir di bawah untuk mendaftarkan pengguna baru ke sistem.</p>
         </div>
 
         {{-- Form Card --}}
@@ -57,8 +56,8 @@
                     <div>
                         <label class="block mb-2 text-sm font-semibold text-gray-900 dark:text-white">Nama Lengkap</label>
                         <input type="text" name="nama" value="{{ old('nama') }}" placeholder="Ahmad Yassin"
-                            class="bg-gray-50 border text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:text-white transition-colors
-                        {{ $errors->has('nama') ? 'border-red-500 dark:border-red-500' : 'border-gray-300 dark:border-gray-600' }}">
+                            class="bg-gray-50 border {{ $errors->has('nama') ? 'border-red-500' : 'border-gray-300' }} text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                            required>
                         @error('nama')
                             <p class="mt-1.5 text-xs font-medium text-red-600 dark:text-red-500">{{ $message }}</p>
                         @enderror
@@ -68,8 +67,8 @@
                     <div>
                         <label class="block mb-2 text-sm font-semibold text-gray-900 dark:text-white">Email</label>
                         <input type="email" name="email" value="{{ old('email') }}" placeholder="nama@subang.go.id"
-                            class="bg-gray-50 border text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:text-white transition-colors
-                        {{ $errors->has('email') ? 'border-red-500 dark:border-red-500' : 'border-gray-300 dark:border-gray-600' }}">
+                            class="bg-gray-50 border {{ $errors->has('email') ? 'border-red-500' : 'border-gray-300' }} text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                            required>
                         @error('email')
                             <p class="mt-1.5 text-xs font-medium text-red-600 dark:text-red-500">{{ $message }}</p>
                         @enderror
@@ -79,21 +78,31 @@
                     <div>
                         <label class="block mb-2 text-sm font-semibold text-gray-900 dark:text-white">Username</label>
                         <input type="text" name="username" value="{{ old('username') }}"
-                            class="bg-gray-50 border text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:text-white transition-colors
-                        {{ $errors->has('username') ? 'border-red-500 dark:border-red-500' : 'border-gray-300 dark:border-gray-600' }}">
+                            class="bg-gray-50 border {{ $errors->has('username') ? 'border-red-500' : 'border-gray-300' }} text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:text-white"
+                            required>
                         @error('username')
                             <p class="mt-1.5 text-xs font-medium text-red-600 dark:text-red-500">{{ $message }}</p>
                         @enderror
                     </div>
 
-                    {{-- NIP --}}
-                    <div>
+                    {{-- Container NIP (Akan dikontrol JS) --}}
+                    <div id="nip_group" class="{{ in_array(old('role'), ['kabid', 'operator', 'super_admin']) ? '' : 'hidden' }}">
                         <label class="block mb-2 text-sm font-semibold text-gray-900 dark:text-white">NIP</label>
-                        <input type="text" name="nip" value="{{ old('nip') }}" maxlength="18"
-                            oninput="this.value = this.value.replace(/[^0-9]/g, '')" placeholder="199001012015011001"
-                            class="bg-gray-50 border text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:text-white transition-colors
-                            {{ $errors->has('nip') ? 'border-red-500 dark:border-red-500' : 'border-gray-300 dark:border-gray-600' }}">
+                        <input type="text" name="nip" id="nip" value="{{ old('nip') }}"
+                            maxlength="18" placeholder="199001012015011001"
+                            class="bg-gray-50 border {{ $errors->has('nip') ? 'border-red-500' : 'border-gray-300' }} text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:text-white">
                         @error('nip')
+                            <p class="mt-1.5 text-xs font-medium text-red-600 dark:text-red-500">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    {{-- Container NIM (Akan dikontrol JS) --}}
+                    <div id="nim_group" class="{{ old('role') == 'mahasiswa' ? '' : 'hidden' }}">
+                        <label class="block mb-2 text-sm font-semibold text-gray-900 dark:text-white">NIM</label>
+                        <input type="text" name="nim" id="nim" value="{{ old('nim') }}"
+                            maxlength="10" placeholder="2305001"
+                            class="bg-gray-50 border {{ $errors->has('nim') ? 'border-red-500' : 'border-gray-300' }} text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:text-white">
+                        @error('nim')
                             <p class="mt-1.5 text-xs font-medium text-red-600 dark:text-red-500">{{ $message }}</p>
                         @enderror
                     </div>
@@ -101,14 +110,12 @@
                     {{-- Role --}}
                     <div>
                         <label class="block mb-2 text-sm font-semibold text-gray-900 dark:text-white">Role</label>
-                        <select name="role"
+                        <select name="role" id="role_select"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-                            <option value="pengguna_asn" {{ old('role') == 'pengguna_asn' ? 'selected' : '' }}>Pengguna ASN
-                            </option>
+                            <option value="super_admin" {{ old('role') == 'super_admin' ? 'selected' : '' }}>Super Admin</option>
+                            <option value="mahasiswa" {{ old('role') == 'mahasiswa' ? 'selected' : '' }}>Mahasiswa</option>
                             <option value="kabid" {{ old('role') == 'kabid' ? 'selected' : '' }}>Kabid</option>
                             <option value="operator" {{ old('role') == 'operator' ? 'selected' : '' }}>Operator</option>
-                            <option value="super_admin" {{ old('role') == 'super_admin' ? 'selected' : '' }}>Super Admin
-                            </option>
                         </select>
                     </div>
 
@@ -117,11 +124,7 @@
                         <label class="block mb-2 text-sm font-semibold text-gray-900 dark:text-white">Nomor WhatsApp</label>
                         <input type="text" name="no_wa" value="{{ old('no_wa') }}" maxlength="13"
                             oninput="this.value = this.value.replace(/[^0-9]/g, '')" placeholder="081234567890"
-                            class="bg-gray-50 border text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:text-white transition-colors
-                            {{ $errors->has('no_wa') ? 'border-red-500' : 'border-gray-300' }}">
-                        @error('no_wa')
-                            <p class="mt-1.5 text-xs font-medium text-red-600">{{ $message }}</p>
-                        @enderror
+                            class="bg-gray-50 border {{ $errors->has('no_wa') ? 'border-red-500' : 'border-gray-300' }} text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:text-white">
                     </div>
 
                     {{-- Alamat --}}
@@ -129,57 +132,63 @@
                         <label class="block mb-2 text-sm font-semibold text-gray-900 dark:text-white">Alamat Lengkap</label>
                         <textarea name="alamat" rows="3"
                             class="bg-gray-50 border text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:text-white transition-colors
-                            {{ $errors->has('alamat') ? 'border-red-500 dark:border-red-500' : 'border-gray-300 dark:border-gray-600' }}"
+                            {{ $errors->has('alamat') ? 'border-red-500' : 'border-gray-300' }}"
                             placeholder="Masukkan alamat lengkap sesuai KTP...">{{ old('alamat') }}</textarea>
                         @error('alamat')
                             <p class="mt-1.5 text-xs font-medium text-red-600 dark:text-red-500">{{ $message }}</p>
                         @enderror
-                    </div>
-
-                    {{-- Password --}}
-                    <div>
-                        <label class="block mb-2 text-sm font-semibold text-gray-900 dark:text-white">Password</label>
-                        <input type="password" name="password"
-                            class="bg-gray-50 border text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:text-white transition-colors
-                        {{ $errors->has('password') ? 'border-red-500 dark:border-red-500' : 'border-gray-300 dark:border-gray-600' }}">
-                        @error('password')
-                            <p class="mt-1.5 text-xs font-medium text-red-600 dark:text-red-500">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    {{-- Konfirmasi Password --}}
-                    <div>
-                        <label class="block mb-2 text-sm font-semibold text-gray-900 dark:text-white">Konfirmasi
-                            Password</label>
-                        <input type="password" name="password_confirmation"
-                            class="bg-gray-50 border text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:text-white transition-colors
-                        {{ $errors->has('password') ? 'border-red-500 dark:border-red-500' : 'border-gray-300 dark:border-gray-600' }}">
                     </div>
                 </div>
 
                 {{-- Avatar Section --}}
                 <div class="mb-8">
                     <label class="block mb-3 text-sm font-semibold text-gray-900 dark:text-white">Avatar Profile</label>
-                    <div
-                        class="flex items-center gap-6 p-4 bg-gray-50 dark:bg-gray-800/50 rounded-xl border border-dashed transition-colors
-                    {{ $errors->has('avatar') ? 'border-red-500 bg-red-50/50 dark:bg-red-900/10' : 'border-gray-300 dark:border-gray-600' }}">
+                    <div class="flex items-center gap-6 p-4 bg-gray-50 dark:bg-gray-700/50 rounded-xl border border-dashed border-gray-300 dark:border-gray-600">
+                        <div class="relative shrink-0">
+                            <img id="avatar-preview"
+                                class="w-20 h-20 rounded-full object-cover ring-4 ring-white dark:ring-gray-800 shadow-lg"
+                                src="https://ui-avatars.com/api/?name=New+User"
+                                alt="preview-avatar">
+                        </div>
                         <div class="w-full">
-                            <input type="file" name="avatar"
+                            <input type="file" name="avatar" id="avatar-input" accept="image/*"
+                                onchange="previewImage(this)"
                                 class="block w-full text-xs text-gray-900 border rounded-lg cursor-pointer bg-white focus:outline-none dark:bg-gray-800 dark:placeholder-gray-400 transition-colors
-                            {{ $errors->has('avatar') ? 'border-red-500 dark:border-red-500' : 'border-gray-300 dark:border-gray-600 dark:text-gray-400' }}">
+                                {{ $errors->has('avatar') ? 'border-red-500' : 'border-gray-300' }}">
                             @error('avatar')
-                                <div class="flex items-center gap-1 mt-1.5 text-red-600 dark:text-red-500">
-                                    <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20">
-                                        <path fill-rule="evenodd"
-                                            d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
-                                            clip-rule="evenodd" />
-                                    </svg>
-                                    <p class="text-xs font-medium">{{ $message }}</p>
-                                </div>
+                                <p class="mt-1.5 text-xs font-medium text-red-600">{{ $message }}</p>
                             @else
-                                <p class="mt-1 text-xs text-gray-500 dark:text-gray-400 font-normal">PNG, JPG or WebP (Max.
-                                    2MB).</p>
+                                <p class="mt-1 text-xs text-gray-500 dark:text-gray-400 font-normal">PNG, JPG or WebP (Max. 2MB).</p>
                             @enderror
+                        </div>
+                    </div>
+                </div>
+
+                {{-- Password Section --}}
+                <div class="border-t border-gray-200 dark:border-gray-700 pt-6 mb-8">
+                    <div class="flex items-center gap-2 mb-4">
+                        <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                        </svg>
+                        <h4 class="text-md font-bold text-gray-900 dark:text-white">Keamanan Akun</h4>
+                    </div>
+                    <div class="grid gap-6 md:grid-cols-2">
+                        <div>
+                            <label class="block mb-2 text-sm font-semibold text-gray-900 dark:text-white">Password</label>
+                            <input type="password" name="password" required
+                                class="bg-gray-50 border text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:text-white transition-colors
+                                {{ $errors->has('password') ? 'border-red-500' : 'border-gray-300' }}">
+                            @error('password')
+                                <p class="mt-1.5 text-xs font-medium text-red-600 dark:text-red-500">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <div>
+                            <label class="block mb-2 text-sm font-semibold text-gray-900 dark:text-white">Konfirmasi Password</label>
+                            <input type="password" name="password_confirmation" required
+                                class="bg-gray-50 border text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:text-white transition-colors
+                                {{ $errors->has('password') ? 'border-red-500' : 'border-gray-300' }}">
                         </div>
                     </div>
                 </div>
@@ -198,4 +207,21 @@
             </form>
         </div>
     </div>
+
+    @push('scripts')
+        <script>
+            // Fungsi Preview Gambar
+            function previewImage(input) {
+                if (input.files && input.files[0]) {
+                    var reader = new FileReader();
+                    reader.onload = function(e) {
+                        document.getElementById('avatar-preview').src = e.target.result;
+                    }
+                    reader.readAsDataURL(input.files[0]);
+                }
+            }
+        </script>
+        {{-- Memanggil JS yang sama dengan edit user untuk handle show/hide NIP-NIM --}}
+        @vite('resources/js/user-management.js')
+    @endpush
 @endsection
