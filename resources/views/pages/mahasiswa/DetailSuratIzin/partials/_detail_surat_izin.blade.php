@@ -118,5 +118,13 @@
 @else
 <div class="text-center py-10 bg-gray-50 dark:bg-gray-800/50 rounded-lg border border-dashed border-gray-300">
     <p class="text-gray-500 dark:text-gray-400">Data detail permohonan tidak ditemukan.</p>
+    @if(in_array($ticket->status, ['draft', 'belum diajukan']))
+        <a href="{{ url()->previous() }}" class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-green-500 rounded-lg hover:bg-green-600 focus:ring-4 focus:ring-green-300 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 transition-all shadow-sm">
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+            </svg>
+            Kembali
+        </a>
+    @endif
 </div>
 @endif

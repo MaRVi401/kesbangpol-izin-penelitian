@@ -7,6 +7,7 @@
     <hr class="mb-6 border-gray-200 dark:border-gray-700">
 
     <div class="max-w-4xl mx-auto">
+        
         <div class="mb-6 flex justify-between items-center bg-white dark:bg-gray-800 p-4 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm">
             <div>
                 <h2 class="text-xl font-bold text-gray-900 dark:text-white">Tiket #{{ $ticket->no_tiket }}</h2>
