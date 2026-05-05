@@ -74,9 +74,9 @@
                             class="bg-gray-50 border {{ $errors->has('username') ? 'border-red-500 dark:border-red-500' : 'border-gray-300 dark:border-gray-600' }} text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:text-white"
                             required>
                     </div>
-                    
+
                     {{-- Container NIP (Hanya tampil untuk Kabid/Operator) --}}
-                    <div id="nip_group" class="{{ in_array($user->role, ['kabid', 'operator']) ? '' : 'hidden' }}">
+                    <div id="nip_group" class="{{ in_array($user->role, ['kabid', 'operator', 'super_admin']) ? '' : 'hidden' }}">
                         <label class="block mb-2 text-sm font-semibold text-gray-900 dark:text-white">NIP</label>
                         <input type="text" name="nip" id="nip" value="{{ old('nip', $nip ?? '') }}"
                             maxlength="18" placeholder="199001012015011001"

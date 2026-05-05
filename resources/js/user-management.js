@@ -141,9 +141,8 @@ document.addEventListener('DOMContentLoaded', function () {
             nipGroup.style.display = 'none';
             nimGroup.style.display = 'none';
 
-            // Sesuaikan dengan value yang ada di <option> pada HTML/Controller Anda
             // Jika Kabid dan Operator menggunakan NIP:
-            if (role === 'kabid' || role === 'operator') {
+            if (role === 'kabid' || role === 'operator' || role === 'super_admin') {
                 nipGroup.style.display = 'block';
             }
             // Jika Mahasiswa menggunakan NIM:
