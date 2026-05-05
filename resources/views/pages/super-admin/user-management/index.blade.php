@@ -161,7 +161,11 @@
                                 <td class="px-6 py-4 text-center">
                                     @php $roleRel = Str::camel($user->role); @endphp
                                     <span class="text-sm font-medium text-gray-700 dark:text-gray-300">
-                                        {{ $user->$roleRel ? $user->$roleRel->nip : '-' }}
+                                        @if ($user->$roleRel)
+                                            {{ $user->role === 'mahasiswa' ? $user->$roleRel->nim : $user->$roleRel->nip }}
+                                        @else
+                                            -
+                                        @endif
                                     </span>
                                 </td>
                                 <td class="px-6 py-4 text-right">

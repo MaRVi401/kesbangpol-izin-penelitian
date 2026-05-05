@@ -100,7 +100,7 @@
                     {{-- Role --}}
                     <div>
                         <label class="block mb-2 text-sm font-semibold text-gray-900 dark:text-white">Role</label>
-                        <select name="role"
+                        <select name="role" id="role_select"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
                             <option value="super_admin" {{ $user->role == 'super_admin' ? 'selected' : '' }}>Super Admin
                             </option>

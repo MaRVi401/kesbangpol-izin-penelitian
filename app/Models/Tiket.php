@@ -26,7 +26,7 @@ class Tiket extends Model
         'petugas_id', 
         'no_tiket', 
         'lampiran',
-        'payload_draft', // Ditambahkan
+        'payload_draft',
         'deskripsi', 
         'status'
     ];

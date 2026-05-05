@@ -141,10 +141,16 @@ class UserManagementController extends Controller
      */
     public function edit(User $user)
     {
-        $roleRelation = Str::camel($user->role);
-        $nip = $user->$roleRelation ? $user->$roleRelation->nip : '';
+        $nip = '';
+        $nim = '';
 
-        return view('pages.super-admin.user-management.edit', compact('user', 'nip'));
+        if (in_array($user->role, ['kabid', 'operator', 'super_admin'])) {
+            $nip = $user->{$user->role} ? $user->{$user->role}->nip : '';
+        } elseif ($user->role === 'mahasiswa') {
+            $nim = $user->mahasiswa ? $user->mahasiswa->nim : '';
+        }
+
+        return view('pages.super-admin.user-management.edit', compact('user', 'nip', 'nim'));
     }
 
     /**
@@ -198,26 +204,32 @@ class UserManagementController extends Controller
             $roleModel = $this->getRoleModel($request->role);
             $oldRoleModel = $this->getRoleModel($oldRole);
 
-            // Tentukan identifier (NIP atau NIM)
-            $identifierValue = ($request->role === 'mahasiswa') ? $request->nim : $request->nip;
-            $identifierField = ($request->role === 'mahasiswa') ? 'nim' : 'nip';
-
             if ($oldRole !== $request->role) {
-                // Hapus data di tabel role lama
                 $oldRoleModel::where('users_id', $user->uuid)->delete();
 
-                // Buat baru di tabel role baru
-                $roleModel::create([
+                $newData = [
                     'uuid' => (string) Str::uuid(),
                     'users_id' => $user->uuid,
-                    $identifierField => $identifierValue,
-                ]);
+                ];
+
+                if ($request->role === 'mahasiswa') {
+                    $newData['nim'] = $request->nim;
+                    $newData['status_akun'] = 'aktif';
+                } else {
+                    $newData['nip'] = $request->nip;
+                }
+
+                $roleModel::create($newData);
             } else {
-                // Update data yang sudah ada
-                $roleModel::updateOrCreate(
-                    ['users_id' => $user->uuid],
-                    [$identifierField => $identifierValue]
-                );
+                if ($request->role === 'mahasiswa') {
+                    $roleModel::where('users_id', $user->uuid)->update([
+                        'nim' => $request->nim
+                    ]);
+                } else if (in_array($request->role, ['kabid', 'operator', 'super_admin'])) {
+                    $roleModel::where('users_id', $user->uuid)->update([
+                        'nip' => $request->nip
+                    ]);
+                }
             }
 
             JejakAudit::create([

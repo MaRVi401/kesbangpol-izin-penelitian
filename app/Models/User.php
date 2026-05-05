@@ -32,7 +32,6 @@ class User extends Authenticatable
         'remember_token',
     ];
 
-    // Penting untuk Route Resource agar mencari berdasarkan uuid di URL
     public function getRouteKeyName()
     {
         return 'uuid';
@@ -50,7 +49,6 @@ class User extends Authenticatable
         return $this->hasOne(SuperAdmin::class, 'users_id', 'uuid');
     }
 
-    // Perubahan dilakukan di sini: penggunaAsn diubah menjadi mahasiswa
     public function mahasiswa()
     {
         return $this->hasOne(Mahasiswa::class, 'users_id', 'uuid');

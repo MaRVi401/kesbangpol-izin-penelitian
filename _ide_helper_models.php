@@ -139,6 +139,32 @@ namespace App\Models{
 /**
  * @property string $uuid
  * @property string $users_id
+ * @property string $nim
+ * @property string|null $ktm_path
+ * @property string|null $surat_rekomendasi_path
+ * @property string $status_akun
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\User $user
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Mahasiswa newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Mahasiswa newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Mahasiswa query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Mahasiswa whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Mahasiswa whereKtmPath($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Mahasiswa whereNim($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Mahasiswa whereStatusAkun($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Mahasiswa whereSuratRekomendasiPath($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Mahasiswa whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Mahasiswa whereUsersId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Mahasiswa whereUuid($value)
+ */
+	class Mahasiswa extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * @property string $uuid
+ * @property string $users_id
  * @property string $nip
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
@@ -206,11 +232,10 @@ namespace App\Models{
  * @property string $tempat_lahir
  * @property string $tanggal_lahir
  * @property string $pekerjaan_pendidikan
- * @property string|null $semester
+ * @property int|null $semester
  * @property string $institusi_pendidikan
  * @property string|null $alamat_kantor
  * @property string|null $alamat_institusi
- * @property string|null $nomor_ktp
  * @property string|null $nomor_mahasiswa
  * @property string|null $nomor_pegawai
  * @property string $kegiatan
@@ -238,6 +263,7 @@ namespace App\Models{
  * @property string|null $ciri_khusus
  * @property string|null $hobi
  * @property string $no_hp
+ * @property string|null $path_pas_foto
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\Tiket $tiket
@@ -266,9 +292,9 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|SuratPermohonanIzinPenelitian whereNamaAlias($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|SuratPermohonanIzinPenelitian whereNamaPanggilan($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|SuratPermohonanIzinPenelitian whereNoHp($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|SuratPermohonanIzinPenelitian whereNomorKtp($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|SuratPermohonanIzinPenelitian whereNomorMahasiswa($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|SuratPermohonanIzinPenelitian whereNomorPegawai($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SuratPermohonanIzinPenelitian wherePathPasFoto($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|SuratPermohonanIzinPenelitian wherePekerjaan($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|SuratPermohonanIzinPenelitian wherePekerjaanPendidikan($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|SuratPermohonanIzinPenelitian wherePenanggungJawab1($value)
@@ -339,6 +365,7 @@ namespace App\Models{
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\Kabid|null $kabid
+ * @property-read \App\Models\Mahasiswa|null $mahasiswa
  * @property-read \Illuminate\Notifications\DatabaseNotificationCollection<int, \Illuminate\Notifications\DatabaseNotification> $notifications
  * @property-read int|null $notifications_count
  * @property-read \App\Models\Operator|null $operator

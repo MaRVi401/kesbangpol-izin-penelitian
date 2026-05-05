@@ -137,24 +137,17 @@ document.addEventListener('DOMContentLoaded', function () {
         function toggleInputs() {
             const role = roleSelect.value;
 
-            // Sembunyikan semua terlebih dahulu
-            nipGroup.style.display = 'none';
-            nimGroup.style.display = 'none';
+            nipGroup.classList.add('hidden');
+            nimGroup.classList.add('hidden');
 
-            // Jika Kabid dan Operator menggunakan NIP:
             if (role === 'kabid' || role === 'operator' || role === 'super_admin') {
-                nipGroup.style.display = 'block';
-            }
-            // Jika Mahasiswa menggunakan NIM:
-            else if (role === 'mahasiswa') {
-                nimGroup.style.display = 'block';
+                nipGroup.classList.remove('hidden');
+            } else if (role === 'mahasiswa') {
+                nimGroup.classList.remove('hidden');
             }
         }
 
-        // Jalankan saat halaman pertama kali dimuat
         toggleInputs();
-
-        // Tambahkan event listener
         roleSelect.addEventListener('change', toggleInputs);
     }
 });

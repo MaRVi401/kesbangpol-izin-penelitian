@@ -13,9 +13,6 @@ class SuratPermohonanIzinPenelitian extends Model
     protected $primaryKey = 'uuid';
     public $incrementing = false;
     protected $keyType = 'string';
-
-    // Menggunakan guarded karena jumlah kolom sangat banyak di migrasi.
-    // Pastikan melakukan validasi Request dengan ketat di Controller.
     protected $guarded = [];
 
     public function tiket()
