@@ -128,4 +128,34 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         }
     }
+
+    const roleSelect = document.getElementById('role_select');
+    const nipGroup = document.getElementById('nip_group');
+    const nimGroup = document.getElementById('nim_group');
+
+    if (roleSelect && nipGroup && nimGroup) {
+        function toggleInputs() {
+            const role = roleSelect.value;
+
+            // Sembunyikan semua terlebih dahulu
+            nipGroup.style.display = 'none';
+            nimGroup.style.display = 'none';
+
+            // Sesuaikan dengan value yang ada di <option> pada HTML/Controller Anda
+            // Jika Kabid dan Operator menggunakan NIP:
+            if (role === 'kabid' || role === 'operator') {
+                nipGroup.style.display = 'block';
+            }
+            // Jika Mahasiswa menggunakan NIM:
+            else if (role === 'mahasiswa') {
+                nimGroup.style.display = 'block';
+            }
+        }
+
+        // Jalankan saat halaman pertama kali dimuat
+        toggleInputs();
+
+        // Tambahkan event listener
+        roleSelect.addEventListener('change', toggleInputs);
+    }
 });

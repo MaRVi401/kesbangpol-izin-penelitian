@@ -78,7 +78,8 @@ class UserManagementController extends Controller
             'email'    => 'required|email|unique:users,email',
             'username' => 'required|string|unique:users,username',
             'role'     => 'required|in:super_admin,mahasiswa,kabid,operator',
-            'nip'      => 'required|numeric|digits:18',
+            'nip'      => 'required_if:role,kabid,operator|nullable|numeric|digits:18',
+            'nim'      => 'required_if:role,mahasiswa|nullable|numeric|digits:10',
             'no_wa'    => 'nullable|numeric|digits_between:10,13',
             'password' => 'required|min:8|confirmed',
             'avatar'   => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
@@ -156,7 +157,8 @@ class UserManagementController extends Controller
             'email'    => 'required|email|unique:users,email,' . $user->uuid . ',uuid',
             'username' => 'required|string|unique:users,username,' . $user->uuid . ',uuid',
             'role'     => 'required|in:super_admin,mahasiswa,kabid,operator',
-            'nip'      => 'required|numeric|digits:18',
+            'nip'      => 'required_if:role,kabid,operator|nullable|numeric|digits:18',
+            'nim'      => 'required_if:role,mahasiswa|nullable|numeric|digits:10',
             'no_wa'    => 'nullable|numeric|digits_between:10,13',
             'avatar'   => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
             'password' => 'nullable|min:8|confirmed',
@@ -193,18 +195,28 @@ class UserManagementController extends Controller
             $user->save();
 
             // Sinkronisasi Tabel Role
+            $roleModel = $this->getRoleModel($request->role);
+            $oldRoleModel = $this->getRoleModel($oldRole);
+
+            // Tentukan identifier (NIP atau NIM)
+            $identifierValue = ($request->role === 'mahasiswa') ? $request->nim : $request->nip;
+            $identifierField = ($request->role === 'mahasiswa') ? 'nim' : 'nip';
+
             if ($oldRole !== $request->role) {
-                $this->getRoleModel($oldRole)::where('users_id', $user->uuid)->delete();
-                $this->getRoleModel($request->role)::create([
+                // Hapus data di tabel role lama
+                $oldRoleModel::where('users_id', $user->uuid)->delete();
+
+                // Buat baru di tabel role baru
+                $roleModel::create([
                     'uuid' => (string) Str::uuid(),
                     'users_id' => $user->uuid,
-                    'nip' => $request->nip,
+                    $identifierField => $identifierValue,
                 ]);
             } else {
-                // Gunakan updateOrCreate untuk memastikan record detail role ada
-                $this->getRoleModel($request->role)::updateOrCreate(
+                // Update data yang sudah ada
+                $roleModel::updateOrCreate(
                     ['users_id' => $user->uuid],
-                    ['nip' => $request->nip]
+                    [$identifierField => $identifierValue]
                 );
             }
 
@@ -227,7 +239,7 @@ class UserManagementController extends Controller
     }
 
     /**
-     * Remove user and clean up Minio (Private Storage) storage.
+     * Remove user and clean (Private Storage).
      */
     public function destroy(User $user)
     {

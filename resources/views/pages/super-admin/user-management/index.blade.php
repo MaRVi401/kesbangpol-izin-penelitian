@@ -119,7 +119,7 @@
                             </th>
                             <th scope="col" class="px-6 py-4 font-bold text-center">Username</th>
                             <th scope="col" class="px-6 py-4 font-bold text-center">Role</th>
-                            <th scope="col" class="px-6 py-4 font-bold text-center">NIP</th>
+                            <th scope="col" class="px-6 py-4 font-bold text-center">NIP/NIM</th>
                             <th scope="col" class="px-6 py-4 text-right font-bold">Aksi</th>
                         </tr>
                     </thead>
