@@ -56,8 +56,7 @@
                     <div>
                         <label class="block mb-2 text-sm font-semibold text-gray-900 dark:text-white">Nama Lengkap</label>
                         <input type="text" name="nama" value="{{ old('nama') }}" placeholder="Ahmad Yassin"
-                            class="bg-gray-50 border {{ $errors->has('nama') ? 'border-red-500' : 'border-gray-300' }} text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                            required>
+                            class="bg-gray-50 border {{ $errors->has('nama') ? 'border-red-500' : 'border-gray-300' }} text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
                         @error('nama')
                             <p class="mt-1.5 text-xs font-medium text-red-600 dark:text-red-500">{{ $message }}</p>
                         @enderror
@@ -67,8 +66,7 @@
                     <div>
                         <label class="block mb-2 text-sm font-semibold text-gray-900 dark:text-white">Email</label>
                         <input type="email" name="email" value="{{ old('email') }}" placeholder="nama@subang.go.id"
-                            class="bg-gray-50 border {{ $errors->has('email') ? 'border-red-500' : 'border-gray-300' }} text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                            required>
+                            class="bg-gray-50 border {{ $errors->has('email') ? 'border-red-500' : 'border-gray-300' }} text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
                         @error('email')
                             <p class="mt-1.5 text-xs font-medium text-red-600 dark:text-red-500">{{ $message }}</p>
                         @enderror
@@ -78,14 +76,13 @@
                     <div>
                         <label class="block mb-2 text-sm font-semibold text-gray-900 dark:text-white">Username</label>
                         <input type="text" name="username" value="{{ old('username') }}"
-                            class="bg-gray-50 border {{ $errors->has('username') ? 'border-red-500' : 'border-gray-300' }} text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:text-white"
-                            required>
+                            class="bg-gray-50 border {{ $errors->has('username') ? 'border-red-500' : 'border-gray-300' }} text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:text-white">
                         @error('username')
                             <p class="mt-1.5 text-xs font-medium text-red-600 dark:text-red-500">{{ $message }}</p>
                         @enderror
                     </div>
 
-                    {{-- Container NIP (Akan dikontrol JS) --}}
+                    {{-- Container NIP --}}
                     <div id="nip_group" class="{{ in_array(old('role'), ['kabid', 'operator', 'super_admin']) ? '' : 'hidden' }}">
                         <label class="block mb-2 text-sm font-semibold text-gray-900 dark:text-white">NIP</label>
                         <input type="text" name="nip" id="nip" value="{{ old('nip') }}"
@@ -96,7 +93,7 @@
                         @enderror
                     </div>
 
-                    {{-- Container NIM (Akan dikontrol JS) --}}
+                    {{-- Container NIM --}}
                     <div id="nim_group" class="{{ old('role') == 'mahasiswa' ? '' : 'hidden' }}">
                         <label class="block mb-2 text-sm font-semibold text-gray-900 dark:text-white">NIM</label>
                         <input type="text" name="nim" id="nim" value="{{ old('nim') }}"
@@ -176,7 +173,7 @@
                     <div class="grid gap-6 md:grid-cols-2">
                         <div>
                             <label class="block mb-2 text-sm font-semibold text-gray-900 dark:text-white">Password</label>
-                            <input type="password" name="password" required
+                            <input type="password" name="password"
                                 class="bg-gray-50 border text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:text-white transition-colors
                                 {{ $errors->has('password') ? 'border-red-500' : 'border-gray-300' }}">
                             @error('password')
@@ -186,7 +183,7 @@
 
                         <div>
                             <label class="block mb-2 text-sm font-semibold text-gray-900 dark:text-white">Konfirmasi Password</label>
-                            <input type="password" name="password_confirmation" required
+                            <input type="password" name="password_confirmation"
                                 class="bg-gray-50 border text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:text-white transition-colors
                                 {{ $errors->has('password') ? 'border-red-500' : 'border-gray-300' }}">
                         </div>
@@ -210,7 +207,6 @@
 
     @push('scripts')
         <script>
-            // Fungsi Preview Gambar
             function previewImage(input) {
                 if (input.files && input.files[0]) {
                     var reader = new FileReader();
@@ -221,7 +217,6 @@
                 }
             }
         </script>
-        {{-- Memanggil JS yang sama dengan edit user untuk handle show/hide NIP-NIM --}}
         @vite('resources/js/user-management.js')
     @endpush
 @endsection
