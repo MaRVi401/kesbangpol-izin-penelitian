@@ -79,7 +79,8 @@ Route::middleware('auth')->group(function () {
     // Rute untuk akses file di storage private
     Route::get('/storage/private/{path}', [FileController::class, 'show'])
     ->where('path', '.*')
-    ->middleware('auth');
+    ->middleware('auth')
+    ->name('file.show');
 
         // Edit profile
 
@@ -141,13 +142,11 @@ Route::get('/user/avatar/{filename}', function ($filename) {
         // Halaman Meja Kerja
         Route::get('workdesk', [OperatorTicketController::class, 'workDesk'])->name('ticket.workdesk');
 
-        Route::prefix('dev')->group(function () {
-            Route::get('/upload-template', [DevTemplateController::class, 'index'])->name('dev.template.index');
-            Route::post('/upload-template', [DevTemplateController::class, 'store'])->name('dev.template.store');
-        });
-
         // Proses Ambil Tiket
         Route::post('ticket/{uuid}/handle', [OperatorTicketController::class, 'handle'])->name('ticket.handle');
+
+        Route::get('/ticket/{uuid}/preview-pdf', [OperatorTicketController::class, 'previewPdf'])->name('ticket.preview-pdf');
+        Route::get('/ticket/{uuid}/download-docx', [OperatorTicketController::class, 'downloadDocx'])->name('ticket.download-docx');
 
         // Proses Selesaikan Tiket
         Route::resource('ticket', OperatorTicketController::class)
