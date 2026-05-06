@@ -193,6 +193,9 @@ Route::get('/user/avatar/{filename}', function ($filename) {
              ->middleware('throttle:30,1') // Maksimal 30 request per menit
              ->name('izin-penelitian.autosave');
 
+        Route::post('history/{uuid}/revisi', [ServiceHistoryTicketController::class, 'revisi'])
+         ->name('history.revisi');
+
         // //Rute Scanner Image
         // Route::view('/ai-scanner', 'pages.mahasiswa.layanan.test-scanner')->name('test.scanner');
     });

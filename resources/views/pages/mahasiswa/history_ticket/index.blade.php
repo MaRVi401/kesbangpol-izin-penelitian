@@ -128,6 +128,19 @@
                                             </svg>
                                             Lihat
                                         </a>
+
+                                        @if(in_array(strtolower($ticket->status), ['ditolak', 'verifikasi gagal']))
+                                            <form action="{{ route('history.revisi', $ticket->uuid) }}" method="POST" class="inline-block">
+                                                @csrf
+                                                <button type="submit" class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-yellow-500 rounded-lg hover:bg-yellow-600 focus:ring-4 focus:outline-none focus:ring-yellow-300 dark:bg-yellow-600 dark:hover:bg-yellow-700 dark:focus:ring-yellow-800 transition-all shadow-sm" title="Revisi Tiket">
+                                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                                                    </svg>
+                                                    Revisi
+                                                </button>
+                                            </form>
+                                        @endif
+
                                         <form action="{{ route('detail.destroy', $ticket->uuid) }}" method="POST" class="inline-block">
                                             @csrf
                                             @method('DELETE')

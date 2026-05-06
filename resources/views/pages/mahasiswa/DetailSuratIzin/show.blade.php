@@ -30,19 +30,21 @@
             </div>
         </div>
 
-        @if(in_array($ticket->status, ['selesai', 'ditolak']))
+        @if(in_array($ticket->status, ['verifikasi lengkap', 'verifikasi gagal', 'diterima', 'ditolak']))
             @if($ticket->komentar->isNotEmpty())
-                <div class="mb-6 p-5 rounded-xl border shadow-sm 
-                    {{ $ticket->status == 'ditolak' ? 'bg-red-50 border-red-200 dark:bg-red-900/10 dark:border-red-800' : 'bg-green-50 border-green-200 dark:bg-green-900/10 dark:border-green-800' }}">
-                    
+                @php
+                    $isError = in_array($ticket->status, ['verifikasi gagal', 'ditolak']);
+                @endphp
+                
+                <div class="mb-6 p-5 rounded-xl border shadow-sm {{ $isError ? 'bg-red-50 border-red-200 dark:bg-red-900/10 dark:border-red-800' : 'bg-green-50 border-green-200 dark:bg-green-900/10 dark:border-green-800' }}">
                     <div class="flex items-center mb-3">
-                        <div class="p-2 rounded-lg {{ $ticket->status == 'ditolak' ? 'bg-red-100 dark:bg-red-800' : 'bg-green-100 dark:bg-green-800' }} mr-3">
-                            <svg class="w-5 h-5 {{ $ticket->status == 'ditolak' ? 'text-red-600 dark:text-red-300' : 'text-green-600 dark:text-green-300' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div class="p-2 rounded-lg {{ $isError ? 'bg-red-100 dark:bg-red-800' : 'bg-green-100 dark:bg-green-800' }} mr-3">
+                            <svg class="w-5 h-5 {{ $isError ? 'text-red-600 dark:text-red-300' : 'text-green-600 dark:text-green-300' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path>
                             </svg>
                         </div>
-                        <h3 class="text-lg font-bold {{ $ticket->status == 'ditolak' ? 'text-red-800 dark:text-red-400' : 'text-green-800 dark:text-green-400' }}">
-                            Balasan Admin (Tiket {{ Str::ucfirst($ticket->status) }})
+                        <h3 class="text-lg font-bold {{ $isError ? 'text-red-800 dark:text-red-400' : 'text-green-800 dark:text-green-400' }}">
+                            Balasan Admin (Tiket {{ Str::title($ticket->status) }})
                         </h3>
                     </div>
 
