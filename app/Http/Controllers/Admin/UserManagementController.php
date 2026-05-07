@@ -38,12 +38,12 @@ class UserManagementController extends Controller
                 $q->where('nama', 'LIKE', "%{$search}%")
                     ->orWhere('username', 'LIKE', "%{$search}%")
                     ->orWhere('email', 'LIKE', "%{$search}%")
-                    // Cari di tabel relasi detail (NIP)
+                    // Cari di tabel relasi detail (NIP/NIM)
                     ->orWhereHas('superAdmin', function ($sq) use ($search) {
                         $sq->where('nip', 'LIKE', "%{$search}%");
                     })
                     ->orWhereHas('mahasiswa', function ($sq) use ($search) {
-                        $sq->where('nip', 'LIKE', "%{$search}%");
+                        $sq->where('nim', 'LIKE', "%{$search}%");
                     })
                     ->orWhereHas('kabid', function ($sq) use ($search) {
                         $sq->where('nip', 'LIKE', "%{$search}%");
@@ -55,7 +55,7 @@ class UserManagementController extends Controller
         }
 
         // Use paginate for Flowbite pagination support
-        $users = $query->latest()->paginate(10);
+        $users = $query->latest()->paginate(10)->withQueryString();
 
         return view('pages.super-admin.user-management.index', compact('users'));
     }

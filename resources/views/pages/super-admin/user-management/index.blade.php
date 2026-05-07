@@ -86,13 +86,14 @@
                             <select name="role" onchange="this.form.submit()"
                                 class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white transition-all cursor-pointer">
                                 <option value="">Semua Role</option>
-                                <option value="pengguna_asn" {{ request('role') == 'pengguna_asn' ? 'selected' : '' }}>
-                                    Pengguna ASN</option>
+                                <option value="mahasiswa" {{ request('role') == 'mahasiswa' ? 'selected' : '' }}>
+                                    Mahasiswa</option>
                                 <option value="kabid" {{ request('role') == 'kabid' ? 'selected' : '' }}>Kabid</option>
                                 <option value="operator" {{ request('role') == 'operator' ? 'selected' : '' }}>Operator
                                 </option>
                             </select>
                         </div>
+                        <button type="submit" class="hidden"></button>
                     </div>
                 </form>
             </div>
