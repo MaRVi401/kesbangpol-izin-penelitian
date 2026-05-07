@@ -234,7 +234,7 @@
         </div>
     </div>
 
-    <div id="modalTolakTiket" class="fixed inset-0 z-50 hidden bg-gray-900/60 backdrop-blur-sm overflow-y-auto h-full w-full flex items-center justify-center p-4">
+    <div id="modalTolakTiket" class="fixed inset-0 z-50 hidden bg-gray-900/60 backdrop-blur-sm overflow-y-auto h-full w-full items-center justify-center p-4">
         <div class="relative w-full max-w-lg bg-white dark:bg-gray-800 rounded-3xl shadow-2xl p-6 md:p-8 border border-gray-100 dark:border-gray-700 flex flex-col">
             <div class="flex justify-between items-center mb-6">
                 <h3 class="text-xl font-black text-gray-900 dark:text-white flex items-center gap-3">
@@ -254,7 +254,7 @@
                 <input type="hidden" name="status" value="ditolak">
                 <div class="mb-5">
                     <label class="block text-xs font-bold uppercase text-gray-500 mb-2 tracking-widest">Alasan Penolakan <span class="text-red-500">*</span></label>
-                    <textarea name="komentar" required class="w-full min-h-[120px] bg-gray-50 dark:bg-gray-700/50 border-2 border-gray-100 dark:border-gray-700 text-gray-900 dark:text-white text-sm rounded-2xl p-4 focus:ring-0 focus:border-red-500 outline-none resize-none transition-colors" placeholder="Masukkan alasan mengapa tiket ini ditolak..."></textarea>
+                    <textarea name="komentar" required class="w-full min-h-30 bg-gray-50 dark:bg-gray-700/50 border-2 border-gray-100 dark:border-gray-700 text-gray-900 dark:text-white text-sm rounded-2xl p-4 focus:ring-0 focus:border-red-500 outline-none resize-none transition-colors" placeholder="Masukkan alasan mengapa tiket ini ditolak..."></textarea>
                 </div>
 
                 <div class="flex justify-end gap-3 mt-5">
