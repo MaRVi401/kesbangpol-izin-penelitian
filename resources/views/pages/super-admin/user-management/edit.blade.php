@@ -89,7 +89,8 @@
                         class="{{ in_array($user->role, ['kabid', 'operator', 'super_admin']) ? '' : 'hidden' }}">
                         <label class="block mb-2 text-sm font-semibold text-gray-900 dark:text-white">NIP</label>
                         <input type="text" name="nip" id="nip" value="{{ old('nip', $nip ?? '') }}"
-                            maxlength="18" placeholder="199001012015011001"
+                            maxlength="18" oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+                            placeholder="199001012015011001"
                             class="bg-gray-50 border {{ $errors->has('nip') ? 'border-red-500' : 'border-gray-300' }} text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:text-white">
                         @error('nip')
                             <p class="mt-1.5 text-xs font-medium text-red-600 dark:text-red-500">{{ $message }}</p>
@@ -100,7 +101,7 @@
                     <div id="nim_group" class="{{ $user->role == 'mahasiswa' ? '' : 'hidden' }}">
                         <label class="block mb-2 text-sm font-semibold text-gray-900 dark:text-white">NIM</label>
                         <input type="text" name="nim" id="nim" value="{{ old('nim', $nim ?? '') }}"
-                            maxlength="10" placeholder="2305001"
+                            maxlength="10" oninput="this.value = this.value.replace(/[^0-9]/g, '')" placeholder="2305001"
                             class="bg-gray-50 border {{ $errors->has('nim') ? 'border-red-500' : 'border-gray-300' }} text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:text-white">
                         @error('nim')
                             <p class="mt-1.5 text-xs font-medium text-red-600 dark:text-red-500">{{ $message }}</p>

@@ -88,7 +88,7 @@
                         class="{{ in_array(old('role'), ['kabid', 'operator', 'super_admin']) ? '' : 'hidden' }}">
                         <label class="block mb-2 text-sm font-semibold text-gray-900 dark:text-white">NIP</label>
                         <input type="text" name="nip" id="nip" value="{{ old('nip') }}" maxlength="18"
-                            placeholder="199001012015011001"
+                            placeholder="199001012015011001" oninput="this.value = this.value.replace(/[^0-9]/g, '')"
                             class="bg-gray-50 border {{ $errors->has('nip') ? 'border-red-500' : 'border-gray-300' }} text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:text-white">
                         @error('nip')
                             <p class="mt-1.5 text-xs font-medium text-red-600 dark:text-red-500">{{ $message }}</p>
@@ -99,7 +99,7 @@
                     <div id="nim_group" class="{{ old('role') == 'mahasiswa' ? '' : 'hidden' }}">
                         <label class="block mb-2 text-sm font-semibold text-gray-900 dark:text-white">NIM</label>
                         <input type="text" name="nim" id="nim" value="{{ old('nim') }}" maxlength="10"
-                            placeholder="2305001"
+                            placeholder="2305001" oninput="this.value = this.value.replace(/[^0-9]/g, '')"
                             class="bg-gray-50 border {{ $errors->has('nim') ? 'border-red-500' : 'border-gray-300' }} text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:text-white">
                         @error('nim')
                             <p class="mt-1.5 text-xs font-medium text-red-600 dark:text-red-500">{{ $message }}</p>
@@ -132,7 +132,8 @@
 
                     {{-- Alamat --}}
                     <div class="md:col-span-2">
-                        <label class="block mb-2 text-sm font-semibold text-gray-900 dark:text-white">Alamat Lengkap</label>
+                        <label class="block mb-2 text-sm font-semibold text-gray-900 dark:text-white">Alamat
+                            Lengkap</label>
                         <textarea name="alamat" rows="3"
                             class="bg-gray-50 border text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:text-white transition-colors
                             {{ $errors->has('alamat') ? 'border-red-500' : 'border-gray-300' }}"
