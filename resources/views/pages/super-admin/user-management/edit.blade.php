@@ -59,6 +59,9 @@
                         <input type="text" name="nama" value="{{ $user->nama }}"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400"
                             required>
+                        @error('nama')
+                            <p class="mt-1.5 text-xs font-medium text-red-600 dark:text-red-500">{{ $message }}</p>
+                        @enderror
                     </div>
                     {{-- Email --}}
                     <div>
@@ -66,6 +69,9 @@
                         <input type="email" name="email" value="{{ $user->email }}"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                             required>
+                        @error('email')
+                            <p class="mt-1.5 text-xs font-medium text-red-600 dark:text-red-500">{{ $message }}</p>
+                        @enderror
                     </div>
                     {{-- Username --}}
                     <div>
@@ -73,10 +79,14 @@
                         <input type="text" name="username" value="{{ old('username', $user->username) }}"
                             class="bg-gray-50 border {{ $errors->has('username') ? 'border-red-500 dark:border-red-500' : 'border-gray-300 dark:border-gray-600' }} text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:text-white"
                             required>
+                        @error('username')
+                            <p class="mt-1.5 text-xs font-medium text-red-600 dark:text-red-500">{{ $message }}</p>
+                        @enderror
                     </div>
 
                     {{-- Container NIP (Hanya tampil untuk Kabid/Operator) --}}
-                    <div id="nip_group" class="{{ in_array($user->role, ['kabid', 'operator', 'super_admin']) ? '' : 'hidden' }}">
+                    <div id="nip_group"
+                        class="{{ in_array($user->role, ['kabid', 'operator', 'super_admin']) ? '' : 'hidden' }}">
                         <label class="block mb-2 text-sm font-semibold text-gray-900 dark:text-white">NIP</label>
                         <input type="text" name="nip" id="nip" value="{{ old('nip', $nip ?? '') }}"
                             maxlength="18" placeholder="199001012015011001"
@@ -117,6 +127,9 @@
                         <input type="text" name="no_wa" value="{{ old('no_wa', $user->no_wa) }}" maxlength="13"
                             oninput="this.value = this.value.replace(/[^0-9]/g, '')"
                             class="bg-gray-50 border {{ $errors->has('no_wa') ? 'border-red-500 dark:border-red-500' : 'border-gray-300 dark:border-gray-600' }} text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:text-white">
+                        @error('no_wa')
+                            <p class="mt-1.5 text-xs font-medium text-red-600 dark:text-red-500">{{ $message }}</p>
+                        @enderror
                     </div>
 
                     {{-- Alamat --}}

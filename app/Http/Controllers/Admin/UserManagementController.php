@@ -89,8 +89,8 @@ class UserManagementController extends Controller
         $request->validate($rules, $this->customMessages());
 
         DB::beginTransaction();
+        $avatarPath = null;
         try {
-            $avatarPath = null;
             if ($request->hasFile('avatar')) {
                 $file = $request->file('avatar');
                 $filename = 'avatars/' . Str::random(40) . '.webp';
@@ -318,7 +318,7 @@ class UserManagementController extends Controller
     }
 
     // Metode untuk mengaktifkan atau menolak akun mahasiswa
-    public function activate(Request $request, $uuid)
+    public function activate(Request $request, string $uuid)
     {
         $request->validate([
             'status' => 'required|in:aktif,ditolak'
@@ -356,7 +356,7 @@ class UserManagementController extends Controller
     /**
      * Helper to get Role Model class.
      */
-    private function getRoleModel($role)
+    private function getRoleModel(string $role)
     {
         return [
             'super_admin'  => SuperAdmin::class,

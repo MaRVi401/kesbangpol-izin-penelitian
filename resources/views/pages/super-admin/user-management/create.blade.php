@@ -43,7 +43,8 @@
         {{-- Title Section --}}
         <div class="mb-6">
             <h3 class="text-xl font-bold text-gray-900 dark:text-white">Tambah Pengguna Baru</h3>
-            <p class="text-sm text-gray-500 dark:text-gray-400">Silahkan lengkapi formulir di bawah untuk mendaftarkan pengguna baru ke sistem.</p>
+            <p class="text-sm text-gray-500 dark:text-gray-400">Silahkan lengkapi formulir di bawah untuk mendaftarkan
+                pengguna baru ke sistem.</p>
         </div>
 
         {{-- Form Card --}}
@@ -83,10 +84,11 @@
                     </div>
 
                     {{-- Container NIP --}}
-                    <div id="nip_group" class="{{ in_array(old('role'), ['kabid', 'operator', 'super_admin']) ? '' : 'hidden' }}">
+                    <div id="nip_group"
+                        class="{{ in_array(old('role'), ['kabid', 'operator', 'super_admin']) ? '' : 'hidden' }}">
                         <label class="block mb-2 text-sm font-semibold text-gray-900 dark:text-white">NIP</label>
-                        <input type="text" name="nip" id="nip" value="{{ old('nip') }}"
-                            maxlength="18" placeholder="199001012015011001"
+                        <input type="text" name="nip" id="nip" value="{{ old('nip') }}" maxlength="18"
+                            placeholder="199001012015011001"
                             class="bg-gray-50 border {{ $errors->has('nip') ? 'border-red-500' : 'border-gray-300' }} text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:text-white">
                         @error('nip')
                             <p class="mt-1.5 text-xs font-medium text-red-600 dark:text-red-500">{{ $message }}</p>
@@ -96,8 +98,8 @@
                     {{-- Container NIM --}}
                     <div id="nim_group" class="{{ old('role') == 'mahasiswa' ? '' : 'hidden' }}">
                         <label class="block mb-2 text-sm font-semibold text-gray-900 dark:text-white">NIM</label>
-                        <input type="text" name="nim" id="nim" value="{{ old('nim') }}"
-                            maxlength="10" placeholder="2305001"
+                        <input type="text" name="nim" id="nim" value="{{ old('nim') }}" maxlength="10"
+                            placeholder="2305001"
                             class="bg-gray-50 border {{ $errors->has('nim') ? 'border-red-500' : 'border-gray-300' }} text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:text-white">
                         @error('nim')
                             <p class="mt-1.5 text-xs font-medium text-red-600 dark:text-red-500">{{ $message }}</p>
@@ -109,7 +111,8 @@
                         <label class="block mb-2 text-sm font-semibold text-gray-900 dark:text-white">Role</label>
                         <select name="role" id="role_select"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-                            <option value="super_admin" {{ old('role') == 'super_admin' ? 'selected' : '' }}>Super Admin</option>
+                            <option value="super_admin" {{ old('role') == 'super_admin' ? 'selected' : '' }}>Super Admin
+                            </option>
                             <option value="mahasiswa" {{ old('role') == 'mahasiswa' ? 'selected' : '' }}>Mahasiswa</option>
                             <option value="kabid" {{ old('role') == 'kabid' ? 'selected' : '' }}>Kabid</option>
                             <option value="operator" {{ old('role') == 'operator' ? 'selected' : '' }}>Operator</option>
@@ -122,6 +125,9 @@
                         <input type="text" name="no_wa" value="{{ old('no_wa') }}" maxlength="13"
                             oninput="this.value = this.value.replace(/[^0-9]/g, '')" placeholder="081234567890"
                             class="bg-gray-50 border {{ $errors->has('no_wa') ? 'border-red-500' : 'border-gray-300' }} text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:text-white">
+                        @error('no_wa')
+                            <p class="mt-1.5 text-xs font-medium text-red-600 dark:text-red-500">{{ $message }}</p>
+                        @enderror
                     </div>
 
                     {{-- Alamat --}}
@@ -140,12 +146,12 @@
                 {{-- Avatar Section --}}
                 <div class="mb-8">
                     <label class="block mb-3 text-sm font-semibold text-gray-900 dark:text-white">Avatar Profile</label>
-                    <div class="flex items-center gap-6 p-4 bg-gray-50 dark:bg-gray-700/50 rounded-xl border border-dashed border-gray-300 dark:border-gray-600">
+                    <div
+                        class="flex items-center gap-6 p-4 bg-gray-50 dark:bg-gray-700/50 rounded-xl border border-dashed border-gray-300 dark:border-gray-600">
                         <div class="relative shrink-0">
                             <img id="avatar-preview"
                                 class="w-20 h-20 rounded-full object-cover ring-4 ring-white dark:ring-gray-800 shadow-lg"
-                                src="https://ui-avatars.com/api/?name=New+User"
-                                alt="preview-avatar">
+                                src="https://ui-avatars.com/api/?name=New+User" alt="preview-avatar">
                         </div>
                         <div class="w-full">
                             <input type="file" name="avatar" id="avatar-input" accept="image/*"
@@ -155,7 +161,8 @@
                             @error('avatar')
                                 <p class="mt-1.5 text-xs font-medium text-red-600">{{ $message }}</p>
                             @else
-                                <p class="mt-1 text-xs text-gray-500 dark:text-gray-400 font-normal">PNG, JPG or WebP (Max. 2MB).</p>
+                                <p class="mt-1 text-xs text-gray-500 dark:text-gray-400 font-normal">PNG, JPG or WebP (Max.
+                                    2MB).</p>
                             @enderror
                         </div>
                     </div>
@@ -182,7 +189,8 @@
                         </div>
 
                         <div>
-                            <label class="block mb-2 text-sm font-semibold text-gray-900 dark:text-white">Konfirmasi Password</label>
+                            <label class="block mb-2 text-sm font-semibold text-gray-900 dark:text-white">Konfirmasi
+                                Password</label>
                             <input type="password" name="password_confirmation"
                                 class="bg-gray-50 border text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:text-white transition-colors
                                 {{ $errors->has('password') ? 'border-red-500' : 'border-gray-300' }}">
