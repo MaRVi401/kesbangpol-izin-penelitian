@@ -9,7 +9,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DevTemplateController;
 use App\Http\Controllers\Operator\TicketController as OperatorTicketController;
 use App\Http\Controllers\Admin\SiemController;
-use App\Http\Controllers\Kabid\UsulanKabidController;
+use App\Http\Controllers\Kabid\PersetujuanKabidController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\FileController;
 // use App\Http\Controllers\Mahasiswa\ServiceSubDomainController;
@@ -208,9 +208,17 @@ Route::get('/user/avatar/{filename}', function ($filename) {
     Route::middleware('can:kabid-only')->group(function () {
 
         // Rute untuk fitur Usulan Prioritas Tiket
-        Route::resource('usulan', UsulanKabidController::class)
-            ->names('kabid.usulan')
-            ->parameters(['usulan' => 'uuid'])
-            ->only(['index', 'create', 'store', 'show', 'destroy']);
+        Route::post('tiket/{uuid}/proses', [PersetujuanKabidController::class, 'proses'])
+            ->name('kabid.tiket.proses');
+
+        Route::get('/private-file/pas-foto', function (\Illuminate\Http\Request $request) {
+            $path = storage_path('app/' . $request->query('path'));
+            
+            if (!file_exists($path)) {
+                abort(404);
+            }
+            
+            return response()->file($path);
+        })->name('file.private')->middleware('auth');
     });
 });

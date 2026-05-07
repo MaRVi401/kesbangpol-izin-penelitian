@@ -10,7 +10,7 @@ class DashboardController extends Controller
 {
     public function index(Request $request)
     {
-        $tiketMenunggu = Tiket::with(['layanan', 'user', 'suratPermohonanIzinPenelitian'])
+        $tiketMenunggu = Tiket::with(['layanan', 'users'])
             ->where('status', 'verifikasi lengkap')
             ->latest()
             ->paginate(10);
