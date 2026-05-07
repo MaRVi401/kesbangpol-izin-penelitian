@@ -67,10 +67,7 @@ class UserManagementController extends Controller
     {
         return view('pages.super-admin.user-management.create');
     }
-
-    /**
-     * Store a newly created user in Minio (Private Storage).
-     */
+    
     /**
      * Store a newly created user.
      */
@@ -102,7 +99,6 @@ class UserManagementController extends Controller
                 $avatarPath = $filename;
             }
 
-            // 1. Simpan ke Tabel Users
             $user = User::create([
                 'nama'     => $request->nama,
                 'email'    => $request->email,
@@ -114,7 +110,6 @@ class UserManagementController extends Controller
                 'avatar'   => $avatarPath,
             ]);
 
-            // 2. Simpan ke Tabel Detail Role (Dynamic Model)
             $roleModel = $this->getRoleModel($request->role);
 
             $detailData = [
@@ -122,7 +117,6 @@ class UserManagementController extends Controller
                 'users_id' => $user->uuid,
             ];
 
-            // Logika pemisahan kolom NIP atau NIM
             if ($request->role === 'mahasiswa') {
                 $detailData['nim'] = $request->nim;
                 $detailData['status_akun'] = 'aktif';
@@ -147,7 +141,6 @@ class UserManagementController extends Controller
 
         } catch (\Exception $e) {
             DB::rollBack();
-            // Hapus avatar jika upload berhasil tapi DB gagal
             if ($avatarPath) {
                 Storage::disk('local')->delete($avatarPath);
             }

@@ -6,7 +6,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\{Auth, Hash, Storage, DB};
 use Illuminate\Validation\Rule;
-use Intervention\Image\Laravel\Facades\Image; // Pastikan v3
+use Intervention\Image\Laravel\Facades\Image;
 use Illuminate\Support\Str;
 use App\Models\JejakAudit;
 
