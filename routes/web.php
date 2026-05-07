@@ -211,14 +211,7 @@ Route::get('/user/avatar/{filename}', function ($filename) {
         Route::post('tiket/{uuid}/proses', [PersetujuanKabidController::class, 'proses'])
             ->name('kabid.tiket.proses');
 
-        Route::get('/private-file/pas-foto', function (\Illuminate\Http\Request $request) {
-            $path = storage_path('app/' . $request->query('path'));
-            
-            if (!file_exists($path)) {
-                abort(404);
-            }
-            
-            return response()->file($path);
-        })->name('file.private')->middleware('auth');
+        Route::get('tiket/{uuid}/preview-pdf', [PersetujuanKabidController::class, 'previewPdf'])
+            ->name('kabid.tiket.preview');
     });
 });
