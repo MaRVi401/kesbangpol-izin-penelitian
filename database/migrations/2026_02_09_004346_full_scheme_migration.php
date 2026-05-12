@@ -68,7 +68,7 @@ return new class extends Migration
             $table->uuid('uuid')->primary();
             $table->foreignUuid('users_id')->constrained('users', 'uuid')->cascadeOnDelete();
             $table->foreignUuid('layanan_id')->constrained('layanan', 'uuid');
-            $table->foreignUuid('petugas_id')->nullable()->constrained('users', 'uuid');
+            $table->foreignUuid('petugas_id')->nullable()->constrained('users', 'uuid')->nullOnDelete();
             $table->string('no_tiket')->unique();
             $table->string('lampiran')->nullable();
             $table->text('deskripsi')->nullable();
