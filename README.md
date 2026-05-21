@@ -254,34 +254,6 @@ Testing meliputi:
 
 ---
 
-# 📸 Screenshot Sistem
-
-## Login Page
-
-```txt
-Tambahkan screenshot di sini
-```
-
-## Dashboard
-
-```txt
-Tambahkan screenshot di sini
-```
-
-## Workdesk Operator
-
-```txt
-Tambahkan screenshot di sini
-```
-
-## SIEM Dashboard
-
-```txt
-Tambahkan screenshot di sini
-```
-
----
-
 # 📁 Struktur Penyimpanan File
 
 ```txt
