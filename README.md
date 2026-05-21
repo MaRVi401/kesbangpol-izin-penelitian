@@ -1,4 +1,4 @@
-# Sistem Pengelolaan Surat Izin Penelitian
+# SIREKIPEMA (Sistem Rekap Izin Penelitian Mahasiswa)
 
 ![Laravel](https://img.shields.io/badge/Laravel-12-red)
 ![PHP](https://img.shields.io/badge/PHP-8.2-blue)
