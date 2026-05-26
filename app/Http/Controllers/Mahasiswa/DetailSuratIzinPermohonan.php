@@ -44,14 +44,17 @@ class DetailSuratIzinPermohonan extends Controller
         $ticket = Tiket::with([
             'layanan',
             'suratIzinPenelitian',
-            'komentar.user'
+            'komentar.user',
+            'riwayatStatus' // Pastikan relasi riwayat status di-load
         ])
         ->where('uuid', $uuid)
         ->where('users_id', Auth::user()->uuid)
         ->firstOrFail();
 
-        // Menghitung jumlah revisi berdasarkan riwayat komentar dari admin
-        $jumlahRevisi = $ticket->komentar->count();
+        // PERBAIKAN: Hitung revisi berdasarkan berapa kali tiket pernah berstatus gagal/ditolak
+        $jumlahRevisi = $ticket->riwayatStatus
+            ->whereIn('status', ['verifikasi gagal', 'ditolak'])
+            ->count();
 
         return view('pages.mahasiswa.DetailSuratIzin.show', compact('ticket', 'jumlahRevisi'));
     }
