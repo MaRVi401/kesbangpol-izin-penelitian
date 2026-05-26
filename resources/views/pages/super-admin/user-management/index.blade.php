@@ -121,6 +121,7 @@
                             <th scope="col" class="px-6 py-4 font-bold text-center">Username</th>
                             <th scope="col" class="px-6 py-4 font-bold text-center">Role</th>
                             <th scope="col" class="px-6 py-4 font-bold text-center">NIP/NIM</th>
+                            <th scope="col" class="px-6 py-4 font-bold text-center">Status Akun</th>
                             <th scope="col" class="px-6 py-4 text-right font-bold">Aksi</th>
                         </tr>
                     </thead>
@@ -169,6 +170,35 @@
                                         @endif
                                     </span>
                                 </td>
+                                <td class="px-6 py-4 text-center">
+                                    @if ($user->role === 'mahasiswa')
+                                        {{-- Jika Mahasiswa, baca status dari database --}}
+                                        @if ($user->mahasiswa && $user->mahasiswa->status_akun === 'aktif')
+                                            <span
+                                                class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400 border border-green-200 dark:border-green-800">
+                                                Aktif
+                                            </span>
+                                        @elseif($user->mahasiswa && $user->mahasiswa->status_akun === 'pending')
+                                            <span
+                                                class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400 border border-yellow-200 dark:border-yellow-800">
+                                                Pending
+                                            </span>
+                                        @elseif($user->mahasiswa && $user->mahasiswa->status_akun === 'ditolak')
+                                            <span
+                                                class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400 border border-red-200 dark:border-red-800">
+                                                Ditolak
+                                            </span>
+                                        @else
+                                            <span class="text-gray-400 dark:text-gray-600">-</span>
+                                        @endif
+                                    @else
+                                        {{-- Jika selain mahasiswa, otomatis cetak badge 'Aktif' karena langsung di create oleh super admin--}}
+                                        <span
+                                            class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400 border border-green-200 dark:border-green-800">
+                                            Aktif
+                                        </span>
+                                    @endif
+                                </td>
                                 <td class="px-6 py-4 text-right">
                                     <div class="flex items-center justify-end gap-2">
                                         {{-- Tombol Edit (Ikon Pensil) --}}
@@ -204,7 +234,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="5" class="px-6 py-12 text-center">
+                                <td colspan="6" class="px-6 py-12 text-center">
                                     <div class="flex flex-col items-center justify-center">
                                         <p class="text-gray-500 dark:text-gray-400 font-medium">
                                             Data dengan pencarian <span

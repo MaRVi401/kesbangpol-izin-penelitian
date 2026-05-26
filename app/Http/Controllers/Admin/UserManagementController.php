@@ -24,7 +24,7 @@ class UserManagementController extends Controller
      */
     public function index(Request $request)
     {
-        $query = User::query()->where('uuid', '!=', Auth::id());
+        $query = User::with(['superAdmin', 'mahasiswa', 'kabid', 'operator'])->where('uuid', '!=', Auth::id());
 
         // Filter logic
         if ($request->filled('role')) {
