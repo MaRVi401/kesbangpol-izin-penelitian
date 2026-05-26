@@ -85,17 +85,19 @@ jobs:
 
     - name: Execute Automated Tests
       run: composer run test
-
   # ==========================================
   # TAHAP 2: CONTINUOUS DEPLOYMENT (AA PANEL)
   # ==========================================
-  deploy-to-server:
-    runs-on: ubuntu-latest
-    needs: yss-tests
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
 
-    steps:
-    - name: Trigger aaPanel Webhook Deployment
-      run: |
-        echo "Mengirimkan instruksi deployment ke aaPanel..."
-        curl -X GET "${{ secrets.AAPANEL_WEBHOOK_URL }}"
+  # Hanya jalankan jika akan di deploy ke server
+
+  # deploy-to-server:
+  #   runs-on: ubuntu-latest
+  #   needs: yss-tests
+  #   if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+
+  #   steps:
+  #   - name: Trigger aaPanel Webhook Deployment
+  #     run: |
+  #       echo "Mengirimkan instruksi deployment ke aaPanel..."
+  #       curl -X GET "${{ secrets.AAPANEL_WEBHOOK_URL }}"
