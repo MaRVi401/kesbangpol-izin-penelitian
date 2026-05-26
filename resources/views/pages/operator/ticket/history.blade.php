@@ -219,11 +219,19 @@
                                 <div>
                                     <label class="block mb-1 text-xs font-medium text-gray-500 uppercase dark:text-gray-400">Status Akhir</label>
                                     <div>
-                                        @if($ticket->status === 'selesai')
-                                            <span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300 border border-green-300">Selesai</span>
-                                        @else
-                                            <span class="bg-red-100 text-red-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300 border border-red-300">Ditolak</span>
-                                        @endif
+                                        @php
+                                            $badgeColor = match(strtolower($ticket->status)) {
+                                                'verifikasi lengkap' => 'bg-blue-100 text-blue-800 border-blue-300 dark:bg-blue-900 dark:text-blue-300',
+                                                'verifikasi gagal'   => 'bg-yellow-100 text-yellow-800 border-yellow-300 dark:bg-yellow-900 dark:text-yellow-300',
+                                                'diterima'           => 'bg-indigo-100 text-indigo-800 border-indigo-300 dark:bg-indigo-900 dark:text-indigo-300',
+                                                'selesai'            => 'bg-green-100 text-green-800 border-green-300 dark:bg-green-900 dark:text-green-300',
+                                                'ditolak'            => 'bg-red-100 text-red-800 border-red-300 dark:bg-red-900 dark:text-red-300',
+                                                default              => 'bg-gray-100 text-gray-800 border-gray-300 dark:bg-gray-800 dark:text-gray-300'
+                                            };
+                                        @endphp
+                                        <span class="{{ $badgeColor }} text-xs font-medium px-2.5 py-0.5 rounded border capitalize">
+                                            {{ $ticket->status }}
+                                        </span>
                                     </div>
                                 </div>
                             </div>

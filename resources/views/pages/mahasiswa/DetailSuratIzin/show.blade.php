@@ -14,11 +14,17 @@
                 <p class="text-sm text-gray-500 dark:text-gray-400">Layanan: <span class="font-semibold text-blue-600 dark:text-blue-400">{{ $ticket->layanan->nama ?? 'Surat Permohonan Izin Penelitian' }}</span></p>
             </div>
             <div class="flex items-center gap-2">
-                <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold border 
-                    {{ $ticket->status == 'diajukan' ? 'bg-gray-100 text-gray-800 border-gray-200' : 
-                      ($ticket->status == 'ditangani' ? 'bg-blue-100 text-blue-800 border-blue-200' : 
-                      ($ticket->status == 'selesai' ? 'bg-green-100 text-green-800 border-green-200' : 'bg-red-100 text-red-800 border-red-200')) }}">
-                    Status: {{ Str::ucfirst($ticket->status) }}
+                @php
+                    $statusColor = match(strtolower($ticket->status)) {
+                        'diajukan' => 'bg-gray-100 text-gray-800 border-gray-200 dark:bg-gray-700 dark:text-gray-300',
+                        'ditangani', 'verifikasi lengkap' => 'bg-blue-100 text-blue-800 border-blue-200 dark:bg-blue-900/30 dark:text-blue-400',
+                        'diterima', 'selesai' => 'bg-green-100 text-green-800 border-green-200 dark:bg-green-900/30 dark:text-green-400',
+                        'verifikasi gagal', 'ditolak' => 'bg-red-100 text-red-800 border-red-200 dark:bg-red-900/30 dark:text-red-400',
+                        default => 'bg-gray-100 text-gray-800 border-gray-200'
+                    };
+                @endphp
+                <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold border {{ $statusColor }} capitalize">
+                    Status: {{ $ticket->status }}
                 </span>
 
                 @if($jumlahRevisi > 0)
