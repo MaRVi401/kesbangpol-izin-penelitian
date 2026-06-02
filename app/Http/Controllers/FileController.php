@@ -13,7 +13,7 @@ class FileController extends Controller
         }
 
         // Izinkan super_admin melihat semua file, 
-        if (auth()->user()->role !== 'super_admin' && !str_contains($path, auth()->id())) {
+        if (!in_array(auth()->user()->role, ['super_admin', 'operator']) && !str_contains($path, auth()->id())) {
             abort(403);
         }
 

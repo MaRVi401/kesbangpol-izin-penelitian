@@ -17,6 +17,7 @@ use App\Http\Controllers\FileController;
 // use App\Http\Controllers\Mahasiswa\ServiceComplaintSystemController;
 use App\Http\Controllers\Mahasiswa\DetailSuratIzinPermohonan;
 use App\Http\Controllers\Mahasiswa\ServiceHistoryTicketController;
+use App\Http\Controllers\Operator\UserManagementController as OperatorUserController;
 // use App\Http\Controllers\Mahasiswa\ServiceEmailGovController;
 
 /*
@@ -139,6 +140,13 @@ Route::get('/user/avatar/{filename}', function ($filename) {
     */
     Route::middleware('can:operator-only')->group(function () {
 
+
+        Route::get('verifikasi-mahasiswa', [OperatorUserController::class, 'index'])
+            ->name('operator.user-management.pending');
+            
+        Route::post('verifikasi-mahasiswa/activate/{uuid}', [OperatorUserController::class, 'activate'])
+            ->name('operator.user-management.activate');
+            
         // Halaman Meja Kerja
         Route::get('workdesk', [OperatorTicketController::class, 'workDesk'])->name('ticket.workdesk');
 

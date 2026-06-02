@@ -67,6 +67,11 @@
                     "name": "Riwayat Ticket",
                     "icon": "ti ti-clock",
                     "route": "ticket.history"
+                },
+                {
+                    "name": "Verifikasi Mahasiswa",
+                    "icon": "ti ti-key",
+                    "route": "operator.user-management.pending"
                 }
             ]
         }
