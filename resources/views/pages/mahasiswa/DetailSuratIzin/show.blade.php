@@ -81,21 +81,32 @@
             </div>
             
             <div class="p-6">
-                {{-- Karena sistem ini HANYA untuk Surat Izin Penelitian, kita panggil langsung partial-nya --}}
                 @include('pages.mahasiswa.DetailSuratIzin.partials._detail_surat_izin')
             </div>
         </div>
 
-        @if(($ticket->status == 'belum diajukan' && empty($ticket->lampiran)) || $ticket->status == 'ditolak')
+        @php
+            $showDownload = ($ticket->status == 'belum diajukan' && empty($ticket->lampiran)) || in_array(strtolower($ticket->status), ['ditolak', 'diterima', 'selesai']);
+            $isApproved = in_array(strtolower($ticket->status), ['diterima', 'selesai']);
+        @endphp
+
+        @if($showDownload)
         <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 mb-8 text-center">
-            <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2">Unduh Dokumen Sistem</h3>
-            <p class="text-sm text-gray-500 dark:text-gray-400 mb-6">Anda dapat mengunduh ulang dokumen persuratan yang telah di-generate oleh sistem melalui tombol di bawah ini.</p>
+            <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2">
+                {{ $isApproved ? 'Unduh Surat Resmi' : 'Unduh Dokumen Sistem' }}
+            </h3>
+            <p class="text-sm text-gray-500 dark:text-gray-400 mb-6">
+                @if($isApproved)
+                    Pengajuan Anda telah disetujui. Silakan unduh dokumen surat resmi melalui tombol di bawah ini.
+                @else
+                    Anda dapat mengunduh ulang dokumen persuratan yang telah di-generate oleh sistem melalui tombol di bawah ini.
+                @endif
+            </p>
             <div class="flex justify-center items-center">
                 <div class="w-full sm:w-auto">
-                    {{-- Sesuaikan route download ini dengan route khusus surat izin penelitian Anda nanti --}}
-                    <a href="{{ url('detail/download/' . $ticket->uuid) }}" class="inline-flex items-center justify-center w-full px-5 py-2.5 text-sm font-medium text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 transition-all shadow-sm">
+                    <a href="{{ url('detail/download/' . $ticket->uuid) }}" class="inline-flex items-center justify-center w-full px-5 py-2.5 text-sm font-medium text-white {{ $isApproved ? 'bg-green-600 hover:bg-green-700 focus:ring-green-300 dark:bg-green-500 dark:hover:bg-green-600 dark:focus:ring-green-800' : 'bg-blue-700 hover:bg-blue-800 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800' }} rounded-lg focus:ring-4 focus:outline-none transition-all shadow-sm">
                         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-                        Download Ulang Surat
+                        {{ $isApproved ? 'Unduh Surat' : 'Download Ulang Surat' }}
                     </a>
                 </div>
             </div>

@@ -51,7 +51,7 @@ class PersetujuanKabidController extends Controller
                 ? 'Tiket berhasil disetujui/diterima.' 
                 : 'Tiket telah ditolak.';
 
-            return redirect()->route('kabid.dashboard')->with('success', $pesan);
+            return redirect()->route('dashboard')->with('success', $pesan);
 
         } catch (\Exception $e) {
             DB::rollBack();
