@@ -21,5 +21,8 @@ class PenandatanganSurat extends Model
     protected $fillable = [
         'nama',
         'nip',
+        'jabatan_atasan',
+        'jabatan_penandatangan',
+        'pangkat_golongan'
     ];
 }

@@ -112,7 +112,9 @@ return new class extends Migration
             $table->string('lokasi_kegiatan');
             $table->string('judul_pembicara');
             $table->string('penanggung_jawab_1');
+            $table->string('nip_penanggung_jawab_1')->nullable();
             $table->string('penanggung_jawab_2')->nullable();
+            $table->string('nip_penanggung_jawab_2')->nullable();
             $table->integer('banyak_peserta');
             $table->string('nama_alias')->nullable();
             $table->string('nama_panggilan')->nullable();

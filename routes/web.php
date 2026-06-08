@@ -194,12 +194,17 @@ Route::get('/user/avatar/{filename}', function ($filename) {
 
         // //Rute untuk pengaduan
         // Route::resource('service-complaint-system', ServiceComplaintSystemController::class);
+        Route::get('detail/download/{uuid}', [ServiceController::class, 'downloadDocx'])
+            ->name('detail.download');
+
         Route::resource('detail', DetailSuratIzinPermohonan::class);
         //Rute History Tiket
         Route::resource('history', ServiceHistoryTicketController::class);
         Route::post('services/autosave', [ServiceController::class, 'autosave'])
              ->middleware('throttle:30,1') // Maksimal 30 request per menit
              ->name('izin-penelitian.autosave');
+
+        
 
         Route::post('history/{uuid}/revisi', [ServiceHistoryTicketController::class, 'revisi'])
          ->name('history.revisi');

@@ -8,7 +8,6 @@
         <form id="form-penelitian" action="{{ route('services.store') }}" data-autosave-url="{{ route('izin-penelitian.autosave') }}" method="POST" enctype="multipart/form-data">
             @csrf
             
-            <!-- Tambahan: Hidden Input untuk ID Draft -->
             <input type="hidden" name="tiket_uuid" id="tiket_uuid" value="{{ $tiketUuid ?? '' }}">
 
             <div class="max-w-5xl mx-auto bg-white dark:bg-gray-800 p-8 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
@@ -80,7 +79,6 @@
                         <div class="md:col-span-3">
                             <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Pas Foto</label>
                             <input type="file" name="pas_foto" accept="image/*" class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:text-white" required>
-                            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">File akan otomatis dikonversi ke format .webp (Maks. 2MB).</p>
                         </div>
                     </div>
                 </div>
@@ -95,7 +93,11 @@
                     <div class="grid gap-6 md:grid-cols-2">
                         <div>
                             <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Pekerjaan/Pendidikan Saat Ini</label>
-                            <input type="text" name="pekerjaan_pendidikan" value="{{ old('pekerjaan_pendidikan', $payloadDraft['pekerjaan_pendidikan'] ?? '') }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white" placeholder="Contoh: Mahasiswa" required>
+                            <input type="text" name="pekerjaan_pendidikan" value="{{ old('pekerjaan_pendidikan', $payloadDraft['pekerjaan_pendidikan'] ?? '') }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white" required>
+                        </div>
+                        <div>
+                            <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Pekerjaan Lainnya (Opsional)</label>
+                            <input type="text" name="pekerjaan" value="{{ old('pekerjaan', $payloadDraft['pekerjaan'] ?? '') }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
                         </div>
                         <div>
                             <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Institusi Pendidikan/Kampus</label>
@@ -117,6 +119,10 @@
                             <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Alamat Institusi Kampus</label>
                             <textarea name="alamat_institusi" rows="2" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">{{ old('alamat_institusi', $payloadDraft['alamat_institusi'] ?? '') }}</textarea>
                         </div>
+                        <div class="md:col-span-2">
+                            <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Alamat Kantor (Opsional)</label>
+                            <textarea name="alamat_kantor" rows="2" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">{{ old('alamat_kantor', $payloadDraft['alamat_kantor'] ?? '') }}</textarea>
+                        </div>
                     </div>
                 </div>
 
@@ -127,6 +133,25 @@
                         <span class="flex items-center justify-center w-6 h-6 mr-2 text-sm rounded-full bg-blue-100 text-blue-600">3</span>
                         Detail Kegiatan Penelitian
                     </h3>
+                    
+                    <div class="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg mb-6 grid gap-6 md:grid-cols-2 border border-blue-100 dark:border-blue-800">
+                        <div class="md:col-span-2">
+                            <h4 class="text-md font-semibold text-gray-900 dark:text-white">Tujuan Surat Pengajuan</h4>
+                        </div>
+                        <div class="md:col-span-2">
+                            <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Pimpinan Instansi Tujuan (Yth.)</label>
+                            <input type="text" name="yth_kepada" value="{{ old('yth_kepada', $payloadDraft['yth_kepada'] ?? '') }}" class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white" placeholder="Contoh: Kepala Badan Kesatuan Bangsa dan Politik Kab. Subang" required>
+                        </div>
+                        <div>
+                            <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Pejabat Spesifik / Melalui (C.q.) <span class="text-xs text-gray-500 font-normal">(Opsional)</span></label>
+                            <input type="text" name="yth_cq" value="{{ old('yth_cq', $payloadDraft['yth_cq'] ?? '') }}" class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white" placeholder="Contoh: Kabid Kewaspadaan Dini">
+                        </div>
+                        <div>
+                            <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Lokasi Instansi Tujuan (Di)</label>
+                            <input type="text" name="yth_di" value="{{ old('yth_di', $payloadDraft['yth_di'] ?? 'Tempat') }}" class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white" placeholder="Contoh: Subang / Tempat" required>
+                        </div>
+                    </div>
+
                     <div class="grid gap-6 md:grid-cols-2">
                         <div class="md:col-span-2">
                             <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Judul Penelitian / Pembicara</label>
@@ -134,7 +159,7 @@
                         </div>
                         <div>
                             <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Kegiatan</label>
-                            <input type="text" name="kegiatan" value="{{ old('kegiatan', $payloadDraft['kegiatan'] ?? '') }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white" placeholder="Contoh: Skripsi / Tugas Akhir" required>
+                            <input type="text" name="kegiatan" value="{{ old('kegiatan', $payloadDraft['kegiatan'] ?? '') }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white" required>
                         </div>
                         <div>
                             <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Dalam Rangka</label>
@@ -157,10 +182,18 @@
                             <input type="text" name="penanggung_jawab_1" value="{{ old('penanggung_jawab_1', $payloadDraft['penanggung_jawab_1'] ?? '') }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white" required>
                         </div>
                         <div>
+                            <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">NIP / NIDN Penanggung Jawab 1</label>
+                            <input type="text" inputmode="numeric" pattern="[0-9]*" name="nip_penanggung_jawab_1" value="{{ old('nip_penanggung_jawab_1', $payloadDraft['nip_penanggung_jawab_1'] ?? '') }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                        </div>
+                        <div>
                             <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Penanggung Jawab 2 (Opsional)</label>
                             <input type="text" name="penanggung_jawab_2" value="{{ old('penanggung_jawab_2', $payloadDraft['penanggung_jawab_2'] ?? '') }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
                         </div>
                         <div>
+                            <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">NIP / NIDN Penanggung Jawab 2 (Opsional)</label>
+                            <input type="text" inputmode="numeric" pattern="[0-9]*" name="nip_penanggung_jawab_2" value="{{ old('nip_penanggung_jawab_2', $payloadDraft['nip_penanggung_jawab_2'] ?? '') }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                        </div>
+                        <div class="md:col-span-2">
                             <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Banyak Peserta/Anggota Tim</label>
                             <input type="text" inputmode="numeric" pattern="[0-9]*" name="banyak_peserta" value="{{ old('banyak_peserta', $payloadDraft['banyak_peserta'] ?? '') }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white" oninput="this.value = this.value.replace(/[^0-9]/g, '')" required>
                         </div>
@@ -191,7 +224,11 @@
                             <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Bentuk Rambut</label>
                             <input type="text" name="bentuk_rambut" value="{{ old('bentuk_rambut', $payloadDraft['bentuk_rambut'] ?? '') }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
                         </div>
-                        <div class="md:col-span-2">
+                        <div>
+                            <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Bentuk Hidung</label>
+                            <input type="text" name="bentuk_hidung" value="{{ old('bentuk_hidung', $payloadDraft['bentuk_hidung'] ?? '') }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                        </div>
+                        <div class="md:col-span-1">
                             <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Ciri Khusus</label>
                             <input type="text" name="ciri_khusus" value="{{ old('ciri_khusus', $payloadDraft['ciri_khusus'] ?? '') }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
                         </div>
@@ -203,7 +240,6 @@
                 </div>
 
                 <div class="flex justify-end items-center pt-6 border-t border-gray-200 dark:border-gray-700">
-                    <!-- Tambahan: Indikator teks status penyimpanan Autosave -->
                     <span id="save-status" class="text-sm text-gray-500 dark:text-gray-400 mr-4 font-medium"></span>
                     
                     <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">

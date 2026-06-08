@@ -16,6 +16,8 @@ use App\Models\Layanan;
 use App\Models\SuratPermohonanIzinPenelitian;
 use App\Models\RiwayatStatusTiket;
 use App\Models\JejakAudit;
+use App\Models\PenandatanganSurat; 
+use PhpOffice\PhpWord\TemplateProcessor;
 
 class ServiceController extends Controller
 {
@@ -33,11 +35,9 @@ class ServiceController extends Controller
 
         $payloadDraft = [];
         if ($draft && $draft->payload_draft) {
-            // Jika payload_draft masih berupa string JSON (misal karena query raw atau error cast)
             if (is_string($draft->payload_draft)) {
                  $payloadDraft = json_decode($draft->payload_draft, true) ?? [];
             } else {
-                 // Jika sudah array (berkat model casting)
                  $payloadDraft = (array) $draft->payload_draft;
             }
         }
@@ -71,14 +71,23 @@ class ServiceController extends Controller
             'semester'              => 'nullable|integer|min:1|max:14',
             'alamat_institusi'      => 'nullable|string',
             'alamat_kantor'         => 'nullable|string',
+            
+            'yth_kepada'            => 'required|string|max:255',
+            'yth_cq'                => 'nullable|string|max:255',
+            'yth_di'                => 'required|string|max:255',
+            
             'kegiatan'              => 'required|string|max:255',
             'dalam_rangka'          => 'required|string|max:255',
             'judul_pembicara'       => 'required|string|max:255',
             'lokasi_kegiatan'       => 'required|string|max:255',
             'tanggal_mulai'         => 'required|date',
             'tanggal_selesai'       => 'required|date|after_or_equal:tanggal_mulai',
+            
             'penanggung_jawab_1'    => 'required|string|max:255',
+            'nip_penanggung_jawab_1'=> 'nullable|string|max:50',
             'penanggung_jawab_2'    => 'nullable|string|max:255',
+            'nip_penanggung_jawab_2'=> 'nullable|string|max:50',
+            
             'banyak_peserta'        => 'required|integer|min:1',
             'tinggi_badan'          => 'nullable|integer|min:50|max:250',
             'bentuk_badan'          => 'nullable|string|max:255',
@@ -163,8 +172,7 @@ class ServiceController extends Controller
                 'uuid'      => (string) Str::uuid(), 
                 'tiket_id'  => $tiket->uuid,
                 'users_id'  => $userId, 
-                'status'    => 'diajukan',
-                'catatan'   => 'Permohonan Izin Penelitian berhasil diajukan oleh Mahasiswa'
+                'status'    => 'diajukan'
             ]);
             
             JejakAudit::create([
@@ -195,11 +203,8 @@ class ServiceController extends Controller
         }
     }
 
-
-
     public function autosave(Request $request)
     {
-        // Hanya validasi field yang diperlukan untuk identifier
         $request->validate([
             'tiket_uuid' => 'nullable|uuid',
         ]);
@@ -209,12 +214,10 @@ class ServiceController extends Controller
             $userId = Auth::user()->uuid;
             $layanan = Layanan::where('nama', 'LIKE', '%Izin Penelitian%')->firstOrFail();
             
-            // Ambil semua input form, KECUALI file foto dan token untuk disimpan sbg JSON
             $payload = $request->except(['_token', 'pas_foto', 'tiket_uuid']);
             
             $tiket = null;
 
-            // Cek apakah sudah ada tiket draft milik user ini (Mencegah IDOR)
             if ($request->filled('tiket_uuid')) {
                 $tiket = Tiket::where('uuid', $request->tiket_uuid)
                             ->where('users_id', $userId)
@@ -223,7 +226,6 @@ class ServiceController extends Controller
             }
 
             if (!$tiket) {
-                // CREATE Tiket Draft Baru
                 $noTiket = 'DRAFT-' . Carbon::now()->format('dmY') . '-' . Str::upper(Str::random(4));
                 
                 $tiket = Tiket::create([
@@ -233,20 +235,18 @@ class ServiceController extends Controller
                     'no_tiket'      => $noTiket,
                     'status'        => 'draft',
                     'deskripsi'     => 'Draft Izin Penelitian',
-                    'payload_draft' => $payload // Simpan semua isian ke sini
+                    'payload_draft' => $payload
                 ]);
 
                 RiwayatStatusTiket::create([
                     'uuid'      => (string) Str::uuid(), 
                     'tiket_id'  => $tiket->uuid,
                     'users_id'  => $userId, 
-                    'status'    => 'draft',
-                    'catatan'   => 'Sistem menyimpan draft otomatis'
+                    'status'    => 'draft'
                 ]);
             } else {
-                // UPDATE Tiket Draft yang sudah ada
                 $tiket->update([
-                    'payload_draft' => $payload // Timpa JSON lama dengan yang baru
+                    'payload_draft' => $payload
                 ]);
             }
 
@@ -262,5 +262,64 @@ class ServiceController extends Controller
             DB::rollBack();
             return response()->json(['status' => 'error', 'message' => 'Gagal autosave'], 500);
         }
+    }
+
+    public function downloadDocx($uuid)
+    {
+        $tiket = Tiket::with('suratIzinPenelitian')->where('uuid', $uuid)->firstOrFail();
+        $surat = $tiket->suratIzinPenelitian;
+
+        $penandatangan = PenandatanganSurat::first();
+
+        $templatePath = storage_path('app/private/templates/FORMAT_SRIKANDI_SURAT_IZIN_PENILITIAN.docx');
+        
+        if (!file_exists($templatePath)) {
+            return back()->with('error', 'Template dokumen tidak ditemukan di sistem.');
+        }
+
+        $templateProcessor = new TemplateProcessor($templatePath);
+
+        Carbon::setLocale('id');
+        
+        $templateProcessor->setValue('tanggal_cetak_surat', Carbon::now()->translatedFormat('d F Y'));
+        $templateProcessor->setValue('kegiatan', $surat->kegiatan);
+        
+        $templateProcessor->setValue('yth_kepada', $surat->yth_kepada);
+        $templateProcessor->setValue('yth_cq', $surat->yth_cq ? $surat->yth_cq : '-');
+        $templateProcessor->setValue('yth_ditempat', $surat->yth_di);
+        
+        $templateProcessor->setValue('institusi_pendidikan', $surat->institusi_pendidikan);
+        $templateProcessor->setValue('nama', $surat->nama);
+        $templateProcessor->setValue('alamat_lengkap', $surat->alamat_lengkap);
+        
+        $templateProcessor->setValue('penanggung_jawab_1', $surat->penanggung_jawab_1);
+        $templateProcessor->setValue('penanggung_jawab_2', $surat->penanggung_jawab_2 ? $surat->penanggung_jawab_2 : '-');
+        $templateProcessor->setValue('banyak_peserta', $surat->banyak_peserta);
+        $templateProcessor->setValue('lokasi', $surat->lokasi_kegiatan);
+        
+        $templateProcessor->setValue('tanggal_mulai', Carbon::parse($surat->tanggal_mulai)->translatedFormat('d F Y'));
+        $templateProcessor->setValue('tanggal_selesai', Carbon::parse($surat->tanggal_selesai)->translatedFormat('d F Y'));
+        
+        $templateProcessor->setValue('dalam_rangka', $surat->dalam_rangka);
+
+        $templateProcessor->setValue('NAMA_PETUGAS_KESBANGPPOL', $penandatangan->nama ?? '');
+        $templateProcessor->setValue('NIP', $penandatangan->nip ?? '');
+        
+        $pangkatGolongan = $penandatangan->pangkat_golongan ?? '';
+        preg_match('/\((.*?)\)/', $pangkatGolongan, $matches);
+        $namaPembina = isset($matches[1]) ? $matches[1] : $pangkatGolongan;
+        $templateProcessor->setValue('NAMA_PEMBINA', $namaPembina);
+
+        $tempDir = storage_path('app/private/temp');
+        if (!file_exists($tempDir)) {
+            mkdir($tempDir, 0755, true);
+        }
+
+        $fileName = 'Surat_Izin_' . str_replace(' ', '_', $surat->nama) . '_' . time() . '.docx';
+        $tempPath = $tempDir . '/' . $fileName;
+        
+        $templateProcessor->saveAs($tempPath);
+
+        return response()->download($tempPath)->deleteFileAfterSend(true);
     }
 }
