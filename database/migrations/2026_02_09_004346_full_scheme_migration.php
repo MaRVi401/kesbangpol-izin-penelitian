@@ -8,13 +8,12 @@ return new class extends Migration
 {
     public function up(): void
     {
-        // 1. Master Users
         Schema::create('users', function (Blueprint $table) {
             $table->uuid('uuid')->primary();
             $table->string('nama');
             $table->string('username')->unique();
             $table->string('password');
-            $table->enum('role', ['super_admin', 'mahasiswa', 'kabid', 'operator',]);
+            $table->enum('role', ['super_admin', 'mahasiswa', 'kabid', 'operator']);
             $table->string('alamat')->nullable();
             $table->string('email')->unique();
             $table->string('no_wa')->nullable();
@@ -22,7 +21,6 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        // 2. Role Specializations
         Schema::create('super_admin', function (Blueprint $table) {
             $table->uuid('uuid')->primary();
             $table->foreignUuid('users_id')->constrained('users', 'uuid')->cascadeOnDelete();
@@ -34,9 +32,9 @@ return new class extends Migration
             $table->uuid('uuid')->primary();
             $table->foreignUuid('users_id')->constrained('users', 'uuid')->cascadeOnDelete();
             $table->string('nim');
-            $table->string('ktm_path')->nullable()->after('status_akun');
-            $table->string('surat_rekomendasi_path')->nullable()->after('ktm_path');
-            $table->enum('status_akun', ['pending', 'aktif', 'ditolak'])->default('pending')->after('nim');
+            $table->enum('status_akun', ['pending', 'aktif', 'ditolak'])->default('pending');
+            $table->string('ktm_path')->nullable();
+            $table->string('surat_rekomendasi_path')->nullable();
             $table->timestamps();
         });
 
@@ -54,7 +52,6 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        // 3. Master Layanan
         Schema::create('layanan', function (Blueprint $table) {
             $table->uuid('uuid')->primary();
             $table->string('nama');
@@ -63,7 +60,6 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        // 4. Tiket
         Schema::create('tiket', function (Blueprint $table) {
             $table->uuid('uuid')->primary();
             $table->foreignUuid('users_id')->constrained('users', 'uuid')->cascadeOnDelete();
@@ -72,12 +68,11 @@ return new class extends Migration
             $table->string('no_tiket')->unique();
             $table->string('lampiran')->nullable();
             $table->text('deskripsi')->nullable();
-            $table->json('payload_draft')->nullable()->after('deskripsi');
+            $table->json('payload_draft')->nullable();
             $table->enum('status', ['draft', 'diajukan', 'verifikasi kelengkapan', 'verifikasi lengkap', 'verifikasi gagal', 'diterima', 'ditolak']);
             $table->timestamps();
         });
 
-        // 5. Log & Komentar
         Schema::create('riwayat_status_tiket', function (Blueprint $table) {
             $table->uuid('uuid')->primary();
             $table->foreignUuid('tiket_id')->constrained('tiket', 'uuid')->cascadeOnDelete();
@@ -97,7 +92,6 @@ return new class extends Migration
         Schema::create('surat_permohonan_izin_penelitian', function (Blueprint $table) {
             $table->uuid('uuid')->primary();
             $table->foreignUuid('tiket_id')->constrained('tiket', 'uuid')->cascadeOnDelete();
-
             $table->string('nama');
             $table->string('tempat_lahir');
             $table->date('tanggal_lahir');
@@ -108,7 +102,9 @@ return new class extends Migration
             $table->text('alamat_institusi')->nullable();
             $table->string('nomor_mahasiswa')->nullable();
             $table->string('nomor_pegawai')->nullable();
-
+            $table->string('yth_kepada');
+            $table->string('yth_cq')->nullable();
+            $table->string('yth_di')->default('Tempat');
             $table->string('kegiatan');
             $table->string('dalam_rangka');
             $table->date('tanggal_mulai');
@@ -118,7 +114,6 @@ return new class extends Migration
             $table->string('penanggung_jawab_1');
             $table->string('penanggung_jawab_2')->nullable();
             $table->integer('banyak_peserta');
-
             $table->string('nama_alias')->nullable();
             $table->string('nama_panggilan')->nullable();
             $table->enum('jenis_kelamin', ['Laki-laki', 'Perempuan']);
@@ -136,18 +131,17 @@ return new class extends Migration
             $table->string('hobi')->nullable();
             $table->string('no_hp');
             $table->string('path_pas_foto')->nullable();
-
             $table->timestamps();
         });
 
         Schema::create('log_keamanan', function (Blueprint $table) {
             $table->uuid('uuid')->primary();
             $table->foreignUuid('users_id')->nullable()->constrained('users', 'uuid')->nullOnDelete();
-            $table->string('username_attempt')->comment('Mencatat username/email yang dicoba saat login');
+            $table->string('username_attempt');
             $table->enum('tipe_event', ['login_sukses', 'login_gagal', 'logout', 'lockout']);
             $table->string('ip_address', 45)->nullable();
-            $table->text('user_agent')->nullable()->comment('Mencatat device/browser yang digunakan');
-            $table->boolean('is_suspicious')->default(false)->comment('Flag untuk memicu alert jika terdeteksi brute force');
+            $table->text('user_agent')->nullable();
+            $table->boolean('is_suspicious')->default(false);
             $table->timestamps();
         });
 
@@ -155,10 +149,10 @@ return new class extends Migration
             $table->uuid('uuid')->primary();
             $table->foreignUuid('users_id')->nullable()->constrained('users', 'uuid')->nullOnDelete();
             $table->enum('aksi', ['create', 'update', 'delete']);
-            $table->string('nama_tabel')->comment('Contoh: layanan, tiket, detail_tiket_layanan_email_gov');
-            $table->uuid('record_id')->comment('UUID dari data yang diubah');
-            $table->json('data_lama')->nullable()->comment('Menyimpan state sebelum diubah');
-            $table->json('data_baru')->nullable()->comment('Menyimpan state setelah diubah');
+            $table->string('nama_tabel');
+            $table->uuid('record_id');
+            $table->json('data_lama')->nullable();
+            $table->json('data_baru')->nullable();
             $table->string('ip_address', 45)->nullable();
             $table->timestamps();
         });
@@ -167,6 +161,9 @@ return new class extends Migration
             $table->uuid('uuid')->primary();
             $table->string('nama');
             $table->string('nip');
+            $table->string('jabatan_atasan')->default('an. Kepala Badan Kesatuan Bangsa dan Politik Kabupaten Subang');
+            $table->string('jabatan_penandatangan');
+            $table->string('pangkat_golongan');
             $table->timestamps();
         });
     }
