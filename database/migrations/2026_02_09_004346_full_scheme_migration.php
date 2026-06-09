@@ -92,6 +92,10 @@ return new class extends Migration
         Schema::create('surat_permohonan_izin_penelitian', function (Blueprint $table) {
             $table->uuid('uuid')->primary();
             $table->foreignUuid('tiket_id')->constrained('tiket', 'uuid')->cascadeOnDelete();
+            
+            $table->string('nomor_surat')->nullable(); 
+            
+            
             $table->string('nama');
             $table->string('tempat_lahir');
             $table->date('tanggal_lahir');
