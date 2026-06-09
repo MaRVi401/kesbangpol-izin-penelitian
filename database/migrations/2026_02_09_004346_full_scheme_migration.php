@@ -94,6 +94,11 @@ return new class extends Migration
             $table->foreignUuid('tiket_id')->constrained('tiket', 'uuid')->cascadeOnDelete();
             
             $table->string('nomor_surat')->nullable(); 
+
+
+            $table->string('nomor_surat_institusi');
+            $table->date('tanggal_surat_institusi');
+            $table->date('tanggal_diterima_surat');
             
             
             $table->string('nama');

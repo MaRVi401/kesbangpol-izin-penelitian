@@ -123,6 +123,18 @@
                             <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Alamat Kantor (Opsional)</label>
                             <textarea name="alamat_kantor" rows="2" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">{{ old('alamat_kantor', $payloadDraft['alamat_kantor'] ?? '') }}</textarea>
                         </div>
+                        <div>
+                            <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nomor Surat Pengantar Institusi</label>
+                            <input type="text" name="nomor_surat_institusi" value="{{ old('nomor_surat_institusi', $payloadDraft['nomor_surat_institusi'] ?? '') }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white" required>
+                        </div>
+                        <div>
+                            <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tanggal Surat Pengantar Institusi</label>
+                            <input type="date" name="tanggal_surat_institusi" value="{{ old('tanggal_surat_institusi', $payloadDraft['tanggal_surat_institusi'] ?? '') }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white" required>
+                        </div>
+                        <div class="md:col-span-2">
+                            <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tanggal Penelitian dimulai</label>
+                            <input type="date" name="tanggal_diterima_surat" value="{{ old('tanggal_diterima_surat', $payloadDraft['tanggal_diterima_surat'] ?? '') }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white" required>
+                        </div>
                     </div>
                 </div>
 

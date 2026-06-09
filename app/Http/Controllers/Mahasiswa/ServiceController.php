@@ -72,6 +72,10 @@ class ServiceController extends Controller
             'alamat_institusi'      => 'nullable|string',
             'alamat_kantor'         => 'nullable|string',
             
+            'nomor_surat_institusi'   => 'required|string|max:255',
+            'tanggal_surat_institusi' => 'required|date',
+            'tanggal_diterima_surat'  => 'required|date',
+            
             'yth_kepada'            => 'required|string|max:255',
             'yth_cq'                => 'nullable|string|max:255',
             'yth_di'                => 'required|string|max:255',
@@ -284,6 +288,10 @@ class ServiceController extends Controller
         $templateProcessor->setValue('tanggal_cetak_surat', Carbon::now()->translatedFormat('d F Y'));
         $templateProcessor->setValue('kegiatan', $surat->kegiatan);
         
+        $templateProcessor->setValue('Nomor_surat_dari_institus_pendidikan', $surat->nomor_surat_institusi);
+        $templateProcessor->setValue('Tanggal_surat_institusi_pendidikan', Carbon::parse($surat->tanggal_surat_institusi)->translatedFormat('d F Y'));
+        $templateProcessor->setValue('Tanggal_penelitian_pada_surat_institusi_pendidikan', Carbon::parse($surat->tanggal_diterima_surat)->translatedFormat('d F Y'));
+
         $templateProcessor->setValue('yth_kepada', $surat->yth_kepada);
         $templateProcessor->setValue('yth_cq', $surat->yth_cq ? $surat->yth_cq : '-');
         $templateProcessor->setValue('yth_ditempat', $surat->yth_di);
