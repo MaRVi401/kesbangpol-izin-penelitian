@@ -132,6 +132,78 @@ const IzinPenelitianFormHandler = () => {
         
         timeoutId = setTimeout(performAutosave, 2000); 
     });
+
+    const btnFillDummy = document.getElementById('btn-fill-dummy');
+    if (btnFillDummy) {
+        btnFillDummy.addEventListener('click', function() {
+            const dummyData = {
+                'nama': 'Budi Santoso',
+                'nama_alias': 'Budi',
+                'nama_panggilan': 'Bud',
+                'no_hp': '081234567890',
+                'tempat_lahir': 'Bandung',
+                'tanggal_lahir': '1998-08-17',
+                'jenis_kelamin': 'Laki-laki',
+                'agama': 'Islam',
+                'status_perkawinan': 'Belum Kawin',
+                'kebangsaan': 'Indonesia',
+                'alamat_lengkap': 'Jl. Merdeka No. 45, RT 01 RW 02, Kota Bandung, Jawa Barat',
+                'pekerjaan_pendidikan': 'Mahasiswa',
+                'pekerjaan': 'Pekerja Lepas',
+                'institusi_pendidikan': 'Universitas Teknologi Nusantara', 
+                'semester': '4',
+                'nomor_mahasiswa': '1234567890',
+                'nomor_pegawai': '198001012005011001',
+                'alamat_institusi': 'Jl. Pendidikan No. 1, Kota Nusantara',
+                'alamat_kantor': '-',
+                'nomor_surat_institusi': '001/UNIV-TN/2026',
+                'tanggal_surat_institusi': '2026-06-01',
+                'tanggal_diterima_surat': '2026-06-10',
+                'yth_kepada': 'Kepala Dinas Pendidikan Kota Bandung',
+                'yth_cq': 'Kabid Pendidikan Menengah',
+                'yth_di': 'Bandung',
+                'judul_pembicara': 'Analisis Kualitas Udara Perkotaan Berbasis IoT',
+                'kegiatan': 'Penelitian Lapangan',
+                'dalam_rangka': 'Penyusunan Skripsi',
+                'tanggal_mulai': '2026-06-15',
+                'tanggal_selesai': '2026-07-15',
+                'lokasi_kegiatan': 'Kota Bandung',
+                'penanggung_jawab_1': 'Dr. Andi Wijaya',
+                'nip_penanggung_jawab_1': '197502022000031002',
+                'penanggung_jawab_2': 'Siti Aminah, M.Sc',
+                'nip_penanggung_jawab_2': '198205052008012001',
+                'banyak_peserta': '3',
+                'tinggi_badan': '170',
+                'bentuk_badan': 'Proporsional',
+                'warna_kulit': 'Sawo Matang',
+                'bentuk_rambut': 'Lurus',
+                'bentuk_hidung': 'Mancung',
+                'ciri_khusus': 'Tidak Ada',
+                'hobi': 'Membaca'
+            };
+
+            Object.entries(dummyData).forEach(([key, value]) => {
+                const inputElement = form.querySelector(`[name="${key}"]`);
+                if (inputElement && inputElement.type !== 'file') {
+                    inputElement.value = value;
+                    inputElement.dispatchEvent(new Event('input', { bubbles: true }));
+                }
+            });
+
+            if (typeof Swal !== 'undefined') {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Data Dummy Berhasil Diisi',
+                    text: 'Silakan isi pas foto secara manual sebelum melakukan submit.',
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true
+                });
+            }
+        });
+    }
 };
 
 document.addEventListener('DOMContentLoaded', IzinPenelitianFormHandler);
