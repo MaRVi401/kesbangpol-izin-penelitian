@@ -136,6 +136,12 @@ class TicketController extends Controller
                 'created_at' => now(),
             ]);
 
+            if ($request->filled('nomor_surat') && $ticket->suratIzinPenelitian) {
+                $ticket->suratIzinPenelitian->update([
+                    'nomor_surat' => $request->nomor_surat
+                ]);
+            }
+
             DB::table('riwayat_status_tiket')->insert([
                 'uuid'       => (string) Str::uuid(),
                 'tiket_id'   => $ticket->uuid,

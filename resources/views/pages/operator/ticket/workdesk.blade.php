@@ -196,6 +196,17 @@
                                                                 @endforeach
                                                             </select>
                                                         </div>
+
+                                                        <div>
+                                                            <label class="block mb-2 text-sm font-bold text-gray-900 dark:text-white">Nomor Surat Resmi</label>
+                                                            <input type="text" name="nomor_surat" 
+                                                                value="{{ $ticket->suratIzinPenelitian->nomor_surat ?? '' }}" 
+                                                                placeholder="Contoh: 123" 
+                                                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-orange-500 focus:border-orange-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400">
+                                                            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Nomor ini akan tersimpan ke data surat izin permohonan.</p>
+                                                        </div>
+
+
                                                         <div>
                                                             <label class="block mb-2 text-sm font-bold text-gray-900 dark:text-white">Pilih Status Akhir</label>
                                                             <select name="status" required class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-orange-500 focus:border-orange-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white cursor-pointer">

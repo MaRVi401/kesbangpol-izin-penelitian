@@ -158,5 +158,45 @@ class WordTemplateServiceIzinPenelitian
         }
     }
 
+
+    public function generatePDFKabid(SuratPermohonanIzinPenelitian $detail, $noTiket, ?PenandatanganSurat $penandatangan = null) 
+    {
+        try {
+            $cleanNoTiket = str_replace(['/', '\\', ' '], '-', $noTiket);
+            
+            $savedPdfPath = "surat_keluar/Surat_Izin_{$cleanNoTiket}.pdf"; 
+            
+            $absoluteSavePath = Storage::disk('local')->path($savedPdfPath);
+            
+            if (!file_exists(dirname($absoluteSavePath))) {
+                mkdir(dirname($absoluteSavePath), 0755, true);
+            }
+
+            
+            $logoPath = public_path('images/logo-subang.png'); 
+
+            $data = [
+                'no_tiket' => $noTiket,
+                'detail' => $detail,
+                'tanggal_cetak_surat' => Carbon::now()->locale('id')->translatedFormat('d F Y'),
+                'penandatangan' => $penandatangan,
+                'logo_path' => $logoPath
+            ];
+
+            $pdf = Pdf::loadView('pdf.surat-resmi-kabid', $data)
+                    ->setPaper('a4', 'portrait')
+                    ->setWarnings(false);
+
+            $pdf->save($absoluteSavePath);
+
+            
+            return $savedPdfPath; 
+
+        } catch (\Exception $e) {
+            Log::error('Error Generate PDF Kabid: ' . $e->getMessage());
+            abort(500);
+        }
+    }
+
     
 }

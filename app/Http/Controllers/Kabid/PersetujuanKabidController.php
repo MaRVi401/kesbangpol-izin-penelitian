@@ -59,12 +59,12 @@ class PersetujuanKabidController extends Controller
         }
     }
 
-    public function previewPdf($uuid, WordTemplateServiceIzinPenelitian $service)
+    public function previewPdf(WordTemplateServiceIzinPenelitian $service, $uuid)
     {
         $tiket = Tiket::with('suratIzinPenelitian')->where('uuid', $uuid)->firstOrFail();
         $penandatangan = PenandatanganSurat::first();        
         
-        $pdfPath = $service->generatePdfPreview($tiket->suratIzinPenelitian, $tiket->no_tiket, $penandatangan);
+        $pdfPath = $service->generatePDFKabid($tiket->suratIzinPenelitian, $tiket->no_tiket, $penandatangan);
         
         return Storage::disk('local')->response($pdfPath);
     }
