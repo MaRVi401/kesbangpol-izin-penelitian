@@ -18,6 +18,13 @@
                     "icon": "ti ti-user-check",
                     "route": "user-management.pending"
                 },
+
+                {
+                    "name": "Riwayat Akun Ditolak",
+                    "icon": "ti ti-user-cancel",
+                    "route": "user-management.rejected"
+                },
+                
                 {
                     "name": "Mini SIEM",
                     "icon": "ti ti-radar",

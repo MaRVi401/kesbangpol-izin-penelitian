@@ -118,9 +118,16 @@ Route::get('/user/avatar/{filename}', function ($filename) {
 
         Route::get('user-management/pending-mahasiswa', [UserManagementController::class, 'pendingMahasiswa'])
             ->name('user-management.pending');
+            
         Route::post('user-management/activate/{uuid}', [UserManagementController::class, 'activate'])
             ->name('user-management.activate');
-        //User management
+            
+        Route::get('user-management/rejected-mahasiswa', [UserManagementController::class, 'rejectedPemohon'])
+            ->name('user-management.rejected');
+            
+        Route::delete('user-management/force-delete/{uuid}', [UserManagementController::class, 'forceDeletePemohon'])
+            ->name('user-management.forceDelete');
+
         Route::resource('user-management', UserManagementController::class)
             ->names('user-management')
             ->parameters(['user-management' => 'user']);

@@ -19,26 +19,20 @@ use App\Models\Mahasiswa;
 
 class UserManagementController extends Controller
 {
-    /**
-     * Display a listing of the users with Search & Pagination.
-     */
     public function index(Request $request)
     {
         $query = User::with(['superAdmin', 'mahasiswa', 'kabid', 'operator'])->where('uuid', '!=', Auth::id());
 
-        // Filter logic
         if ($request->filled('role')) {
             $query->where('role', $request->role);
         }
 
-        // Search Logic
         if ($request->has('search')) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
                 $q->where('nama', 'LIKE', "%{$search}%")
                     ->orWhere('username', 'LIKE', "%{$search}%")
                     ->orWhere('email', 'LIKE', "%{$search}%")
-                    // Cari di tabel relasi detail (NIP/NIM)
                     ->orWhereHas('superAdmin', function ($sq) use ($search) {
                         $sq->where('nip', 'LIKE', "%{$search}%");
                     })
@@ -54,23 +48,16 @@ class UserManagementController extends Controller
             });
         }
 
-        // Use paginate for Flowbite pagination support
         $users = $query->latest()->paginate(10)->withQueryString();
 
         return view('pages.super-admin.user-management.index', compact('users'));
     }
 
-    /**
-     * Show the form for creating a new user.
-     */
     public function create()
     {
         return view('pages.super-admin.user-management.create');
     }
     
-    /**
-     * Store a newly created user.
-     */
     public function store(Request $request)
     {
         $rules = [
@@ -126,7 +113,6 @@ class UserManagementController extends Controller
 
             $roleModel::create($detailData);
 
-            // 3. Catat Jejak Audit
             JejakAudit::create([
                 'users_id'   => Auth::id(),
                 'aksi'       => 'create',
@@ -148,10 +134,6 @@ class UserManagementController extends Controller
         }
     }
 
-
-    /**
-     * Show the form for editing the specified user.
-     */
     public function edit(User $user)
     {
         $nip = '';
@@ -166,9 +148,6 @@ class UserManagementController extends Controller
         return view('pages.super-admin.user-management.edit', compact('user', 'nip', 'nim'));
     }
 
-    /**
-     * Update user data and sync Minio (Private Storage) storage.
-     */
     public function update(Request $request, User $user)
     {
         $rules = [
@@ -213,7 +192,6 @@ class UserManagementController extends Controller
 
             $user->save();
 
-            // Sinkronisasi Tabel Role
             $roleModel = $this->getRoleModel($request->role);
             $oldRoleModel = $this->getRoleModel($oldRole);
 
@@ -263,22 +241,16 @@ class UserManagementController extends Controller
         }
     }
 
-    /**
-     * Remove user and clean (Private Storage).
-     */
     public function destroy(User $user)
     {
-        // 1. Validasi: Jangan hapus diri sendiri
         if ($user->uuid === Auth::id()) {
             return back()->with('error', 'Anda tidak dapat menghapus akun sendiri.');
         }
 
-        // 2. Validasi Relasi: Cek apakah user ini masih dirujuk oleh tabel tiket
         if ($user->tiketDitangani()->exists() || $user->tiketDibuat()->exists()) {
             return back()->with('error', 'User ini masih memiliki riwayat tiket yang terdaftar.');
         }
 
-        // 3. Proses hapus jika tidak ada relasi
         DB::beginTransaction();
         try {
             if ($user->avatar) {
@@ -303,9 +275,9 @@ class UserManagementController extends Controller
             return back()->with('error', 'Terjadi kesalahan sistem: ' . $e->getMessage());
         }
     }
+
     public function pendingMahasiswa()
     {
-        // Mengambil user dengan role mahasiswa yang status_akun-nya 'pending'
         $pendingUsers = User::where('role', 'mahasiswa')
             ->whereHas('mahasiswa', function ($query) {
                 $query->where('status_akun', 'pending');
@@ -317,7 +289,6 @@ class UserManagementController extends Controller
         return view('pages.super-admin.user-management.pending', compact('pendingUsers'));
     }
 
-    // Metode untuk mengaktifkan atau menolak akun mahasiswa
     public function activate(Request $request, string $uuid)
     {
         $request->validate([
@@ -333,7 +304,6 @@ class UserManagementController extends Controller
                 'status_akun' => $request->status
             ]);
 
-            // Catat Audit
             JejakAudit::create([
                 'users_id' => Auth::id(),
                 'aksi' => 'update',
@@ -353,9 +323,6 @@ class UserManagementController extends Controller
         }
     }
 
-    /**
-     * Helper to get Role Model class.
-     */
     private function getRoleModel(string $role)
     {
         return [
@@ -391,5 +358,45 @@ class UserManagementController extends Controller
             'nim.digits'        => 'NIM harus berjumlah 10 digit.',
             'nim.numeric'       => 'NIM harus berupa angka.',
         ];
+    }
+
+    public function rejectedPemohon()
+    {
+        $rejectedUsers = User::where('role', 'mahasiswa')
+            ->whereHas('mahasiswa', function ($query) {
+                $query->where('status_akun', 'ditolak');
+            })
+            ->with('mahasiswa')
+            ->latest()
+            ->paginate(10);
+
+        return view('pages.super-admin.user-management.rejected', compact('rejectedUsers'));
+    }
+
+    public function forceDeletePemohon(string $uuid)
+    {
+        DB::beginTransaction();
+        try {
+            $user = User::findOrFail($uuid);
+            
+            $mahasiswa = Mahasiswa::where('users_id', $uuid)->first();
+
+            if ($mahasiswa) {
+                if ($mahasiswa->ktm_path) Storage::disk('local')->delete($mahasiswa->ktm_path);
+                if ($mahasiswa->surat_rekomendasi_path) Storage::disk('local')->delete($mahasiswa->surat_rekomendasi_path);
+            }
+
+            if ($user->avatar) {
+                Storage::disk('local')->delete($user->avatar);
+            }
+
+            $user->delete();
+
+            DB::commit();
+            return back()->with('success', 'User dan dokumen berhasil dihapus permanen.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->with('error', 'Gagal menghapus: ' . $e->getMessage());
+        }
     }
 }
