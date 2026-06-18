@@ -9,6 +9,6 @@ class Kabid extends Model {
     protected $primaryKey = 'uuid';
     protected $keyType = 'string';
     public $incrementing = false;
-    protected $fillable = ['users_id', 'nip'];
+    protected $fillable = ['uuid', 'users_id', 'nip', 'nik'];
     public function user() { return $this->belongsTo(User::class, 'users_id', 'uuid'); }
 }

@@ -42,6 +42,7 @@ return new class extends Migration
             $table->uuid('uuid')->primary();
             $table->foreignUuid('users_id')->constrained('users', 'uuid')->cascadeOnDelete();
             $table->string('nip');
+            $table->string('nik');
             $table->timestamps();
         });
 

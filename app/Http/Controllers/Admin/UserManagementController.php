@@ -66,6 +66,7 @@ class UserManagementController extends Controller
             'username' => 'required|string|unique:users,username',
             'role'     => 'required|in:super_admin,mahasiswa,kabid,operator',
             'nip'      => 'required_if:role,kabid,operator,super_admin|nullable|numeric|digits:18',
+            'nik'      => 'required_if:role,kabid|nullable|numeric|digits:16',
             'nim'      => 'required_if:role,mahasiswa|nullable|numeric|digits:10',
             'no_wa'    => 'nullable|numeric|digits_between:10,13',
             'password' => 'required|min:8|confirmed',
@@ -109,6 +110,9 @@ class UserManagementController extends Controller
                 $detailData['status_akun'] = 'aktif';
             } else {
                 $detailData['nip'] = $request->nip;
+                if ($request->role === 'kabid') {
+                    $detailData['nik'] = $request->nik;
+                }
             }
 
             $roleModel::create($detailData);
@@ -138,14 +142,18 @@ class UserManagementController extends Controller
     {
         $nip = '';
         $nim = '';
+        $nik = '';
 
         if (in_array($user->role, ['kabid', 'operator', 'super_admin'])) {
             $nip = $user->{$user->role} ? $user->{$user->role}->nip : '';
+            if ($user->role === 'kabid') {
+                $nik = $user->kabid ? $user->kabid->nik : '';
+            }
         } elseif ($user->role === 'mahasiswa') {
             $nim = $user->mahasiswa ? $user->mahasiswa->nim : '';
         }
 
-        return view('pages.super-admin.user-management.edit', compact('user', 'nip', 'nim'));
+        return view('pages.super-admin.user-management.edit', compact('user', 'nip', 'nim', 'nik'));
     }
 
     public function update(Request $request, User $user)
@@ -155,7 +163,8 @@ class UserManagementController extends Controller
             'email'    => 'required|email|unique:users,email,' . $user->uuid . ',uuid',
             'username' => 'required|string|unique:users,username,' . $user->uuid . ',uuid',
             'role'     => 'required|in:super_admin,mahasiswa,kabid,operator',
-            'nip'      => 'required_if:role,kabid,operator|nullable|numeric|digits:18',
+            'nip'      => 'required_if:role,kabid,operator,super_admin|nullable|numeric|digits:18',
+            'nik'      => 'required_if:role,kabid|nullable|numeric|digits:16',
             'nim'      => 'required_if:role,mahasiswa|nullable|numeric|digits:10',
             'no_wa'    => 'nullable|numeric|digits_between:10,13',
             'avatar'   => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
@@ -208,6 +217,9 @@ class UserManagementController extends Controller
                     $newData['status_akun'] = 'aktif';
                 } else {
                     $newData['nip'] = $request->nip;
+                    if ($request->role === 'kabid') {
+                        $newData['nik'] = $request->nik;
+                    }
                 }
 
                 $roleModel::create($newData);
@@ -217,9 +229,13 @@ class UserManagementController extends Controller
                         'nim' => $request->nim
                     ]);
                 } else if (in_array($request->role, ['kabid', 'operator', 'super_admin'])) {
-                    $roleModel::where('users_id', $user->uuid)->update([
+                    $updateData = [
                         'nip' => $request->nip
-                    ]);
+                    ];
+                    if ($request->role === 'kabid') {
+                        $updateData['nik'] = $request->nik;
+                    }
+                    $roleModel::where('users_id', $user->uuid)->update($updateData);
                 }
             }
 
@@ -345,6 +361,9 @@ class UserManagementController extends Controller
             'nip.required'      => 'NIP wajib diisi.',
             'nip.numeric'       => 'NIP harus berupa angka.',
             'nip.digits'        => 'NIP harus berjumlah 18 digit.',
+            'nik.required_if'   => 'NIK wajib diisi jika Anda memilih role Kabid.',
+            'nik.numeric'       => 'NIK harus berupa angka.',
+            'nik.digits'        => 'NIK harus berjumlah 16 digit.',
             'no_wa.numeric'     => 'Nomor WhatsApp harus berupa angka.',
             'no_wa.digits_between' => 'Nomor WhatsApp harus berjumlah antara 10 sampai 13 digit.',
             'password.required' => 'Password wajib diisi.',

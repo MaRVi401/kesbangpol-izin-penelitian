@@ -42,7 +42,6 @@ window.previewImage = function (input) {
 }
 
 document.addEventListener('DOMContentLoaded', function () {
-
     const searchInput = document.getElementById('simple-search');
     const clearBtn = document.querySelector('[title="Bersihkan Pencarian"]');
 
@@ -56,7 +55,6 @@ document.addEventListener('DOMContentLoaded', function () {
     if (chartCanvas) {
         const isDark = document.documentElement.classList.contains('dark');
         const textColor = isDark ? '#f8fafc' : '#475569';
-
         const labels = JSON.parse(chartCanvas.dataset.labels || '[]');
         const dataValues = JSON.parse(chartCanvas.dataset.values || '[]');
 
@@ -132,18 +130,26 @@ document.addEventListener('DOMContentLoaded', function () {
     const roleSelect = document.getElementById('role_select');
     const nipGroup = document.getElementById('nip_group');
     const nimGroup = document.getElementById('nim_group');
+    const nikGroup = document.getElementById('nik_group');
 
-    if (roleSelect && nipGroup && nimGroup) {
+    if (roleSelect) {
         function toggleInputs() {
             const role = roleSelect.value;
 
-            nipGroup.classList.add('hidden');
-            nimGroup.classList.add('hidden');
+            if (nipGroup) nipGroup.classList.add('hidden');
+            if (nimGroup) nimGroup.classList.add('hidden');
+            if (nikGroup) nikGroup.classList.add('hidden');
 
             if (role === 'kabid' || role === 'operator' || role === 'super_admin') {
-                nipGroup.classList.remove('hidden');
-            } else if (role === 'mahasiswa') {
-                nimGroup.classList.remove('hidden');
+                if (nipGroup) nipGroup.classList.remove('hidden');
+            } 
+            
+            if (role === 'kabid') {
+                if (nikGroup) nikGroup.classList.remove('hidden');
+            }
+            
+            if (role === 'mahasiswa') {
+                if (nimGroup) nimGroup.classList.remove('hidden');
             }
         }
 
