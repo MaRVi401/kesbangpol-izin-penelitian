@@ -1,28 +1,25 @@
-<?php
+<?php 
 
-namespace Database\Seeders;
+namespace Database\Seeders; 
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use Illuminate\Database\Seeder;
+use Illuminate\Database\Console\Seeds\WithoutModelEvents; 
+use Illuminate\Database\Seeder; 
 
-class DatabaseSeeder extends Seeder
+class DatabaseSeeder extends Seeder     
 {
-    use WithoutModelEvents;
+    use WithoutModelEvents;     
 
-    /**
-     * Seed the application's database.
-     */
-    public function run(): void
-    {
-        // User::factory(10)->create();
-
-        $this->call([
-            UserSeeder::class,
-            ServiceSeeder::class,
-            PenandatanganSuratSeeder::class,
-            //LayananSeeder::class,
-            //TiketSeeder::class,
-            //DashboardKabidSeeder::class
-        ]);
-    }
+    /**      
+     * Seed the application's database.      
+     */     
+    public function run(): void     
+    {         
+        $this->call([             
+            UserSeeder::class,             
+            ServiceSeeder::class,             
+            // LayananSeeder::class,             
+            // TiketSeeder::class,             
+            // DashboardKabidSeeder::class         
+        ]);     
+    } 
 }

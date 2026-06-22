@@ -13,7 +13,7 @@ return new class extends Migration
             $table->string('nama');
             $table->string('username')->unique();
             $table->string('password');
-            $table->enum('role', ['super_admin', 'mahasiswa', 'kabid', 'operator']);
+            $table->enum('role', ['super_admin', 'mahasiswa', 'kaban', 'kabid', 'operator']);
             $table->string('alamat')->nullable();
             $table->string('email')->unique();
             $table->string('no_wa')->nullable();
@@ -38,11 +38,25 @@ return new class extends Migration
             $table->timestamps();
         });
 
+        Schema::create('kaban', function (Blueprint $table) {
+            $table->uuid('uuid')->primary();
+            $table->foreignUuid('users_id')->constrained('users', 'uuid')->cascadeOnDelete();
+            $table->string('nip');
+            $table->string('nik')->nullable();
+            $table->string('jabatan_atasan')->nullable();
+            $table->string('jabatan_penandatangan')->default('Kepala Badan Kesatuan Bangsa dan Politik Kabupaten Subang');
+            $table->string('pangkat_golongan');
+            $table->timestamps();
+        });
+
         Schema::create('kabid', function (Blueprint $table) {
             $table->uuid('uuid')->primary();
             $table->foreignUuid('users_id')->constrained('users', 'uuid')->cascadeOnDelete();
             $table->string('nip');
             $table->string('nik');
+            $table->string('jabatan_atasan')->default('an. Kepala Badan Kesatuan Bangsa dan Politik Kabupaten Subang');
+            $table->string('jabatan_penandatangan');
+            $table->string('pangkat_golongan');
             $table->timestamps();
         });
 
@@ -94,14 +108,13 @@ return new class extends Migration
             $table->uuid('uuid')->primary();
             $table->foreignUuid('tiket_id')->constrained('tiket', 'uuid')->cascadeOnDelete();
             
+            $table->uuid('penandatangan_id')->nullable();
+            $table->string('penandatangan_type')->nullable();
+            
             $table->string('nomor_surat')->nullable(); 
-
-
             $table->string('nomor_surat_institusi');
             $table->date('tanggal_surat_institusi');
             $table->date('tanggal_diterima_surat');
-            
-            
             $table->string('nama');
             $table->string('tempat_lahir');
             $table->date('tanggal_lahir');
@@ -168,21 +181,10 @@ return new class extends Migration
             $table->string('ip_address', 45)->nullable();
             $table->timestamps();
         });
-
-        Schema::create('penandatangan_surat', function (Blueprint $table) {
-            $table->uuid('uuid')->primary();
-            $table->string('nama');
-            $table->string('nip');
-            $table->string('jabatan_atasan')->default('an. Kepala Badan Kesatuan Bangsa dan Politik Kabupaten Subang');
-            $table->string('jabatan_penandatangan');
-            $table->string('pangkat_golongan');
-            $table->timestamps();
-        });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('penandatangan_surat');
         Schema::dropIfExists('surat_permohonan_izin_penelitian');
         Schema::dropIfExists('komentar_tiket');
         Schema::dropIfExists('riwayat_status_tiket');
@@ -190,6 +192,7 @@ return new class extends Migration
         Schema::dropIfExists('layanan');
         Schema::dropIfExists('operator');
         Schema::dropIfExists('kabid');
+        Schema::dropIfExists('kaban');
         Schema::dropIfExists('mahasiswa');
         Schema::dropIfExists('super_admin');
         Schema::dropIfExists('users');

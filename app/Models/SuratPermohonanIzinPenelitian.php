@@ -13,10 +13,17 @@ class SuratPermohonanIzinPenelitian extends Model
     protected $primaryKey = 'uuid';
     public $incrementing = false;
     protected $keyType = 'string';
+    
     protected $guarded = [];
 
     public function tiket()
     {
         return $this->belongsTo(Tiket::class, 'tiket_id', 'uuid');
+    }
+
+    // Relasi Polimorfik ke Kaban / Kabid
+    public function penandatangan()
+    {
+        return $this->morphTo();
     }
 }
