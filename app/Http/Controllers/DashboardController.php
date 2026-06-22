@@ -19,6 +19,9 @@ class DashboardController extends Controller
             
             // Dashboard Kabid
             'kabid'        => app(Kabid\DashboardController::class)->index(request()),
+
+            // Dashboard Kaban
+            'kaban'        => app(Kaban\DashboardController::class)->index(request()),
             
             'mahasiswa' => app(Mahasiswa\DashboardControllerMahasiswa::class)->index(request()),
 

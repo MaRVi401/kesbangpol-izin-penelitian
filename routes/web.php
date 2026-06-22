@@ -18,6 +18,7 @@ use App\Http\Controllers\FileController;
 use App\Http\Controllers\Mahasiswa\DetailSuratIzinPermohonan;
 use App\Http\Controllers\Mahasiswa\ServiceHistoryTicketController;
 use App\Http\Controllers\Operator\UserManagementController as OperatorUserController;
+use App\Http\Controllers\Kaban\PersetujuanKabanController;
 // use App\Http\Controllers\Mahasiswa\ServiceEmailGovController;
 
 /*
@@ -233,5 +234,19 @@ Route::get('/user/avatar/{filename}', function ($filename) {
 
         Route::get('tiket/{uuid}/preview-pdf', [PersetujuanKabidController::class, 'previewPdf'])
             ->name('kabid.tiket.preview');
+    });
+
+    Route::middleware('can:kaban-only')->group(function () {
+        
+        // Rute khusus dashboard jika dipanggil langsung via name
+        Route::get('/dashboard-kaban', [App\Http\Controllers\Kaban\DashboardController::class, 'index'])
+            ->name('dashboard.kaban');
+
+        // Rute untuk proses persetujuan
+        Route::post('kaban/tiket/{uuid}/proses', [PersetujuanKabanController::class, 'proses'])
+            ->name('kaban.tiket.proses');
+
+        Route::get('kaban/tiket/{uuid}/preview-pdf', [PersetujuanKabanController::class, 'previewPdf'])
+            ->name('kaban.tiket.preview');
     });
 });
