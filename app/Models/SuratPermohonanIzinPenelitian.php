@@ -1,29 +1,27 @@
-<?php
+<?php 
+namespace App\Models; 
 
-namespace App\Models;
+use Illuminate\Database\Eloquent\Model; 
+use Illuminate\Database\Eloquent\Concerns\HasUuids; 
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Concerns\HasUuids;
-
-class SuratPermohonanIzinPenelitian extends Model
+class SuratPermohonanIzinPenelitian extends Model 
 {
-    use HasUuids;
+    use HasUuids; 
 
-    protected $table = 'surat_permohonan_izin_penelitian';
-    protected $primaryKey = 'uuid';
-    public $incrementing = false;
-    protected $keyType = 'string';
-    
-    protected $guarded = [];
+    protected $table = 'surat_permohonan_izin_penelitian'; 
+    protected $primaryKey = 'uuid'; 
+    public $incrementing = false; 
+    protected $keyType = 'string'; 
 
-    public function tiket()
-    {
-        return $this->belongsTo(Tiket::class, 'tiket_id', 'uuid');
-    }
+    protected $guarded = []; // Kolom file_surat_signed_path otomatis diizinkan untuk Mass Assignment
 
-    // Relasi Polimorfik ke Kaban / Kabid
-    public function penandatangan()
-    {
-        return $this->morphTo();
-    }
+    public function tiket() 
+    { 
+        return $this->belongsTo(Tiket::class, 'tiket_id', 'uuid'); 
+    } 
+
+    public function penandatangan() 
+    { 
+        return $this->morphTo(); 
+    } 
 }

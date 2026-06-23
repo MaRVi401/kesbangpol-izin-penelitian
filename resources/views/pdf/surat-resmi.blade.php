@@ -186,10 +186,20 @@
             <tr>
                 <td width="50%"></td>
                 <td width="50%" style="text-align: center;">
-                    {{ $penandatangan->jabatan_atasan ?? 'an. Kepala Badan Kesatuan Bangsa dan Politik Kabupaten Subang' }}<br>
-                    {{ $penandatangan->jabatan_penandatangan ?? 'Kepala Bidang Ideologi Wawasan Kebangsaan dan Karakter Bangsa' }}<br>
-                    <br><br><br><br><br><br><br><br>
-                    <strong><u>{{ $penandatangan->nama ?? 'NAMA PEJABAT' }}</u></strong>
+                    @if(!empty($penandatangan))
+                        @if(!empty($penandatangan->jabatan_atasan))
+                            {{ $penandatangan->jabatan_atasan }}<br>
+                        @endif
+                        {{ $penandatangan->jabatan_penandatangan }}<br>
+                        <br><br><br><br><br><br><br><br>
+                        <strong><u>{{ $penandatangan->user->nama ?? 'NAMA PEJABAT' }}</u></strong><br>
+                        NIP. {{ $penandatangan->nip ?? '-' }}
+                    @else
+                        an. Kepala Badan Kesatuan Bangsa dan Politik Kabupaten Subang<br>
+                        Kepala Bidang Ideologi Wawasan Kebangsaan dan Karakter Bangsa<br>
+                        <br><br><br><br><br><br><br><br>
+                        <strong><u>NAMA PEJABAT</u></strong>
+                    @endif
                 </td>
             </tr>
         </table>

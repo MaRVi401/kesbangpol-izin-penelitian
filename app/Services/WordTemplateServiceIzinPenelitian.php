@@ -8,11 +8,10 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
 use Barryvdh\DomPDF\Facade\Pdf;
-use App\Models\PenandatanganSurat;
 
 class WordTemplateServiceIzinPenelitian
 {
-    public function generateDokumen(SuratPermohonanIzinPenelitian $detail, $noTiket, ?PenandatanganSurat $penandatangan = null)
+    public function generateDokumen(SuratPermohonanIzinPenelitian $detail, $noTiket, $penandatangan = null)
     {
         $templatePath = 'templates/Template-Izin-Penelitian.docx';
 
@@ -52,7 +51,7 @@ class WordTemplateServiceIzinPenelitian
             $templateProcessor->setValue('tempat_tgl_lahir', $detail->tempat_lahir . ', ' . Carbon::parse($detail->tanggal_lahir)->locale('id')->translatedFormat('d F Y'));
             $templateProcessor->setValue('kebangsaan', $detail->kebangsaan ?? 'Indonesia');
             $templateProcessor->setValue('agama', $detail->agama);
-            $templateProcessor->setValue('nama_wasnas', $penandatangan ? $penandatangan->nama : '-');
+            $templateProcessor->setValue('nama_wasnas', $penandatangan ? $penandatangan->user->nama : '-');
             $templateProcessor->setValue('nip_wasnas', $penandatangan ? $penandatangan->nip : '-');
             $templateProcessor->setValue('pekerjaan', $detail->pekerjaan ?? '-');
             $templateProcessor->setValue('status_perkawinan', $detail->status_perkawinan);
@@ -122,7 +121,7 @@ class WordTemplateServiceIzinPenelitian
         }
     }
 
-    public function generatePdfPreview(SuratPermohonanIzinPenelitian $detail, $noTiket, ?PenandatanganSurat $penandatangan = null)
+    public function generatePdfPreview(SuratPermohonanIzinPenelitian $detail, $noTiket, $penandatangan = null)
     {
         try {
             $userId = auth()->id();
@@ -139,8 +138,7 @@ class WordTemplateServiceIzinPenelitian
                 'no_tiket' => $noTiket,
                 'detail' => $detail,
                 'tanggal_surat' => Carbon::now()->locale('id')->translatedFormat('d F Y'),
-                // Data penandatangan disisipkan ke view PDF
-                'nama_wasnas' => $penandatangan ? $penandatangan->nama : '-',
+                'nama_wasnas' => $penandatangan ? $penandatangan->user->nama : '-',
                 'nip_wasnas' => $penandatangan ? $penandatangan->nip : '-',
             ];
 
@@ -158,8 +156,7 @@ class WordTemplateServiceIzinPenelitian
         }
     }
 
-
-    public function generatePDFKabid(SuratPermohonanIzinPenelitian $detail, $noTiket, ?PenandatanganSurat $penandatangan = null) 
+    public function generatePDFKabid(SuratPermohonanIzinPenelitian $detail, $noTiket, $penandatangan = null) 
     {
         try {
             $cleanNoTiket = str_replace(['/', '\\', ' '], '-', $noTiket);
@@ -172,7 +169,6 @@ class WordTemplateServiceIzinPenelitian
                 mkdir(dirname($absoluteSavePath), 0755, true);
             }
 
-            
             $logoPath = public_path('images/logo-subang.png'); 
 
             $data = [
@@ -183,13 +179,12 @@ class WordTemplateServiceIzinPenelitian
                 'logo_path' => $logoPath
             ];
 
-            $pdf = Pdf::loadView('pdf.surat-resmi-kabid', $data)
+            $pdf = Pdf::loadView('pdf.surat-resmi', $data)
                     ->setPaper('a4', 'portrait')
                     ->setWarnings(false);
 
             $pdf->save($absoluteSavePath);
 
-            
             return $savedPdfPath; 
 
         } catch (\Exception $e) {
@@ -198,5 +193,40 @@ class WordTemplateServiceIzinPenelitian
         }
     }
 
-    
+    public function generatePDFKaban(SuratPermohonanIzinPenelitian $detail, $noTiket, $penandatangan = null) 
+    {
+        try {
+            $cleanNoTiket = str_replace(['/', '\\', ' '], '-', $noTiket);
+            
+            $savedPdfPath = "surat_keluar/Surat_Izin_{$cleanNoTiket}.pdf"; 
+            
+            $absoluteSavePath = Storage::disk('local')->path($savedPdfPath);
+            
+            if (!file_exists(dirname($absoluteSavePath))) {
+                mkdir(dirname($absoluteSavePath), 0755, true);
+            }
+
+            $logoPath = public_path('images/logo-subang.png'); 
+
+            $data = [
+                'no_tiket' => $noTiket,
+                'detail' => $detail,
+                'tanggal_cetak_surat' => Carbon::now()->locale('id')->translatedFormat('d F Y'),
+                'penandatangan' => $penandatangan,
+                'logo_path' => $logoPath
+            ];
+
+            $pdf = Pdf::loadView('pdf.surat-resmi', $data)
+                    ->setPaper('a4', 'portrait')
+                    ->setWarnings(false);
+
+            $pdf->save($absoluteSavePath);
+
+            return $savedPdfPath; 
+
+        } catch (\Exception $e) {
+            Log::error('Error Generate PDF Kaban: ' . $e->getMessage());
+            abort(500);
+        }
+    }
 }

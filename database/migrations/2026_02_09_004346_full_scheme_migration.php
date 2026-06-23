@@ -84,7 +84,7 @@ return new class extends Migration
             $table->string('lampiran')->nullable();
             $table->text('deskripsi')->nullable();
             $table->json('payload_draft')->nullable();
-            $table->enum('status', ['draft', 'diajukan', 'verifikasi kelengkapan', 'verifikasi lengkap', 'verifikasi gagal', 'diterima', 'ditolak']);
+            $table->enum('status', ['draft', 'diajukan', 'verifikasi kelengkapan', 'verifikasi lengkap', 'verifikasi gagal', 'diterima', 'menunggu_tte', 'ditandatangani', 'ditolak']);
             $table->timestamps();
         });
 
@@ -92,7 +92,7 @@ return new class extends Migration
             $table->uuid('uuid')->primary();
             $table->foreignUuid('tiket_id')->constrained('tiket', 'uuid')->cascadeOnDelete();
             $table->foreignUuid('users_id')->constrained('users', 'uuid')->cascadeOnDelete();
-            $table->enum('status', ['draft', 'diajukan', 'verifikasi kelengkapan', 'verifikasi lengkap', 'verifikasi gagal', 'diterima', 'ditolak']);
+            $table->enum('status', ['draft', 'diajukan', 'verifikasi kelengkapan', 'verifikasi lengkap', 'verifikasi gagal', 'diterima', 'menunggu_tte', 'ditandatangani', 'ditolak']);
             $table->timestamps();
         });
 
@@ -107,10 +107,8 @@ return new class extends Migration
         Schema::create('surat_permohonan_izin_penelitian', function (Blueprint $table) {
             $table->uuid('uuid')->primary();
             $table->foreignUuid('tiket_id')->constrained('tiket', 'uuid')->cascadeOnDelete();
-            
             $table->uuid('penandatangan_id')->nullable();
             $table->string('penandatangan_type')->nullable();
-            
             $table->string('nomor_surat')->nullable(); 
             $table->string('nomor_surat_institusi');
             $table->date('tanggal_surat_institusi');
@@ -156,6 +154,7 @@ return new class extends Migration
             $table->string('hobi')->nullable();
             $table->string('no_hp');
             $table->string('path_pas_foto')->nullable();
+            $table->string('file_surat_signed_path')->nullable();
             $table->timestamps();
         });
 
