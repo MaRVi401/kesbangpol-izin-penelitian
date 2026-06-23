@@ -23,8 +23,14 @@ class PersetujuanKabanController extends Controller
         try {
             DB::beginTransaction();
 
+            $kabanProfile = auth()->user()->kaban;
+
             $tiket = Tiket::where('uuid', $uuid)
                 ->where('status', 'verifikasi lengkap')
+                ->whereHas('suratIzinPenelitian', function ($query) use ($kabanProfile) {
+                    $query->where('penandatangan_id', $kabanProfile->uuid)
+                          ->where('penandatangan_type', \App\Models\Kaban::class);
+                })
                 ->firstOrFail();
 
             $tiket->update([
@@ -61,11 +67,17 @@ class PersetujuanKabanController extends Controller
 
     public function previewPdf(WordTemplateServiceIzinPenelitian $service, $uuid)
     {
-        $tiket = Tiket::with('suratIzinPenelitian')->where('uuid', $uuid)->firstOrFail();
+        $kabanProfile = auth()->user()->kaban;
+
+        $tiket = Tiket::with('suratIzinPenelitian')
+            ->where('uuid', $uuid)
+            ->whereHas('suratIzinPenelitian', function ($query) use ($kabanProfile) {
+                $query->where('penandatangan_id', $kabanProfile->uuid)
+                      ->where('penandatangan_type', \App\Models\Kaban::class);
+            })
+            ->firstOrFail();
         
-        $penandatangan = auth()->user()->kaban; 
-        
-        $pdfPath = $service->generatePDFKaban($tiket->suratIzinPenelitian, $tiket->no_tiket, $penandatangan); 
+        $pdfPath = $service->generatePDFKaban($tiket->suratIzinPenelitian, $tiket->no_tiket, $kabanProfile); 
         
         return Storage::disk('local')->response($pdfPath);
     }

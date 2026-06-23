@@ -8,7 +8,6 @@ use App\Models\RiwayatStatusTiket;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Services\WordTemplateServiceIzinPenelitian;
-use App\Models\PenandatanganSurat;
 use Illuminate\Support\Facades\Storage;
 
 class PersetujuanKabidController extends Controller
@@ -23,8 +22,14 @@ class PersetujuanKabidController extends Controller
         try {
             DB::beginTransaction();
 
+            $kabidProfile = auth()->user()->kabid;
+
             $tiket = Tiket::where('uuid', $uuid)
                 ->where('status', 'verifikasi lengkap')
+                ->whereHas('suratIzinPenelitian', function ($query) use ($kabidProfile) {
+                    $query->where('penandatangan_id', $kabidProfile->uuid)
+                          ->where('penandatangan_type', \App\Models\Kabid::class);
+                })
                 ->firstOrFail();
 
             $tiket->update([
@@ -61,10 +66,17 @@ class PersetujuanKabidController extends Controller
 
     public function previewPdf(WordTemplateServiceIzinPenelitian $service, $uuid)
     {
-        $tiket = Tiket::with('suratIzinPenelitian')->where('uuid', $uuid)->firstOrFail();
-        $penandatangan = PenandatanganSurat::first();        
+        $kabidProfile = auth()->user()->kabid;
+
+        $tiket = Tiket::with('suratIzinPenelitian')
+            ->where('uuid', $uuid)
+            ->whereHas('suratIzinPenelitian', function ($query) use ($kabidProfile) {
+                $query->where('penandatangan_id', $kabidProfile->uuid)
+                      ->where('penandatangan_type', \App\Models\Kabid::class);
+            })
+            ->firstOrFail();
         
-        $pdfPath = $service->generatePDFKabid($tiket->suratIzinPenelitian, $tiket->no_tiket, $penandatangan);
+        $pdfPath = $service->generatePDFKabid($tiket->suratIzinPenelitian, $tiket->no_tiket, $kabidProfile);
         
         return Storage::disk('local')->response($pdfPath);
     }

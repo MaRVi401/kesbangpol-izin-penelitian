@@ -174,7 +174,6 @@
                                                             </div>
                                                         @endif
 
-                                                        {{-- Menampilkan Screenshot Pengaduan (Folder: pengaduan) --}}
                                                         @if ($ticket->detailPengaduan && $ticket->detailPengaduan->lampiran_screenshot)
                                                             <div class="mt-4">
                                                                 <label class="block text-xs text-gray-500 uppercase mb-1">Screenshot Pengaduan</label>
@@ -186,13 +185,20 @@
 
                                                         <hr class="dark:border-gray-600">
 
-                                                        <!-- POSISI YANG BENAR UNTUK DROPDOWN PENANDATANGAN -->
                                                         <div>
-                                                            <label class="block mb-2 text-sm font-bold text-gray-900 dark:text-white">Pilih Penandatangan Surat (Wasnas)</label>
-                                                            <select data-uuid="{{ $ticket->uuid }}" class="penandatangan-select bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-orange-500 focus:border-orange-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white cursor-pointer">
+                                                            <label class="block mb-2 text-sm font-bold text-gray-900 dark:text-white">Pilih Penandatangan Surat (Kaban/Kabid)</label>
+                                                            <select name="penandatangan_user_uuid" data-uuid="{{ $ticket->uuid }}" class="penandatangan-select bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-orange-500 focus:border-orange-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white cursor-pointer">
                                                                 <option value="">-- Pilih Penandatangan untuk memunculkan dokumen --</option>
-                                                                @foreach($penandatangan_list as $penandatangan)
-                                                                    <option value="{{ $penandatangan->uuid }}">{{ $penandatangan->nama }} (NIP: {{ $penandatangan->nip }})</option>
+                                                                @foreach($penandatangan_list as $user_penandatangan)
+                                                                    @php
+                                                                        $isKaban = $user_penandatangan->role === 'kaban';
+                                                                        $profile = $isKaban ? $user_penandatangan->kaban : $user_penandatangan->kabid;
+                                                                        $nip = $profile ? $profile->nip : 'NIP Tidak Tersedia';
+                                                                        $labelRole = $isKaban ? 'Kaban' : 'Kabid';
+                                                                    @endphp
+                                                                    <option value="{{ $user_penandatangan->uuid }}">
+                                                                        {{ $user_penandatangan->nama }} ({{ $labelRole }} - NIP: {{ $nip }})
+                                                                    </option>
                                                                 @endforeach
                                                             </select>
                                                         </div>
@@ -205,7 +211,6 @@
                                                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-orange-500 focus:border-orange-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400">
                                                             <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Nomor ini akan tersimpan ke data surat izin permohonan.</p>
                                                         </div>
-
 
                                                         <div>
                                                             <label class="block mb-2 text-sm font-bold text-gray-900 dark:text-white">Pilih Status Akhir</label>
@@ -227,7 +232,6 @@
 
                                                     <div class="flex flex-wrap items-center justify-between p-6 border-t border-gray-200 rounded-b dark:border-gray-600 gap-4">
     
-                                                        <!-- Kelompok Kiri: Aksi Form -->
                                                         <div class="flex items-center gap-2">
                                                             <button type="submit" class="text-white bg-orange-600 hover:bg-orange-700 focus:ring-4 focus:outline-none focus:ring-orange-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center transition-all cursor-pointer whitespace-nowrap">
                                                                 Simpan Perubahan
@@ -237,9 +241,7 @@
                                                             </button>
                                                         </div>
 
-                                                        <!-- Kelompok Kanan: Aksi Dokumen -->
                                                         <div id="doc-actions-{{ $ticket->uuid }}" class="hidden items-center gap-2">
-                                                            <!-- Tombol Edit DOCX -->
                                                             <a id="btn-docx-{{ $ticket->uuid }}" data-base-url="{{ route('ticket.download-docx', $ticket->uuid) }}" href="#" class="flex items-center gap-2 text-gray-900 bg-white border border-gray-300 hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 font-medium rounded-lg text-sm px-4 py-2.5 text-center transition-all cursor-pointer whitespace-nowrap dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">
                                                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
@@ -247,7 +249,6 @@
                                                                 Download DOCX
                                                             </a>
 
-                                                            <!-- Tombol Preview PDF -->
                                                             <a id="btn-pdf-{{ $ticket->uuid }}" data-base-url="{{ route('ticket.preview-pdf', $ticket->uuid) }}" href="#" target="_blank" class="flex items-center gap-2 text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2.5 text-center transition-all cursor-pointer whitespace-nowrap dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
                                                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>

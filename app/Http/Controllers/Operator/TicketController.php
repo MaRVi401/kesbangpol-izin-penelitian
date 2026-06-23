@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Operator;
 
 use App\Http\Controllers\Controller;
 use App\Models\Tiket;
+use App\Models\User;
+use App\Models\Kaban;
+use App\Models\Kabid;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -12,7 +15,6 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 use App\Models\JejakAudit;
 use App\Services\WordTemplateServiceIzinPenelitian;
-use App\Models\PenandatanganSurat;
 
 class TicketController extends Controller
 {
@@ -41,7 +43,6 @@ class TicketController extends Controller
         return view('pages.operator.ticket.index', compact('tickets'));
     }
 
-    
     public function handle(Request $request, string $uuid): RedirectResponse
     {
         $ticket = Tiket::where('uuid', $uuid)
@@ -100,7 +101,10 @@ class TicketController extends Controller
 
         $tickets = $query->latest()->paginate(10);
 
-        $penandatangan_list = PenandatanganSurat::all();
+        // Ambil User dengan role Kaban dan Kabid beserta data profil aslinya
+        $penandatangan_list = User::whereIn('role', ['kaban', 'kabid'])
+            ->with(['kaban', 'kabid'])
+            ->get();
 
         return view('pages.operator.ticket.workdesk', compact('tickets', 'penandatangan_list'));
     }
@@ -119,6 +123,7 @@ class TicketController extends Controller
         $request->validate([
             'status'   => 'required|in:verifikasi lengkap,verifikasi gagal,diterima,ditolak',
             'komentar' => 'required|string|min:1',
+            'penandatangan_user_uuid' => 'nullable|exists:users,uuid'
         ]);
 
         $ticket = Tiket::where('uuid', $uuid)->firstOrFail();
@@ -136,10 +141,31 @@ class TicketController extends Controller
                 'created_at' => now(),
             ]);
 
-            if ($request->filled('nomor_surat') && $ticket->suratIzinPenelitian) {
-                $ticket->suratIzinPenelitian->update([
-                    'nomor_surat' => $request->nomor_surat
-                ]);
+            if ($ticket->suratIzinPenelitian) {
+                $updateData = [];
+                
+                if ($request->filled('nomor_surat')) {
+                    $updateData['nomor_surat'] = $request->nomor_surat;
+                }
+
+                // Logika relasi Polymorphic berdasarkan User Kaban / Kabid yang dipilih operator
+                if ($request->filled('penandatangan_user_uuid')) {
+                    $signerUser = User::with(['kaban', 'kabid'])->find($request->penandatangan_user_uuid);
+                    
+                    if ($signerUser) {
+                        $isKaban = $signerUser->role === 'kaban';
+                        $profile = $isKaban ? $signerUser->kaban : $signerUser->kabid;
+
+                        if ($profile) {
+                            $updateData['penandatangan_id'] = $profile->uuid;
+                            $updateData['penandatangan_type'] = $isKaban ? Kaban::class : Kabid::class;
+                        }
+                    }
+                }
+
+                if (!empty($updateData)) {
+                    $ticket->suratIzinPenelitian->update($updateData);
+                }
             }
 
             DB::table('riwayat_status_tiket')->insert([
@@ -201,21 +227,25 @@ class TicketController extends Controller
             ->where('uuid', $uuid)
             ->firstOrFail();
 
-        if (!$ticket) {
+        if (!$ticket || !$ticket->suratIzinPenelitian) {
             abort(404);
         }
 
-        if (!$ticket->suratIzinPenelitian) {
-            abort(404);
+        // Ambil objek profil aslinya agar templating Word tidak error
+        $penandatanganUserId = $request->query('penandatangan_user_uuid');
+        $penandatangan = null;
+        
+        if ($penandatanganUserId) {
+            $signerUser = User::with(['kaban', 'kabid'])->find($penandatanganUserId);
+            if ($signerUser) {
+                $penandatangan = $signerUser->role === 'kaban' ? $signerUser->kaban : $signerUser->kabid;
+            }
         }
-
-        $penandatangan = PenandatanganSurat::find($request->query('penandatangan_id'));
 
         $pdfPath = $wordService->generatePdfPreview($ticket->suratIzinPenelitian, $ticket->no_tiket, $penandatangan);
 
         return redirect()->route('file.show', ['path' => $pdfPath]);
     }
-
 
     public function downloadDocx(Request $request, string $uuid, WordTemplateServiceIzinPenelitian $wordService)
     {
@@ -227,9 +257,16 @@ class TicketController extends Controller
             abort(404);
         }
 
-        $penandatangan = PenandatanganSurat::find($request->query('penandatangan_id'));
+        $penandatanganUserId = $request->query('penandatangan_user_uuid');
+        $penandatangan = null;
+        
+        if ($penandatanganUserId) {
+            $signerUser = User::with(['kaban', 'kabid'])->find($penandatanganUserId);
+            if ($signerUser) {
+                $penandatangan = $signerUser->role === 'kaban' ? $signerUser->kaban : $signerUser->kabid;
+            }
+        }
 
-        // Metode generateDokumen akan langsung mengembalikan response()->download()
         return $wordService->generateDokumen($ticket->suratIzinPenelitian, $ticket->no_tiket, $penandatangan);
     }
 }
