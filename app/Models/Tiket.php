@@ -22,9 +22,9 @@ class Tiket extends Model
         'petugas_id', 
         'no_tiket', 
         'lampiran', 
-        'payload_draft', 
+        'payload_draft',
+        'status',
         'deskripsi', 
-        'status' // Menampung status baru: menunggu_tte, ditandatangani
     ]; 
 
     protected function casts(): array 

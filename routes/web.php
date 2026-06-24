@@ -67,6 +67,9 @@ Route::middleware('guest')->group(function () {
         ->name('login.post');
 });
 
+Route::get('/verifikasi/surat/{uuid}', [App\Http\Controllers\VerifikasiController::class, 'cekKeaslian'])
+    ->name('verifikasi.dokumen');
+
 /*
 |--------------------------------------------------------------------------
 | Authenticated Routes (Sudah Login)
@@ -86,25 +89,25 @@ Route::middleware('auth')->group(function () {
 
         // Edit profile
 
-// Route untuk halaman profil
-Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
-Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
+    // Route untuk halaman profil
+    Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
 
-/**
- * Route khusus untuk menampilkan avatar dari storage private
- * Menggunakan parameter {filename} untuk mencari file di storage/app/avatars/
- */
-Route::get('/user/avatar/{filename}', function ($filename) {
-    $path = 'avatars/' . $filename;
+    /**
+     * Route khusus untuk menampilkan avatar dari storage private
+     * Menggunakan parameter {filename} untuk mencari file di storage/app/avatars/
+     */
+    Route::get('/user/avatar/{filename}', function ($filename) {
+        $path = 'avatars/' . $filename;
 
-    // Pastikan file ada di storage/app/avatars
-    if (!Storage::disk('local')->exists($path)) {
-        abort(404);
-    }
+        // Pastikan file ada di storage/app/avatars
+        if (!Storage::disk('local')->exists($path)) {
+            abort(404);
+        }
 
-    // Mengembalikan file sebagai response gambar
-    return Storage::disk('local')->response($path);
-})->name('avatar.display')->middleware('auth');
+        // Mengembalikan file sebagai response gambar
+        return Storage::disk('local')->response($path);
+    })->name('avatar.display')->middleware('auth');
 
     // Proses Logout
     Route::post('/logout', [LoginController::class, 'logout'])

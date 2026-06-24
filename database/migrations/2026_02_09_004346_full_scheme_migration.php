@@ -84,7 +84,7 @@ return new class extends Migration
             $table->string('lampiran')->nullable();
             $table->text('deskripsi')->nullable();
             $table->json('payload_draft')->nullable();
-            $table->enum('status', ['draft', 'diajukan', 'verifikasi kelengkapan', 'verifikasi lengkap', 'verifikasi gagal', 'diterima', 'menunggu_tte', 'ditandatangani', 'ditolak']);
+            $table->enum('status', ['draft', 'diajukan', 'verifikasi kelengkapan', 'verifikasi lengkap', 'verifikasi gagal', 'diterima', 'ditandatangani', 'ditolak'])->default('draft');
             $table->timestamps();
         });
 
@@ -92,7 +92,7 @@ return new class extends Migration
             $table->uuid('uuid')->primary();
             $table->foreignUuid('tiket_id')->constrained('tiket', 'uuid')->cascadeOnDelete();
             $table->foreignUuid('users_id')->constrained('users', 'uuid')->cascadeOnDelete();
-            $table->enum('status', ['draft', 'diajukan', 'verifikasi kelengkapan', 'verifikasi lengkap', 'verifikasi gagal', 'diterima', 'menunggu_tte', 'ditandatangani', 'ditolak']);
+            $table->enum('status', ['draft', 'diajukan', 'verifikasi kelengkapan', 'verifikasi lengkap', 'verifikasi gagal', 'diterima', 'ditandatangani', 'ditolak'])->default('draft');
             $table->timestamps();
         });
 

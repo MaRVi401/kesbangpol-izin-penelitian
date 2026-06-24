@@ -14,7 +14,7 @@ class RiwayatStatusTiket extends Model
     protected $keyType = 'string'; 
     public $incrementing = false; 
 
-    protected $fillable = ['tiket_id', 'users_id', 'status']; // Menampung status baru
+    protected $fillable = ['tiket_id', 'users_id',]; 
 
     public function tiket(): BelongsTo 
     { 

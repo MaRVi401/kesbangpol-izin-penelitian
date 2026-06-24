@@ -191,13 +191,25 @@
                             {{ $penandatangan->jabatan_atasan }}<br>
                         @endif
                         {{ $penandatangan->jabatan_penandatangan }}<br>
-                        <br><br><br><br><br><br><br><br>
+                        @if(!empty($qrCodeBase64))
+                            <div style="margin-top: 10px; margin-bottom: 10px;">
+                                <img src="{{ $qrCodeBase64 }}" alt="QR Code Verifikasi" style="width: 80px; height: 80px;">
+                            </div>
+                        @else
+                            <br><br><br><br><br><br>
+                        @endif
                         <strong><u>{{ $penandatangan->user->nama ?? 'NAMA PEJABAT' }}</u></strong><br>
-                        NIP. {{ $penandatangan->nip ?? '-' }}
+                        
                     @else
                         an. Kepala Badan Kesatuan Bangsa dan Politik Kabupaten Subang<br>
                         Kepala Bidang Ideologi Wawasan Kebangsaan dan Karakter Bangsa<br>
-                        <br><br><br><br><br><br><br><br>
+                        @if(!empty($qrCodeBase64))
+                            <div style="margin-top: 10px; margin-bottom: 10px;">
+                                <img src="{{ $qrCodeBase64 }}" alt="QR Code Verifikasi" style="width: 80px; height: 80px;">
+                            </div>
+                        @else
+                            <br><br><br><br><br><br>
+                        @endif
                         <strong><u>NAMA PEJABAT</u></strong>
                     @endif
                 </td>

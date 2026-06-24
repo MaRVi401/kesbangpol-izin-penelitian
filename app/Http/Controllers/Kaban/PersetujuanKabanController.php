@@ -13,10 +13,11 @@ use Illuminate\Support\Facades\Storage;
 
 class PersetujuanKabanController extends Controller
 {
-    public function proses(Request $request, $uuid)
+    public function proses(Request $request, $uuid, WordTemplateServiceIzinPenelitian $service)
     {
         $request->validate([
-            'status' => 'required|in:diterima,ditolak',
+            'status' => 'required|in:ditandatangani,ditolak',
+            'passphrase' => 'required_if:status,ditandatangani|string',
             'komentar' => 'nullable|string'
         ]);
 
@@ -25,22 +26,76 @@ class PersetujuanKabanController extends Controller
 
             $kabanProfile = auth()->user()->kaban;
 
-            $tiket = Tiket::where('uuid', $uuid)
-                ->where('status', 'verifikasi lengkap')
+            $tiket = Tiket::with('suratIzinPenelitian')
+                ->where('uuid', $uuid)
+                ->where('status', 'diterima') 
                 ->whereHas('suratIzinPenelitian', function ($query) use ($kabanProfile) {
                     $query->where('penandatangan_id', $kabanProfile->uuid)
                           ->where('penandatangan_type', \App\Models\Kaban::class);
                 })
                 ->firstOrFail();
 
+            if ($request->status === 'ditolak') {
+                $tiket->update(['status' => 'ditolak']);
+                
+                RiwayatStatusTiket::create([
+                    'tiket_id' => $tiket->uuid,
+                    'users_id' => auth()->user()->uuid,
+                    'status' => 'ditolak'
+                ]);
+
+                if ($request->filled('komentar')) {
+                    KomentarTiket::create([
+                        'tiket_id' => $tiket->uuid,
+                        'users_id' => auth()->user()->uuid,
+                        'komentar' => $request->komentar
+                    ]);
+                }
+                
+                DB::commit();
+                return redirect()->route('dashboard.kaban')->with('success', 'Tiket telah ditolak.');
+            }
+
+            $linkVerifikasi = route('verifikasi.dokumen', $tiket->uuid);
+            $qrCodeImage = \SimpleSoftwareIO\QrCode\Facades\QrCode::format('png')->size(100)->margin(1)->generate($linkVerifikasi);
+            $qrCodeBase64 = 'data:image/png;base64,' . base64_encode($qrCodeImage);
+
+            $pdfPathDraf = $service->generatePDFKaban($tiket->suratIzinPenelitian, $tiket->no_tiket, $kabanProfile, $qrCodeBase64);
+            $absolutePdfPath = \Illuminate\Support\Facades\Storage::disk('public')->path($pdfPathDraf);
+
+            $responseTte = \Illuminate\Support\Facades\Http::withBasicAuth(
+                    config('services.bsre.username'), 
+                    config('services.bsre.password')
+                )
+                ->attach('file', file_get_contents($absolutePdfPath), 'surat_izin.pdf')
+                ->post(config('services.bsre.url') . '/api/sign/pdf', [
+                    'nik' => $kabanProfile->nik, 
+                    'passphrase' => $request->passphrase,
+                    'tampilan' => 'invisible',
+                ]);
+
+            if (!$responseTte->successful()) {
+                throw new \Exception('API BSrE Error: ' . $responseTte->body());
+            }
+
+            $signedPdfContent = $responseTte->body();
+            $signedFileName = 'signed_' . str_replace('/', '_', $tiket->no_tiket) . '.pdf';
+            $signedFilePath = 'surat_izin/signed/' . $signedFileName;
+            
+            \Illuminate\Support\Facades\Storage::disk('public')->put($signedFilePath, $signedPdfContent);
+
+            $tiket->suratIzinPenelitian->update([
+                'file_surat_signed_path' => $signedFilePath
+            ]);
+
             $tiket->update([
-                'status' => $request->status
+                'status' => 'ditandatangani'
             ]);
 
             RiwayatStatusTiket::create([
                 'tiket_id' => $tiket->uuid,
                 'users_id' => auth()->user()->uuid,
-                'status' => $request->status
+                'status' => 'ditandatangani'
             ]);
 
             if ($request->filled('komentar')) {
@@ -51,17 +106,17 @@ class PersetujuanKabanController extends Controller
                 ]);
             }
 
+            if (\Illuminate\Support\Facades\Storage::disk('public')->exists($pdfPathDraf)) {
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($pdfPathDraf);
+            }
+
             DB::commit();
 
-            $pesan = $request->status == 'diterima' 
-                ? 'Tiket berhasil disetujui/diterima.' 
-                : 'Tiket telah ditolak.';
-
-            return redirect()->route('dashboard.kaban')->with('success', $pesan);
+            return redirect()->route('dashboard.kaban')->with('success', 'Dokumen berhasil ditandatangani secara elektronik.');
 
         } catch (\Exception $e) {
             DB::rollBack();
-            return redirect()->back()->with('error', 'Terjadi kesalahan saat memproses tiket: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Gagal memproses TTE: ' . $e->getMessage());
         }
     }
 

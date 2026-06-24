@@ -11,7 +11,6 @@ class UserSeeder extends Seeder
 {
     public function run(): void     
     {         
-        // 1. Super Admin         
         $adminUuid = (string) Str::uuid();         
         DB::table('users')->insert([             
             'uuid'       => $adminUuid,             
@@ -34,7 +33,6 @@ class UserSeeder extends Seeder
             'updated_at' => now(),         
         ]);         
 
-        // 2. Mahasiswa         
         $mhsUuid = (string) Str::uuid();         
         DB::table('users')->insert([             
             'uuid'       => $mhsUuid,             
@@ -58,7 +56,6 @@ class UserSeeder extends Seeder
             'updated_at'  => now(),         
         ]);         
 
-        // 3. Operator         
         $opUuid = (string) Str::uuid();         
         DB::table('users')->insert([             
             'uuid'       => $opUuid,             
@@ -81,11 +78,10 @@ class UserSeeder extends Seeder
             'updated_at' => now(),         
         ]);         
 
-        // 4. Kaban (Kepala Badan - Baru)
         $kabanUuid = (string) Str::uuid();         
         DB::table('users')->insert([             
             'uuid'       => $kabanUuid,             
-            'nama'       => 'Nama Kaban Kesbangpol, M.Si.', // Sesuaikan dengan nama asli             
+            'nama'       => 'Nama Kaban Kesbangpol, M.Si.',             
             'username'   => 'kaban',             
             'password'   => Hash::make('password'),             
             'role'       => 'kaban',             
@@ -100,7 +96,7 @@ class UserSeeder extends Seeder
             'uuid'                  => (string) Str::uuid(),             
             'users_id'              => $kabanUuid,             
             'nip'                   => '197001011995011001',             
-            'nik'                   => '3212000000000002',             
+            'nik'                   => '1234567890123452',             
             'jabatan_atasan'        => null,             
             'jabatan_penandatangan' => 'Kepala Badan Kesatuan Bangsa dan Politik Kabupaten Subang',
             'pangkat_golongan'      => 'Pembina Utama Muda, (IV/c)',
@@ -108,7 +104,6 @@ class UserSeeder extends Seeder
             'updated_at'            => now(),         
         ]);
 
-        // 5. Kabid (Multiple sesuai data penandatangan surat)
         $dataKabid = [
             [
                 'nama' => 'AVIEF SALAM RAKHMAT, ST',
@@ -153,7 +148,7 @@ class UserSeeder extends Seeder
                 'uuid'                  => (string) Str::uuid(),             
                 'users_id'              => $kabidUuid,             
                 'nip'                   => $kabid['nip'],             
-                'nik'                   => '32120000000000' . rand(10, 99),             
+                'nik'                   => '1234567890123452',             
                 'jabatan_atasan'        => 'an. Kepala Badan Kesatuan Bangsa dan Politik Kabupaten Subang',
                 'jabatan_penandatangan' => $kabid['jabatan_penandatangan'],
                 'pangkat_golongan'      => $kabid['pangkat_golongan'],

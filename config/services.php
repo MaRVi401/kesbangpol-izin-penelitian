@@ -35,4 +35,10 @@ return [
         ],
     ],
 
+    'bsre' => [
+        'url' => env('BSRE_API_URL'),
+        'username' => env('BSRE_API_USERNAME'),
+        'password' => env('BSRE_API_PASSWORD'),
+    ],
+
 ];
