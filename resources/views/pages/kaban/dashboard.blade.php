@@ -140,19 +140,26 @@
                                             title="Preview PDF Tiket">
                                                 <i class="ti ti-file-description mr-1"></i> Preview PDF
                                         </a>
-                                        <button type="button" 
-                                                onclick="bukaModalTte('{{ $tiket->no_tiket }}', '{{ route('kaban.tiket.proses', $tiket->uuid) }}')"
-                                                class="inline-flex items-center justify-center px-3 py-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-500 dark:hover:bg-blue-600 dark:focus:ring-blue-800 transition-all shadow-sm font-bold text-xs"
-                                                title="Proses Tanda Tangan Elektronik">
-                                            <i class="ti ti-signature mr-1"></i> Proses TTE
-                                        </button>
+
+                                        <form action="{{ route('kaban.tiket.proses', $tiket->uuid) }}" method="POST" class="inline">
+                                            @csrf
+                                            <input type="hidden" name="status" value="ditolak">
+                                            <input type="hidden" name="komentar" class="input-komentar" value="">
+                                            <button type="button" 
+                                                    data-notiket="{{ $tiket->no_tiket }}"
+                                                    class="btn-tolak inline-flex items-center justify-center px-3 py-2 text-white bg-red-600 rounded-lg hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 dark:bg-red-500 dark:hover:bg-red-600 dark:focus:ring-red-800 transition-all shadow-sm font-bold text-xs"
+                                                    title="Tolak Tiket">
+                                                <i class="ti ti-x mr-1"></i> Tolak
+                                            </button>
+                                        </form>
+
                                         <form action="{{ route('kaban.tiket.proses', $tiket->uuid) }}" method="POST" class="inline">
                                             @csrf
                                             <input type="hidden" name="status" value="ditandatangani">
                                             <input type="hidden" name="passphrase" class="input-passphrase" value="">
                                             <button type="button" 
                                                     data-notiket="{{ $tiket->no_tiket }}"
-                                                    class="btn-tte inline-flex items-center justify-center px-3 py-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-500 dark:hover:bg-blue-600 dark:focus:ring-blue-800 transition-all shadow-sm font-bold text-xs"
+                                                    class="btn-tte inline-flex items-center justify-center px-3 py-2 text-white bg-green-600 rounded-lg hover:bg-green-700 focus:ring-4 focus:outline-none focus:ring-green-300 dark:bg-green-500 dark:hover:bg-green-600 dark:focus:ring-green-800 transition-all shadow-sm font-bold text-xs"
                                                     title="Proses TTE">
                                                 <i class="ti ti-signature mr-1"></i> Proses TTE
                                             </button>
@@ -242,75 +249,6 @@
             <div class="px-5 py-4 bg-gray-50 dark:bg-[#1e293b] border-t border-gray-100 dark:border-gray-700 rounded-b-xl">
                 {{ $tiketHistory->links() }}
             </div>
-        </div>
-    </div>
-
-    <div id="modalTolakTiket" class="fixed inset-0 z-50 hidden bg-gray-900/60 backdrop-blur-sm overflow-y-auto h-full w-full items-center justify-center p-4">
-        <div class="relative w-full max-w-lg bg-white dark:bg-gray-800 rounded-3xl shadow-2xl p-6 md:p-8 border border-gray-100 dark:border-gray-700 flex flex-col">
-            <div class="flex justify-between items-center mb-6">
-                <h3 class="text-xl font-black text-gray-900 dark:text-white flex items-center gap-3">
-                    <i class="ti ti-alert-triangle text-red-600 text-2xl"></i> Tolak Tiket
-                </h3>
-                <button onclick="tutupModalTolak()" type="button" class="text-gray-400 hover:text-red-500 transition-colors">
-                    <i class="ti ti-x text-2xl"></i>
-                </button>
-            </div>
-
-            <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">
-                Anda akan menolak tiket dengan nomor: <span id="nomor_tiket_tolak" class="font-bold text-gray-900 dark:text-white"></span>
-            </p>
-
-            <form id="formTolakTiket" method="POST" action="">
-                @csrf
-                <input type="hidden" name="status" value="ditolak">
-                <div class="mb-5">
-                    <label class="block text-xs font-bold uppercase text-gray-500 mb-2 tracking-widest">Alasan Penolakan <span class="text-red-500">*</span></label>
-                    <textarea name="komentar" required class="w-full min-h-30 bg-gray-50 dark:bg-gray-700/50 border-2 border-gray-100 dark:border-gray-700 text-gray-900 dark:text-white text-sm rounded-2xl p-4 focus:ring-0 focus:border-red-500 outline-none resize-none transition-colors" placeholder="Masukkan alasan mengapa tiket ini ditolak..."></textarea>
-                </div>
-
-                <div class="flex justify-end gap-3 mt-5">
-                    <button type="button" onclick="tutupModalTolak()" class="px-5 py-2.5 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 font-bold rounded-xl hover:bg-gray-200 dark:hover:bg-gray-600 transition">Batal</button>
-                    <button type="submit" class="px-6 py-2.5 bg-red-600 text-white font-bold rounded-xl hover:bg-red-700 shadow-lg shadow-red-500/30 transition flex items-center gap-2">
-                        <i class="ti ti-send"></i> Konfirmasi Tolak
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <div id="modalProsesTte" class="fixed inset-0 z-50 hidden bg-gray-900/60 backdrop-blur-sm overflow-y-auto h-full w-full items-center justify-center p-4">
-        <div class="relative w-full max-w-lg bg-white dark:bg-gray-800 rounded-3xl shadow-2xl p-6 md:p-8 border border-gray-100 dark:border-gray-700 flex flex-col">
-            <div class="flex justify-between items-center mb-6">
-                <h3 class="text-xl font-black text-gray-900 dark:text-white flex items-center gap-3">
-                    <i class="ti ti-signature text-blue-600 text-2xl"></i> Tandatangani Dokumen
-                </h3>
-                <button onclick="tutupModalTte()" type="button" class="text-gray-400 hover:text-red-500 transition-colors">
-                    <i class="ti ti-x text-2xl"></i>
-                </button>
-            </div>
-
-            <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">
-                Anda akan menandatangani dokumen dengan nomor tiket: <br>
-                <span id="nomor_tiket_tte" class="font-bold text-gray-900 dark:text-white text-base"></span>
-            </p>
-
-            <form id="formProsesTte" method="POST" action="">
-                @csrf
-                <input type="hidden" name="status" value="ditandatangani">
-                
-                <div class="mb-5">
-                    <label class="block text-xs font-bold uppercase text-gray-500 mb-2 tracking-widest">Passphrase BSrE <span class="text-red-500">*</span></label>
-                    <input type="password" name="passphrase" required class="w-full bg-gray-50 dark:bg-gray-700/50 border-2 border-gray-100 dark:border-gray-700 text-gray-900 dark:text-white text-sm rounded-2xl p-4 focus:ring-0 focus:border-blue-500 outline-none transition-colors" placeholder="Masukkan Passphrase Anda...">
-                    <p class="text-xs text-gray-500 mt-2 italic">*Sistem tidak akan menyimpan Passphrase Anda demi menjaga keamanan sandi digital.</p>
-                </div>
-
-                <div class="flex justify-end gap-3 mt-5">
-                    <button type="button" onclick="tutupModalTte()" class="px-5 py-2.5 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 font-bold rounded-xl hover:bg-gray-200 dark:hover:bg-gray-600 transition">Batal</button>
-                    <button id="btnSubmitTte" type="submit" class="px-6 py-2.5 bg-blue-600 text-white font-bold rounded-xl hover:bg-blue-700 shadow-lg shadow-blue-500/30 transition flex items-center gap-2" onclick="this.innerHTML='<i class=\'ti ti-loader animate-spin\'></i> Memproses...'; this.classList.add('opacity-70', 'cursor-not-allowed');">
-                        <i class="ti ti-send"></i> Eksekusi TTE
-                    </button>
-                </div>
-            </form>
         </div>
     </div>
 @endsection

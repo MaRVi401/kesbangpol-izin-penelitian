@@ -5,9 +5,7 @@
 @section('content')
 <div class="p-4 mt-14">
     <hr class="mb-6 border-gray-200 dark:border-gray-700">
-
     <div class="max-w-4xl mx-auto">
-        
         <div class="mb-6 flex justify-between items-center bg-white dark:bg-gray-800 p-4 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm">
             <div>
                 <h2 class="text-xl font-bold text-gray-900 dark:text-white">Tiket #{{ $ticket->no_tiket }}</h2>
@@ -18,7 +16,7 @@
                     $statusColor = match(strtolower($ticket->status)) {
                         'diajukan' => 'bg-gray-100 text-gray-800 border-gray-200 dark:bg-gray-700 dark:text-gray-300',
                         'ditangani', 'verifikasi lengkap' => 'bg-blue-100 text-blue-800 border-blue-200 dark:bg-blue-900/30 dark:text-blue-400',
-                        'diterima', 'selesai' => 'bg-green-100 text-green-800 border-green-200 dark:bg-green-900/30 dark:text-green-400',
+                        'diterima', 'selesai', 'ditandatangani' => 'bg-green-100 text-green-800 border-green-200 dark:bg-green-900/30 dark:text-green-400',
                         'verifikasi gagal', 'ditolak' => 'bg-red-100 text-red-800 border-red-200 dark:bg-red-900/30 dark:text-red-400',
                         default => 'bg-gray-100 text-gray-800 border-gray-200'
                     };
@@ -26,7 +24,6 @@
                 <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold border {{ $statusColor }} capitalize">
                     Status: {{ $ticket->status }}
                 </span>
-
                 @if($jumlahRevisi > 0)
                     <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold border bg-purple-100 text-red-800 border-purple-200 dark:bg-red-900/30 dark:text-red-400 dark:border-red-800">
                         <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
@@ -37,8 +34,13 @@
         </div>
 
         @php
-            $showDownload = ($ticket->status == 'belum diajukan' && empty($ticket->lampiran)) || in_array(strtolower($ticket->status), ['ditolak', 'diterima', 'selesai']);
-            $isApproved = in_array(strtolower($ticket->status), ['diterima', 'selesai']);
+            $showDownload = ($ticket->status == 'belum diajukan' && empty($ticket->lampiran)) || in_array(strtolower($ticket->status), ['ditolak', 'diterima', 'selesai', 'ditandatangani']);
+            $isApproved = in_array(strtolower($ticket->status), ['diterima', 'selesai', 'ditandatangani']);
+            $isSigned = strtolower($ticket->status) === 'ditandatangani';
+            
+            $downloadUrl = $isSigned
+                ? route('file.show', 'surat_izin/signed/signed_' . $ticket->no_tiket . '.pdf')
+                : url('detail/download/' . $ticket->uuid);
         @endphp
 
         @if($showDownload)
@@ -55,7 +57,7 @@
             </p>
             <div class="flex justify-center items-center">
                 <div class="w-full sm:w-auto">
-                    <a href="{{ url('detail/download/' . $ticket->uuid) }}" class="inline-flex items-center justify-center w-full px-5 py-2.5 text-sm font-medium text-white {{ $isApproved ? 'bg-green-600 hover:bg-green-700 focus:ring-green-300 dark:bg-green-500 dark:hover:bg-green-600 dark:focus:ring-green-800' : 'bg-blue-700 hover:bg-blue-800 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800' }} rounded-lg focus:ring-4 focus:outline-none transition-all shadow-sm">
+                    <a href="{{ $downloadUrl }}" class="inline-flex items-center justify-center w-full px-5 py-2.5 text-sm font-medium text-white {{ $isApproved ? 'bg-green-600 hover:bg-green-700 focus:ring-green-300 dark:bg-green-500 dark:hover:bg-green-600 dark:focus:ring-green-800' : 'bg-blue-700 hover:bg-blue-800 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800' }} rounded-lg focus:ring-4 focus:outline-none transition-all shadow-sm" {{ $isSigned ? 'target="_blank"' : '' }}>
                         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
                         {{ $isApproved ? 'Unduh Surat' : 'Download Ulang Surat' }}
                     </a>
@@ -64,12 +66,11 @@
         </div>
         @endif
 
-        @if(in_array($ticket->status, ['verifikasi lengkap', 'verifikasi gagal', 'diterima', 'ditolak']))
+        @if(in_array(strtolower($ticket->status), ['verifikasi lengkap', 'verifikasi gagal', 'diterima', 'ditolak', 'ditandatangani']))
             @if($ticket->komentar->isNotEmpty())
                 @php
-                    $isError = in_array($ticket->status, ['verifikasi gagal', 'ditolak']);
+                    $isError = in_array(strtolower($ticket->status), ['verifikasi gagal', 'ditolak']);
                 @endphp
-                
                 <div class="mb-6 p-5 rounded-xl border shadow-sm {{ $isError ? 'bg-red-50 border-red-200 dark:bg-red-900/10 dark:border-red-800' : 'bg-green-50 border-green-200 dark:bg-green-900/10 dark:border-green-800' }}">
                     <div class="flex items-center mb-3">
                         <div class="p-2 rounded-lg {{ $isError ? 'bg-red-100 dark:bg-red-800' : 'bg-green-100 dark:bg-green-800' }} mr-3">
@@ -81,7 +82,6 @@
                             Balasan Admin (Tiket {{ Str::title($ticket->status) }})
                         </h3>
                     </div>
-
                     <div class="space-y-4">
                         @foreach($ticket->komentar as $item)
                             <div class="bg-white dark:bg-gray-800 p-4 rounded-lg border border-gray-100 dark:border-gray-700 shadow-sm">
@@ -107,12 +107,10 @@
             <div class="bg-gray-50 dark:bg-gray-700 border-b border-gray-200 dark:border-gray-600 p-4">
                 <h3 class="text-lg font-bold text-gray-900 dark:text-white">Detail Formulir Surat Izin Penelitian</h3>
             </div>
-            
             <div class="p-6">
                 @include('pages.mahasiswa.DetailSuratIzin.partials._detail_surat_izin')
             </div>
         </div>
-
     </div>
 </div>
 

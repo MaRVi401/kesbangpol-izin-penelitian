@@ -28,7 +28,7 @@ class PersetujuanKabanController extends Controller
 
             $tiket = Tiket::with('suratIzinPenelitian')
                 ->where('uuid', $uuid)
-                ->where('status', 'diterima') 
+                ->where('status', 'verifikasi lengkap') 
                 ->whereHas('suratIzinPenelitian', function ($query) use ($kabanProfile) {
                     $query->where('penandatangan_id', $kabanProfile->uuid)
                           ->where('penandatangan_type', \App\Models\Kaban::class);
@@ -61,9 +61,13 @@ class PersetujuanKabanController extends Controller
             $qrCodeBase64 = 'data:image/png;base64,' . base64_encode($qrCodeImage);
 
             $pdfPathDraf = $service->generatePDFKaban($tiket->suratIzinPenelitian, $tiket->no_tiket, $kabanProfile, $qrCodeBase64);
-            $absolutePdfPath = \Illuminate\Support\Facades\Storage::disk('public')->path($pdfPathDraf);
+            $absolutePdfPath = \Illuminate\Support\Facades\Storage::disk('local')->path($pdfPathDraf);
 
-            $responseTte = \Illuminate\Support\Facades\Http::withBasicAuth(
+            $responseTte = \Illuminate\Support\Facades\Http::withHeaders([
+                    'Expect' => '' 
+                ])
+                ->timeout(60)
+                ->withBasicAuth(
                     config('services.bsre.username'), 
                     config('services.bsre.password')
                 )
@@ -82,7 +86,7 @@ class PersetujuanKabanController extends Controller
             $signedFileName = 'signed_' . str_replace('/', '_', $tiket->no_tiket) . '.pdf';
             $signedFilePath = 'surat_izin/signed/' . $signedFileName;
             
-            \Illuminate\Support\Facades\Storage::disk('public')->put($signedFilePath, $signedPdfContent);
+            \Illuminate\Support\Facades\Storage::disk('local')->put($signedFilePath, $signedPdfContent);
 
             $tiket->suratIzinPenelitian->update([
                 'file_surat_signed_path' => $signedFilePath
@@ -106,8 +110,8 @@ class PersetujuanKabanController extends Controller
                 ]);
             }
 
-            if (\Illuminate\Support\Facades\Storage::disk('public')->exists($pdfPathDraf)) {
-                \Illuminate\Support\Facades\Storage::disk('public')->delete($pdfPathDraf);
+            if (\Illuminate\Support\Facades\Storage::disk('local')->exists($pdfPathDraf)) {
+                \Illuminate\Support\Facades\Storage::disk('local')->delete($pdfPathDraf);
             }
 
             DB::commit();
