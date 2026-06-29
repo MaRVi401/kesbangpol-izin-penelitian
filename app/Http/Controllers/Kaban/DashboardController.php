@@ -26,10 +26,10 @@ class DashboardController extends Controller
             ->paginate(10, ['*'], 'antrean_page');
 
         $tiketHistory = Tiket::with(['layanan', 'user', 'suratIzinPenelitian'])
-            ->whereIn('status', ['diterima', 'ditolak'])
+            ->whereIn('status', ['ditandatangani', 'ditolak']) 
             ->whereHas('suratIzinPenelitian', function ($query) use ($kabanProfile) {
                 $query->where('penandatangan_id', $kabanProfile->uuid)
-                      ->where('penandatangan_type', \App\Models\Kaban::class);
+                    ->where('penandatangan_type', \App\Models\Kaban::class);
             })
             ->latest()
             ->paginate(10, ['*'], 'history_page');

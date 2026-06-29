@@ -180,4 +180,42 @@ class WordTemplateServiceIzinPenelitian
             abort(500);
         }
     }
+
+
+    public function generatePdfPreview(SuratPermohonanIzinPenelitian $detail, $noTiket, $penandatangan = null) 
+    {
+        try {
+            $cleanNoTiket = str_replace(['/', '\\', ' '], '-', $noTiket);
+            
+            $savedPdfPath = "surat_keluar/Preview_Surat_Izin_{$cleanNoTiket}.pdf"; 
+            $absoluteSavePath = Storage::disk('local')->path($savedPdfPath);
+            
+            if (!file_exists(dirname($absoluteSavePath))) {
+                mkdir(dirname($absoluteSavePath), 0755, true);
+            }
+
+            $logoPath = public_path('images/logo-subang.png'); 
+
+            $data = [
+                'no_tiket' => $noTiket,
+                'detail' => $detail,
+                'tanggal_cetak_surat' => Carbon::now()->locale('id')->translatedFormat('d F Y'),
+                'penandatangan' => $penandatangan,
+                'logo_path' => $logoPath,
+                'qrCodeBase64' => null 
+            ];
+
+            $pdf = Pdf::loadView('pdf.surat-resmi', $data)
+                    ->setPaper('a4', 'portrait')
+                    ->setWarnings(false);
+
+            $pdf->save($absoluteSavePath);
+
+            return $savedPdfPath; 
+
+        } catch (\Exception $e) {
+            Log::error('Error Generate PDF Preview: ' . $e->getMessage());
+            abort(500);
+        }
+    }
 }

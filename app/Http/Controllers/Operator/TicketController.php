@@ -218,7 +218,11 @@ class TicketController extends Controller
 
         $tickets = $query->latest('updated_at')->paginate(10);
 
-        return view('pages.operator.ticket.history', compact('tickets'));
+        $penandatangan_list = User::whereIn('role', ['kaban', 'kabid'])
+            ->with(['kaban', 'kabid'])
+            ->get();
+
+        return view('pages.operator.ticket.history', compact('tickets', 'penandatangan_list'));
     }
 
     public function previewPdf(Request $request, string $uuid, WordTemplateServiceIzinPenelitian $wordService)
