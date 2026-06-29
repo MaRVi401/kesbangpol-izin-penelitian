@@ -41,34 +41,6 @@
             </div>
         </div>
 
-        @if(session('success'))
-            <div class="p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400 flex items-center gap-2" role="alert">
-                <i class="ti ti-check text-lg"></i>
-                <span class="font-medium">Berhasil!</span> {{ session('success') }}
-            </div>
-        @endif
-
-        @if(session('error'))
-            <div class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400 flex items-center gap-2" role="alert">
-                <i class="ti ti-alert-circle text-lg"></i>
-                <span class="font-medium">Gagal!</span> {{ session('error') }}
-            </div>
-        @endif
-
-        @if($errors->any())
-            <div class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400 flex flex-col gap-2" role="alert">
-                <div class="flex items-center gap-2 font-medium">
-                    <i class="ti ti-alert-circle text-lg"></i>
-                    <span>Terdapat Kesalahan:</span>
-                </div>
-                <ul class="list-disc list-inside ml-2">
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
-
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
             <div class="p-5 bg-blue-50/50 border border-blue-100 rounded-xl shadow-sm dark:bg-blue-900/10 dark:border-blue-900/20">
                 <div class="flex items-center justify-between mb-2">
@@ -255,4 +227,42 @@
 
 @push('scripts')
     @vite(['resources/js/dashboard-kaban.js'])
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            @if(session('success'))
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Berhasil!',
+                    text: '{!! session('success') !!}',
+                    confirmButtonColor: '#10b981',
+                    timer: 3000,
+                    timerProgressBar: true
+                });
+            @endif
+
+            @if(session('error'))
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Gagal!',
+                    text: '{!! session('error') !!}',
+                    confirmButtonColor: '#ef4444'
+                });
+            @endif
+
+            @if($errors->any())
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Terdapat Kesalahan',
+                    html: `
+                        <ul class="text-left list-disc list-inside text-sm mt-2">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    `,
+                    confirmButtonColor: '#ef4444'
+                });
+            @endif
+        });
+    </script>
 @endpush
