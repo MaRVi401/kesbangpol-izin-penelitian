@@ -16,10 +16,10 @@ namespace App\Models{
  * @property string $uuid
  * @property string|null $users_id
  * @property string $aksi
- * @property string $nama_tabel Contoh: layanan, tiket, detail_tiket_layanan_email_gov
- * @property string $record_id UUID dari data yang diubah
- * @property array<array-key, mixed>|null $data_lama Menyimpan state sebelum diubah
- * @property array<array-key, mixed>|null $data_baru Menyimpan state setelah diubah
+ * @property string $nama_tabel
+ * @property string $record_id
+ * @property array<array-key, mixed>|null $data_lama
+ * @property array<array-key, mixed>|null $data_baru
  * @property string|null $ip_address
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
@@ -46,14 +46,54 @@ namespace App\Models{
  * @property string $uuid
  * @property string $users_id
  * @property string $nip
+ * @property string|null $nik
+ * @property string|null $jabatan_atasan
+ * @property string $jabatan_penandatangan
+ * @property string $pangkat_golongan
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\SuratPermohonanIzinPenelitian> $suratIzinPenelitian
+ * @property-read int|null $surat_izin_penelitian_count
+ * @property-read \App\Models\User $user
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Kaban newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Kaban newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Kaban query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Kaban whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Kaban whereJabatanAtasan($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Kaban whereJabatanPenandatangan($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Kaban whereNik($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Kaban whereNip($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Kaban wherePangkatGolongan($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Kaban whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Kaban whereUsersId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Kaban whereUuid($value)
+ */
+	class Kaban extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * @property string $uuid
+ * @property string $users_id
+ * @property string $nip
+ * @property string $nik
+ * @property string $jabatan_atasan
+ * @property string $jabatan_penandatangan
+ * @property string $pangkat_golongan
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\SuratPermohonanIzinPenelitian> $suratIzinPenelitian
+ * @property-read int|null $surat_izin_penelitian_count
  * @property-read \App\Models\User $user
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Kabid newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Kabid newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Kabid query()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Kabid whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Kabid whereJabatanAtasan($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Kabid whereJabatanPenandatangan($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Kabid whereNik($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Kabid whereNip($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Kabid wherePangkatGolongan($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Kabid whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Kabid whereUsersId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Kabid whereUuid($value)
@@ -111,11 +151,11 @@ namespace App\Models{
 /**
  * @property string $uuid
  * @property string|null $users_id
- * @property string $username_attempt Mencatat username/email yang dicoba saat login
+ * @property string $username_attempt
  * @property string $tipe_event
  * @property string|null $ip_address
- * @property string|null $user_agent Mencatat device/browser yang digunakan
- * @property bool $is_suspicious Flag untuk memicu alert jika terdeteksi brute force
+ * @property string|null $user_agent
+ * @property bool $is_suspicious
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\User|null $user
@@ -140,9 +180,9 @@ namespace App\Models{
  * @property string $uuid
  * @property string $users_id
  * @property string $nim
+ * @property string $status_akun
  * @property string|null $ktm_path
  * @property string|null $surat_rekomendasi_path
- * @property string $status_akun
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\User $user
@@ -228,6 +268,12 @@ namespace App\Models{
 /**
  * @property string $uuid
  * @property string $tiket_id
+ * @property string|null $penandatangan_id
+ * @property string|null $penandatangan_type
+ * @property string|null $nomor_surat
+ * @property string $nomor_surat_institusi
+ * @property string $tanggal_surat_institusi
+ * @property string $tanggal_diterima_surat
  * @property string $nama
  * @property string $tempat_lahir
  * @property string $tanggal_lahir
@@ -238,6 +284,9 @@ namespace App\Models{
  * @property string|null $alamat_institusi
  * @property string|null $nomor_mahasiswa
  * @property string|null $nomor_pegawai
+ * @property string $yth_kepada
+ * @property string|null $yth_cq
+ * @property string $yth_di
  * @property string $kegiatan
  * @property string $dalam_rangka
  * @property string $tanggal_mulai
@@ -245,7 +294,9 @@ namespace App\Models{
  * @property string $lokasi_kegiatan
  * @property string $judul_pembicara
  * @property string $penanggung_jawab_1
+ * @property string|null $nip_penanggung_jawab_1
  * @property string|null $penanggung_jawab_2
+ * @property string|null $nip_penanggung_jawab_2
  * @property int $banyak_peserta
  * @property string|null $nama_alias
  * @property string|null $nama_panggilan
@@ -264,8 +315,10 @@ namespace App\Models{
  * @property string|null $hobi
  * @property string $no_hp
  * @property string|null $path_pas_foto
+ * @property string|null $file_surat_signed_path
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Model|\Eloquent|null $penandatangan
  * @property-read \App\Models\Tiket $tiket
  * @method static \Illuminate\Database\Eloquent\Builder<static>|SuratPermohonanIzinPenelitian newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|SuratPermohonanIzinPenelitian newQuery()
@@ -281,6 +334,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|SuratPermohonanIzinPenelitian whereCiriKhusus($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|SuratPermohonanIzinPenelitian whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|SuratPermohonanIzinPenelitian whereDalamRangka($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SuratPermohonanIzinPenelitian whereFileSuratSignedPath($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|SuratPermohonanIzinPenelitian whereHobi($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|SuratPermohonanIzinPenelitian whereInstitusiPendidikan($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|SuratPermohonanIzinPenelitian whereJenisKelamin($value)
@@ -291,25 +345,36 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|SuratPermohonanIzinPenelitian whereNama($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|SuratPermohonanIzinPenelitian whereNamaAlias($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|SuratPermohonanIzinPenelitian whereNamaPanggilan($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SuratPermohonanIzinPenelitian whereNipPenanggungJawab1($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SuratPermohonanIzinPenelitian whereNipPenanggungJawab2($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|SuratPermohonanIzinPenelitian whereNoHp($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|SuratPermohonanIzinPenelitian whereNomorMahasiswa($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|SuratPermohonanIzinPenelitian whereNomorPegawai($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SuratPermohonanIzinPenelitian whereNomorSurat($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SuratPermohonanIzinPenelitian whereNomorSuratInstitusi($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|SuratPermohonanIzinPenelitian wherePathPasFoto($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|SuratPermohonanIzinPenelitian wherePekerjaan($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|SuratPermohonanIzinPenelitian wherePekerjaanPendidikan($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SuratPermohonanIzinPenelitian wherePenandatanganId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SuratPermohonanIzinPenelitian wherePenandatanganType($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|SuratPermohonanIzinPenelitian wherePenanggungJawab1($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|SuratPermohonanIzinPenelitian wherePenanggungJawab2($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|SuratPermohonanIzinPenelitian whereSemester($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|SuratPermohonanIzinPenelitian whereStatusPerkawinan($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SuratPermohonanIzinPenelitian whereTanggalDiterimaSurat($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|SuratPermohonanIzinPenelitian whereTanggalLahir($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|SuratPermohonanIzinPenelitian whereTanggalMulai($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|SuratPermohonanIzinPenelitian whereTanggalSelesai($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SuratPermohonanIzinPenelitian whereTanggalSuratInstitusi($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|SuratPermohonanIzinPenelitian whereTempatLahir($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|SuratPermohonanIzinPenelitian whereTiketId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|SuratPermohonanIzinPenelitian whereTinggiBadan($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|SuratPermohonanIzinPenelitian whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|SuratPermohonanIzinPenelitian whereUuid($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|SuratPermohonanIzinPenelitian whereWarnaKulit($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SuratPermohonanIzinPenelitian whereYthCq($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SuratPermohonanIzinPenelitian whereYthDi($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SuratPermohonanIzinPenelitian whereYthKepada($value)
  */
 	class SuratPermohonanIzinPenelitian extends \Eloquent {}
 }
@@ -323,6 +388,7 @@ namespace App\Models{
  * @property string $no_tiket
  * @property string|null $lampiran
  * @property string|null $deskripsi
+ * @property array<array-key, mixed>|null $payload_draft
  * @property string $status
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
@@ -342,6 +408,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Tiket whereLampiran($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Tiket whereLayananId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Tiket whereNoTiket($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Tiket wherePayloadDraft($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Tiket wherePetugasId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Tiket whereStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Tiket whereUpdatedAt($value)
@@ -364,6 +431,7 @@ namespace App\Models{
  * @property string|null $avatar
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\Kaban|null $kaban
  * @property-read \App\Models\Kabid|null $kabid
  * @property-read \App\Models\Mahasiswa|null $mahasiswa
  * @property-read \Illuminate\Notifications\DatabaseNotificationCollection<int, \Illuminate\Notifications\DatabaseNotification> $notifications
@@ -374,6 +442,8 @@ namespace App\Models{
  * @property-read int|null $tiket_dibuat_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Tiket> $tiketDitangani
  * @property-read int|null $tiket_ditangani_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \Laravel\Sanctum\PersonalAccessToken> $tokens
+ * @property-read int|null $tokens_count
  * @method static \Database\Factories\UserFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User newQuery()
