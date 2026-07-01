@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\Mahasiswa\ApiServiceController;
+use App\Http\Controllers\Api\ApiProfileController;
 
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
@@ -17,4 +18,10 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Endpoint untuk Autosave Draft
     Route::post('/services/autosave', [ApiServiceController::class, 'autosave']);
+
+    // Endpoint untuk menampilkan data profil pengguna
+    Route::get('/profile', [ApiProfileController::class, 'show']);
+
+    // Endpoint untuk memperbarui data profil pengguna
+    Route::post('/profile/updated', [ApiProfileController::class, 'update']);
 });
